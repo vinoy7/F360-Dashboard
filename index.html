@@ -191,6 +191,38 @@
       box-shadow: none;
     }
 
+    /* Refresh button (Buttons 28px) */
+    #refresh-data {
+      box-sizing: border-box;
+      width: 28px;
+      height: 28px;
+      padding: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: #939596;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    #refresh-data:hover {
+      background: #F3F0FF;
+      color: #623CEA;
+    }
+    #refresh-data svg {
+      display: block;
+      width: 20px;
+      height: 20px;
+    }
+    #refresh-data svg.spinning {
+      animation: refresh-spin 0.6s linear;
+    }
+    @keyframes refresh-spin {
+      to { transform: rotate(360deg); }
+    }
+
     /* Nav items */
     .nav-item {
       display: flex;
@@ -634,7 +666,6 @@
     <!-- ---- TOP HEADER ---- -->
     <div style="background:white; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; box-shadow: 0px 2.4px 6px rgba(0,0,0,0.048); flex-shrink:0; position:relative; z-index:10;">
       <span style="font-size:24px; font-weight:500; color:#262626; letter-spacing:-0.48px; line-height:36px;">Dashboard</span>
-      <span style="font-size:14px; font-weight:500; color:#8C8D8F; letter-spacing:-0.28px; line-height:20px;">Last Updated at 11:17 AM</span>
     </div>
 
     <!-- ---- SCROLLABLE CONTENT ---- -->
@@ -654,15 +685,24 @@
       <!-- Divider -->
       <div style="height:1px; background:#E3E3E5; flex-shrink:0;"></div>
 
-      <!-- Overview heading + Time tabs -->
-      <div style="display:flex; align-items:center; justify-content:space-between;">
-        <h3 style="font-size:24px; font-weight:600; color:#262626; letter-spacing:-0.48px; line-height:36px; margin:0;">Overview</h3>
-        <div class="tab-group" id="time-tabs" style="width:432px;">
-          <div class="tab-indicator" id="time-indicator"></div>
-          <button class="tab-btn active" data-period="overall">Overall</button>
-          <button class="tab-btn" data-period="today">Today</button>
-          <button class="tab-btn" data-period="week">This Week</button>
-          <button class="tab-btn" data-period="month">This Month</button>
+      <!-- Overview heading + Refresh data + Time tabs -->
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
+        <h3 style="font-size:24px; font-weight:500; color:#262626; letter-spacing:-0.48px; line-height:36px; margin:0;">Overview</h3>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <span id="last-updated" style="font-size:16px; font-weight:500; color:#8C8D8F; letter-spacing:-0.32px; line-height:24px;">Last Updated at 11:17 AM</span>
+          <button id="refresh-data" aria-label="Refresh data">
+            <svg width="20" height="20" viewBox="0 0 18.0013 21.0535" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11.501 6.19626C12.7228 6.04915 13.9218 5.75125 15.071 5.31126L15.252 5.24126C15.3522 5.20126 15.436 5.1287 15.4899 5.03527C15.5437 4.94184 15.5646 4.83298 15.549 4.72626C15.3621 3.44421 15.0098 2.19179 14.501 1.00026M15.071 5.31126C13.9179 3.96749 12.3515 3.04528 10.6173 2.68731C8.88311 2.32934 7.07917 2.55684 5.48817 3.33415C3.89717 4.11147 2.60902 5.39467 1.82559 6.98267C1.04216 8.57067 0.807728 10.3737 1.15903 12.1093M3.50103 20.0533C2.99148 18.8615 2.63854 17.6087 2.45103 16.3263C2.43547 16.2195 2.45632 16.1107 2.5102 16.0172C2.56408 15.9238 2.64786 15.8512 2.74803 15.8113L2.93003 15.7413C4.06204 17.06 5.5937 17.9742 7.29149 18.3456C8.98929 18.717 10.7619 18.5255 12.3411 17.7999C13.9204 17.0744 15.2204 15.8543 16.0445 14.3242C16.8687 12.794 17.1722 11.0372 16.909 9.31926M6.50103 14.8563C5.27927 15.0034 4.08026 15.3003 2.93103 15.7403" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div style="width:1px; height:24px; background:#E3E3E5;"></div>
+          <div class="tab-group" id="time-tabs" style="width:432px;">
+            <div class="tab-indicator" id="time-indicator"></div>
+            <button class="tab-btn active" data-period="overall">Overall</button>
+            <button class="tab-btn" data-period="today">Today</button>
+            <button class="tab-btn" data-period="week">This Week</button>
+            <button class="tab-btn" data-period="month">This Month</button>
+          </div>
         </div>
       </div>
 
@@ -1702,6 +1742,19 @@ if (document.readyState === 'loading') {
 // Resize guard
 window.addEventListener('resize', () => {
   if (cashflowChart) { cashflowChart.resize(); }
+});
+
+// Refresh data
+document.getElementById('refresh-data').addEventListener('click', () => {
+  const btn = document.getElementById('refresh-data');
+  const svg = btn.querySelector('svg');
+  svg.classList.add('spinning');
+  setTimeout(() => {
+    svg.classList.remove('spinning');
+    const now = new Date();
+    const t = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    document.getElementById('last-updated').textContent = 'Last Updated at ' + t;
+  }, 600);
 });
 </script>
 </body>
