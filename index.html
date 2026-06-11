@@ -412,11 +412,11 @@
     .user-card {
       background: white;
       border-radius: 8px;
-      padding: 12px;
+      padding: 10px 12px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+      gap: 8px;
+      box-shadow: 0px 1px 4px rgba(0,0,0,0.05);
     }
 
     /* Cashflow legend box */
@@ -646,11 +646,13 @@
 
       <!-- User card -->
       <div class="user-card" style="margin-top:8px;">
-        <!-- Avatar circle -->
-        <div style="width:36px; height:36px; border-radius:50%; background:#623CEA; display:flex; align-items:center; justify-content:center; color:white; font-size:14px; font-weight:600; flex-shrink:0;">R</div>
-        <div style="min-width:0; flex:1;">
+        <!-- Building avatar -->
+        <div style="width:40px; height:40px; border-radius:100px; background:#FFEBF3; display:flex; align-items:center; justify-content:center; flex-shrink:0; padding:9px; box-sizing:border-box;">
+          <img src="assets/imgProfileBuilding.svg" style="width:22px; height:22px;" alt="" />
+        </div>
+        <div style="min-width:0; flex:1; display:flex; flex-direction:column; justify-content:center;">
           <div style="font-size:14px; font-weight:500; color:#262626; letter-spacing:-0.28px; line-height:20px;">Hi, Rohan!</div>
-          <div style="font-size:12px; font-weight:400; color:#8C8D8F; letter-spacing:-0.24px; line-height:18px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Galaxy Electronics Pvt. L…</div>
+          <div style="font-size:14px; font-weight:400; color:#8C8D8F; letter-spacing:-0.28px; line-height:20px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Galaxy Electronics Pvt. Ltd.</div>
         </div>
       </div>
     </div>
@@ -665,9 +667,11 @@
   <div style="background:white; border-radius:16px; box-shadow: 0px 1px 3px rgba(0,0,0,0.02), 0px 0px 6px rgba(0,0,0,0.04); overflow:hidden; height: calc(100vh - 32px); display:flex; flex-direction:column; width:100%; max-width:1300px;">
 
     <!-- ---- TOP HEADER ---- -->
+    <!--
     <div style="background:white; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; box-shadow: 0px 2.4px 6px rgba(0,0,0,0.048); flex-shrink:0; position:relative; z-index:10;">
       <span style="font-size:24px; font-weight:500; color:#262626; letter-spacing:-0.48px; line-height:36px;">Dashboard</span>
     </div>
+    -->
 
     <!-- ---- SCROLLABLE CONTENT ---- -->
     <div class="scroll-area" style="display:flex; flex-direction:column; gap:20px; max-width:1300px; margin:0 auto; width:100%; flex:1; min-height:0; overflow-y:auto;">
