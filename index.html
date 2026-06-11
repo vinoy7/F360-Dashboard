@@ -1484,7 +1484,7 @@ function buildItemsGrid(type) {
     div.style.cssText = 'display:flex; flex-direction:column; gap:10px; align-items:center; width:147px;';
     div.innerHTML = `
       <div style="display:flex; flex-direction:column; align-items:center;">
-        <div style="width:84px; height:84px; border-radius:300px; border:3px solid ${item.rankColor}; overflow:hidden; margin-bottom:-12px; position:relative; background:#262626;">
+        <div style="width:84px; height:84px; border-radius:300px; border:3px solid ${item.rankColor}; overflow:hidden; margin-bottom:-12px; position:relative; background:#FFFFFF;">
           <img src="${item.img}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;" alt="${item.name}" />
         </div>
         <div style="background:${item.rankColor}; border:3px solid ${item.rankColor}; border-radius:8px; padding:3px 12px; position:relative; z-index:1;">
@@ -1618,14 +1618,19 @@ function render() {
   tip.innerHTML = '<div class="pt-title"></div><div class="pt-row"><span class="pt-swatch"></span><span class="pt-amount"></span></div>';
   document.body.appendChild(tip);
   document.querySelectorAll('.prog-segment').forEach(seg => {
-    seg.addEventListener('mouseenter', () => {
+    seg.addEventListener('mouseenter', (e) => {
       tip.querySelector('.pt-title').textContent = seg.dataset.label || '';
       tip.querySelector('.pt-amount').textContent = seg.dataset.amount || '';
       tip.querySelector('.pt-swatch').style.background = seg.dataset.color || '#262626';
       const r = seg.getBoundingClientRect();
-      tip.style.left = (r.left + r.width / 2) + 'px';
+      tip.style.left = e.clientX + 'px';
       tip.style.top = (r.top - 10) + 'px';
       tip.classList.add('show');
+    });
+    seg.addEventListener('mousemove', (e) => {
+      const r = seg.getBoundingClientRect();
+      tip.style.left = e.clientX + 'px';
+      tip.style.top = (r.top - 10) + 'px';
     });
     seg.addEventListener('mouseleave', () => tip.classList.remove('show'));
   });
