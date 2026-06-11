@@ -217,7 +217,7 @@
       height: 20px;
     }
     #refresh-data svg.spinning {
-      animation: refresh-spin 0.6s linear;
+      animation: refresh-spin 0.4s linear;
     }
     @keyframes refresh-spin {
       to { transform: rotate(360deg); }
@@ -553,7 +553,8 @@
     ::-webkit-scrollbar-thumb { background: #D4D4D6; border-radius: 3px; }
 
     /* Auto-hide scrollbar: thumb only visible while hovering/scrolling the area */
-    .scroll-area { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+    .scroll-area { scrollbar-width: thin; scrollbar-color: transparent transparent; padding:48px 72px 16px; }
+    @media (max-width: 1300px) { .scroll-area { padding: 16px; } }
     .scroll-area:hover { scrollbar-color: #D4D4D6 transparent; }
     .scroll-area::-webkit-scrollbar-thumb { background: transparent; transition: background 200ms ease; }
     .scroll-area:hover::-webkit-scrollbar-thumb { background: #D4D4D6; }
@@ -661,7 +662,7 @@
      ============================================================ -->
 <main id="main">
   <!-- White content area -->
-  <div style="background:white; border-radius:16px; box-shadow: 0px 1px 3px rgba(0,0,0,0.02), 0px 0px 6px rgba(0,0,0,0.04); overflow:hidden; height: calc(100vh - 32px); display:flex; flex-direction:column; width:100%; max-width:1200px;">
+  <div style="background:white; border-radius:16px; box-shadow: 0px 1px 3px rgba(0,0,0,0.02), 0px 0px 6px rgba(0,0,0,0.04); overflow:hidden; height: calc(100vh - 32px); display:flex; flex-direction:column; width:100%; max-width:1300px;">
 
     <!-- ---- TOP HEADER ---- -->
     <div style="background:white; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; box-shadow: 0px 2.4px 6px rgba(0,0,0,0.048); flex-shrink:0; position:relative; z-index:10;">
@@ -669,11 +670,11 @@
     </div>
 
     <!-- ---- SCROLLABLE CONTENT ---- -->
-    <div class="scroll-area" style="padding:16px; display:flex; flex-direction:column; gap:20px; max-width:1300px; margin:0 auto; width:100%; flex:1; min-height:0; overflow-y:auto;">
+    <div class="scroll-area" style="display:flex; flex-direction:column; gap:20px; max-width:1300px; margin:0 auto; width:100%; flex:1; min-height:0; overflow-y:auto;">
 
       <!-- Welcome + Action Buttons -->
       <div style="display:flex; flex-direction:column; gap:12px;">
-        <h2 style="font-size:24px; font-weight:600; color:#262626; letter-spacing:-0.48px; line-height:36px; margin:0;">Welcome, Rohan!</h2>
+        <h2 style="font-size:28px; font-weight:400; color:#262626; letter-spacing:-0.56px; line-height:36px; margin:0;">Welcome, Rohan!</h2>
         <div style="display:flex; gap:12px; flex-wrap:wrap;">
           <button class="action-btn">Create Order for Delivery</button>
           <button class="action-btn">Create Order for Cash Sales</button>
@@ -690,7 +691,7 @@
         <h3 style="font-size:24px; font-weight:500; color:#262626; letter-spacing:-0.48px; line-height:36px; margin:0;">Overview</h3>
         <div style="display:flex; align-items:center; gap:16px;">
           <span id="last-updated" style="font-size:16px; font-weight:500; color:#8C8D8F; letter-spacing:-0.32px; line-height:24px;">Last Updated at 11:17 AM</span>
-          <button id="refresh-data" aria-label="Refresh data">
+          <button id="refresh-data" aria-label="Refresh data" style="margin-left:-4px;">
             <svg width="20" height="20" viewBox="0 0 18.0013 21.0535" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M11.501 6.19626C12.7228 6.04915 13.9218 5.75125 15.071 5.31126L15.252 5.24126C15.3522 5.20126 15.436 5.1287 15.4899 5.03527C15.5437 4.94184 15.5646 4.83298 15.549 4.72626C15.3621 3.44421 15.0098 2.19179 14.501 1.00026M15.071 5.31126C13.9179 3.96749 12.3515 3.04528 10.6173 2.68731C8.88311 2.32934 7.07917 2.55684 5.48817 3.33415C3.89717 4.11147 2.60902 5.39467 1.82559 6.98267C1.04216 8.57067 0.807728 10.3737 1.15903 12.1093M3.50103 20.0533C2.99148 18.8615 2.63854 17.6087 2.45103 16.3263C2.43547 16.2195 2.45632 16.1107 2.5102 16.0172C2.56408 15.9238 2.64786 15.8512 2.74803 15.8113L2.93003 15.7413C4.06204 17.06 5.5937 17.9742 7.29149 18.3456C8.98929 18.717 10.7619 18.5255 12.3411 17.7999C13.9204 17.0744 15.2204 15.8543 16.0445 14.3242C16.8687 12.794 17.1722 11.0372 16.909 9.31926M6.50103 14.8563C5.27927 15.0034 4.08026 15.3003 2.93103 15.7403" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -816,8 +817,8 @@
               </div>
               <ul class="dropdown-menu" id="category-dropdown-menu">
                 <li data-value="delivery_cash">Delivery Sales vs Cash Sales</li>
-                <li data-value="retail_wholesale">Retail vs Wholesale</li>
-                <li data-value="product_categories">Product Categories</li>
+                <li data-value="retail_wholesale">Retailer vs Wholesaler</li>
+                <li data-value="product_categories">Product Category</li>
               </ul>
             </div>
             <!-- Donut chart -->
@@ -920,7 +921,7 @@
               </div>
               <ul class="dropdown-menu" id="vendor-sort-menu">
                 <li data-value="amount_pending">By Amount Pending</li>
-                <li data-value="amount_paid">By Amount Paid</li>
+                <li data-value="amount_paid">By Sales Amount</li>
               </ul>
             </div>
           </div>
@@ -957,8 +958,8 @@ const DATA = {
     },
     donut: {
       delivery_cash: { data: [82, 18], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 18,954.32', 'SR 4,124.68'], colors: ['#623CEA', '#D7CCFF'] },
-      product_categories: { data: [40, 30, 20, 10], labels: ['Beverages', 'Snacks', 'Dairy', 'Others'], values: ['SR 9,440.00', 'SR 7,080.00', 'SR 4,720.00', 'SR 2,360.00'], colors: ['#623CEA', '#D7CCFF', '#FFDDB0', '#87D08A'] },
-      retail_wholesale: { data: [65, 35], labels: ['Retail', 'Wholesale'], values: ['SR 15,330.82', 'SR 8,255.50'], colors: ['#623CEA', '#D7CCFF'] },
+      product_categories: { data: [44, 23, 12, 22], labels: ['Alcoholic', 'Juices', 'Packet Chips', 'Others'], values: ['SR 128,954.32', 'SR 68,454.00', 'SR 34,124.68', 'SR 64,124.28'], colors: ['#D7CCFF', '#C1B2FF', '#8F76F5', '#623CEA'] },
+      retail_wholesale: { data: [27, 73], labels: ['Retailer', 'Wholesaler'], values: ['SR 88,954.32', 'SR 242,124.68'], colors: ['#623CEA', '#D7CCFF'] },
     },
     payments: {
       transactions: '14 Transactions',
@@ -1017,7 +1018,8 @@ const DATA = {
     },
     donut: {
       delivery_cash: { data: [78, 22], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 243,895.79', 'SR 68,944.96'], colors: ['#623CEA', '#D7CCFF'] },
-      by_product:    { data: [42, 35, 23], labels: ['Beverages', 'Snacks', 'Other'], values: ['SR 131,392.72', 'SR 109,494.26', 'SR 71,953.77'], colors: ['#623CEA', '#D7CCFF', '#FFDDB0'] },
+      product_categories: { data: [43, 22, 12, 23], labels: ['Alcoholic', 'Juices', 'Packet Chips', 'Others'], values: ['SR 131,392.72', 'SR 70,054.86', 'SR 35,124.68', 'SR 76,268.68'], colors: ['#D7CCFF', '#C1B2FF', '#8F76F5', '#623CEA'] },
+      retail_wholesale: { data: [27, 73], labels: ['Retailer', 'Wholesaler'], values: ['SR 295,680.46', 'SR 799,160.28'], colors: ['#623CEA', '#D7CCFF'] },
       by_region:     { data: [65, 35], labels: ['Victoria', 'Other Islands'], values: ['SR 203,346.49', 'SR 109,494.26'], colors: ['#623CEA', '#D7CCFF'] },
     },
     payments: {
@@ -1077,7 +1079,8 @@ const DATA = {
     },
     donut: {
       delivery_cash: { data: [80, 20], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 67,372.48', 'SR 16,843.12'], colors: ['#623CEA', '#D7CCFF'] },
-      by_product:    { data: [44, 33, 23], labels: ['Beverages', 'Snacks', 'Other'], values: ['SR 37,054.86', 'SR 27,790.75', 'SR 19,369.99'], colors: ['#623CEA', '#D7CCFF', '#FFDDB0'] },
+      product_categories: { data: [44, 23, 11, 22], labels: ['Alcoholic', 'Juices', 'Packet Chips', 'Others'], values: ['SR 37,054.86', 'SR 19,369.99', 'SR 9,184.68', 'SR 18,606.09'], colors: ['#D7CCFF', '#C1B2FF', '#8F76F5', '#623CEA'] },
+      retail_wholesale: { data: [27, 73], labels: ['Retailer', 'Wholesaler'], values: ['SR 72,557.72', 'SR 196,057.88'], colors: ['#623CEA', '#D7CCFF'] },
       by_region:     { data: [62, 38], labels: ['Victoria', 'Other Islands'], values: ['SR 52,213.67', 'SR 32,001.93'], colors: ['#623CEA', '#D7CCFF'] },
     },
     payments: {
@@ -1137,7 +1140,8 @@ const DATA = {
     },
     donut: {
       delivery_cash: { data: [79, 21], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 156,933.70', 'SR 41,716.55'], colors: ['#623CEA', '#D7CCFF'] },
-      by_product:    { data: [43, 34, 23], labels: ['Beverages', 'Snacks', 'Other'], values: ['SR 85,419.61', 'SR 67,541.09', 'SR 45,689.55'], colors: ['#623CEA', '#D7CCFF', '#FFDDB0'] },
+      product_categories: { data: [43, 23, 11, 23], labels: ['Alcoholic', 'Juices', 'Packet Chips', 'Others'], values: ['SR 85,419.61', 'SR 45,689.55', 'SR 21,844.28', 'SR 45,696.56'], colors: ['#D7CCFF', '#C1B2FF', '#8F76F5', '#623CEA'] },
+      retail_wholesale: { data: [27, 73], labels: ['Retailer', 'Wholesaler'], values: ['SR 185,040.07', 'SR 500,108.28'], colors: ['#623CEA', '#D7CCFF'] },
       by_region:     { data: [63, 37], labels: ['Victoria', 'Other Islands'], values: ['SR 125,149.66', 'SR 73,500.59'], colors: ['#623CEA', '#D7CCFF'] },
     },
     payments: {
@@ -1400,6 +1404,9 @@ function buildCashflowChart(period) {
 function buildDonutChart(period, category) {
   const d = DATA[period].donut[category];
   const canvas = document.getElementById('donutChart');
+  const size = category === 'product_categories' ? 220 : 252;
+  canvas.width = size; canvas.height = size;
+  canvas.style.width = size + 'px'; canvas.style.height = size + 'px';
   const ctx = canvas.getContext('2d');
 
   if (donutChartInstance) {
@@ -1443,14 +1450,15 @@ function buildDonutChart(period, category) {
   const legend = document.getElementById('donut-legend');
   legend.innerHTML = '';
   d.labels.forEach((label, i) => {
+    const [whole, cents] = d.values[i].split('.');
     const row = document.createElement('div');
     row.style.cssText = 'display:flex; align-items:center; justify-content:space-between; width:100%;';
     row.innerHTML = `
       <div style="display:flex; gap:8px; align-items:center;">
         <div style="width:10px; height:10px; border-radius:50%; background:${d.colors[i]}; flex-shrink:0;"></div>
-        <span style="font-size:16px; color:#262626; letter-spacing:-0.32px; line-height:24px;">${label}</span>
+        <span style="font-size:16px; font-weight:400; color:#262626; letter-spacing:-0.32px; line-height:24px;">${label}</span>
       </div>
-      <span style="font-size:16px; font-weight:500; color:#262626; letter-spacing:-0.32px;">${d.values[i]}</span>
+      <span style="font-size:16px; font-weight:500; color:#262626; letter-spacing:-0.32px; line-height:24px;">${whole}<span style="font-size:14px; font-weight:500; letter-spacing:-0.28px;">.${cents}</span></span>
     `;
     legend.appendChild(row);
   });
@@ -1493,7 +1501,7 @@ function buildVendorList() {
   if (currentVendorSide === 'least') {
     vendors = vendors.concat(EXTRA_LEAST).map(v => {
       const mag = parseFloat(v.amount.replace(/[^0-9.]/g, '')) || 0;
-      return { ...v, _mag: mag, amount: '− SR ' + mag.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), color: '#262626' };
+      return { ...v, _mag: mag, amount: 'SR ' + mag.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), color: '#262626' };
     }).sort((a, b) => a._mag - b._mag).slice(0, 5);
   }
   const list = document.getElementById('vendor-list');
@@ -1513,7 +1521,7 @@ function buildVendorList() {
           <div style="font-size:14px; color:#8C8D8F; letter-spacing:-0.28px; line-height:20px;">${v.type}</div>
         </div>
       </div>
-      <span style="font-size:18px; font-weight:500; color:${v.color}; letter-spacing:-0.36px; white-space:nowrap; flex-shrink:0; margin-left:12px;">${v.amount}</span>
+      <span style="font-size:18px; font-weight:500; color:#262626; letter-spacing:-0.36px; white-space:nowrap; flex-shrink:0; margin-left:12px;">${(() => { const a = v.amount.replace(/^[+−\-]\s*/, ''); const [w,c] = a.split('.'); return c ? w + '.<span style="font-size:14px;font-weight:500;">' + c + '</span>' : a; })()}</span>
     `;
     list.appendChild(row);
   });
@@ -1754,7 +1762,7 @@ document.getElementById('refresh-data').addEventListener('click', () => {
     const now = new Date();
     const t = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
     document.getElementById('last-updated').textContent = 'Last Updated at ' + t;
-  }, 600);
+  }, 400);
 });
 </script>
 </body>
