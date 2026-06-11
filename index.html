@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fusepay Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" /></noscript>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['DM Sans', 'sans-serif'],
+          },
+          colors: {
+            primary: '#623CEA',
+            'primary-light': '#D7CCFF',
+            'primary-hover': '#F3F0FF',
+            'primary-disabled': '#D7CCFF',
+            'text-primary': '#262626',
+            'text-secondary': '#8C8D8F',
+            'border': '#E3E3E5',
+            'border-input': '#D4D4D6',
+            'bg-page': '#F9FAFB',
+            'bg-card': '#FFFFFF',
+            'bg-tab': '#F4F4F5',
+            'bg-tab-inner': '#EDEDED',
+            'success': '#0E8F53',
+            'success-light': '#87D08A',
+            'warning': '#E07509',
+            'error': '#CC2828',
+            'error-light': '#F59D9D',
+            'gold': '#B88D00',
+            'silver': '#98A2B3',
+            'bronze': '#DD6A4F',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #F9FAFB;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Sidebar */
+    #sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 266px;
+      background: #F9FAFB;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    /* Main content */
+    #main {
+      margin-left: 266px;
+      min-height: 100vh;
+      padding: 16px 16px 16px 0;
+    }
+
+    /* Stat cards container */
+    .stat-cards-wrapper {
+      background: #EDEDED;
+      border-radius: 16px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .stat-cards-row {
+      display: flex;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100px;
+      gap: 8px;
+    }
+
+    .stat-card + .stat-card {
+      border-left: 1px solid #E3E3E5;
+    }
+
+    .stat-card-label {
+      color: #8C8D8F;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+      letter-spacing: -0.32px;
+    }
+
+    .stat-card-value {
+      color: #262626;
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 36px;
+      letter-spacing: -0.48px;
+    }
+
+    .stat-card-value span.cents {
+      font-size: 20px;
+      line-height: 28px;
+      letter-spacing: -0.4px;
+    }
+
+    /* Tabs */
+    .tab-group {
+      background: #F4F4F5;
+      border-radius: 8px;
+      padding: 4px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #8C8D8F;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      white-space: nowrap;
+      letter-spacing: -0.28px;
+      transition: all 0.15s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .tab-btn.active {
+      background: white;
+      color: #262626;
+      box-shadow: 0px 1px 3px 0px rgba(16,24,40,0.1), 0px 1px 2px 0px rgba(16,24,40,0.06);
+    }
+
+    /* Nav items */
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .nav-item:hover {
+      background: #F4F4F5;
+    }
+
+    .nav-item.active {
+      background: white;
+      box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .nav-item-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: #262626;
+      letter-spacing: -0.28px;
+    }
+
+    .nav-item.active .nav-label {
+      color: #623CEA;
+      font-weight: 500;
+    }
+
+    .nav-icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Quick action buttons */
+    .action-btn {
+      background: white;
+      border: 1px solid #623CEA;
+      border-radius: 8px;
+      padding: 10px 16px;
+      color: #623CEA;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+
+    .action-btn:hover {
+      background: #F3F0FF;
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: white;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: #262626;
+      letter-spacing: -0.36px;
+      line-height: 28px;
+    }
+
+    .card-divider {
+      height: 1px;
+      background: #E3E3E5;
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    /* Product item ring colors */
+    .ring-gold { border-color: #B88D00 !important; }
+    .ring-silver { border-color: #98A2B3 !important; }
+    .ring-bronze { border-color: #DD6A4F !important; }
+
+    /* Donut chart legend dot */
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Vendor avatar badge */
+    .vendor-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Payments progress bar segments */
+    .prog-segment {
+      height: 40px;
+      transition: width 0.5s ease;
+    }
+
+    /* User card at bottom of sidebar */
+    .user-card {
+      background: white;
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+    }
+
+    /* Cashflow legend box */
+    .cashflow-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+    }
+
+    .cashflow-legend-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+    }
+
+    .separator-v {
+      width: 1px;
+      background: #D9D9D9;
+      align-self: stretch;
+    }
+
+    /* Dropdown */
+    .dropdown-input {
+      background: white;
+      border: 1px solid #D4D4D6;
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 16px;
+      color: #262626;
+      letter-spacing: -0.32px;
+      position: relative;
+    }
+
+    .dropdown-input select {
+      appearance: none;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 16px;
+      font-family: 'DM Sans', sans-serif;
+      color: #262626;
+      width: 100%;
+      cursor: pointer;
+      letter-spacing: -0.32px;
+    }
+
+    /* Chart animation */
+    .bar-fill {
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Vendor amount colors */
+    .amount-positive { color: #0E8F53; }
+    .amount-neutral  { color: #262626; }
+    .amount-negative { color: #262626; }
+
+    /* Info icon */
+    .info-icon {
+      width: 16px;
+      height: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 1.5px solid #8C8D8F;
+      color: #8C8D8F;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: help;
+      flex-shrink: 0;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #D4D4D6; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     SIDEBAR
+     ============================================================ -->
+<aside id="sidebar">
+  <!-- Logo -->
+  <div style="padding: 16px 0 12px; height: 64px; display: flex; align-items: center;">
+    <img src="assets/imgLogo.svg" alt="Fusepay" style="height:32px; width:auto;" />
+  </div>
+
+  <!-- Separator -->
+  <div style="height:1px; background:#EDEDED; margin-bottom:1px;"></div>
+  <div style="height:1px; background:white; margin-bottom:8px;"></div>
+
+  <!-- Nav items + lower group -->
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; overflow:hidden;">
+    <!-- Top nav -->
+    <nav id="top-nav" style="display:flex; flex-direction:column; gap:4px;">
+      <div class="nav-item active" data-nav="Dashboard">
+        <div class="nav-item-content">
+          <img src="assets/imgVector2.svg" class="nav-icon" alt="" />
+          <span class="nav-label">Dashboard</span>
+        </div>
+      </div>
+      <div class="nav-item" data-nav="Warehouse">
+        <div class="nav-item-content">
+          <img src="assets/imgVector3.svg" class="nav-icon" alt="" />
+          <span class="nav-label">Warehouse</span>
+        </div>
+      </div>
+      <div class="nav-item" data-nav="Vendors">
+        <div class="nav-item-content">
+          <img src="assets/imgVector4.svg" class="nav-icon" alt="" />
+          <span class="nav-label">Vendors</span>
+        </div>
+      </div>
+      <div class="nav-item" data-nav="Orders">
+        <div class="nav-item-content">
+          <img src="assets/imgVector5.svg" class="nav-icon" alt="" />
+          <span class="nav-label">Orders</span>
+        </div>
+      </div>
+      <div class="nav-item" data-nav="Delivery">
+        <div class="nav-item-content">
+          <img src="assets/imgVector6.svg" class="nav-icon" alt="" />
+          <span class="nav-label">Delivery</span>
+        </div>
+      </div>
+      <div class="nav-item" data-nav="Payments">
+        <div class="nav-item-content">
+          <img src="assets/imgVector7.svg" class="nav-icon" alt="" />
+          <span class="nav-label">Payments</span>
+        </div>
+      </div>
+      <div class="nav-item" data-nav="Reports">
+        <div class="nav-item-content">
+          <img src="assets/imgVector8.svg" class="nav-icon" alt="" />
+          <span class="nav-label">Reports</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Bottom nav -->
+    <div style="display:flex; flex-direction:column; gap:4px;">
+      <div class="nav-item" data-nav="Help">
+        <div class="nav-item-content">
+          <img src="assets/imgVector9.svg" class="nav-icon" alt="" />
+          <span class="nav-label">Help</span>
+        </div>
+      </div>
+      <div class="nav-item" data-nav="Settings">
+        <div class="nav-item-content">
+          <img src="assets/imgVector10.svg" class="nav-icon" alt="" />
+          <span class="nav-label">Settings</span>
+        </div>
+      </div>
+      <div class="nav-item" data-nav="LogOut">
+        <div class="nav-item-content">
+          <img src="assets/imgVector11.svg" class="nav-icon" alt="" />
+          <span class="nav-label">Log Out</span>
+        </div>
+      </div>
+
+      <!-- User card -->
+      <div class="user-card" style="margin-top:8px;">
+        <!-- Avatar circle -->
+        <div style="width:36px; height:36px; border-radius:50%; background:#623CEA; display:flex; align-items:center; justify-content:center; color:white; font-size:14px; font-weight:600; flex-shrink:0;">R</div>
+        <div style="min-width:0; flex:1;">
+          <div style="font-size:14px; font-weight:500; color:#262626; letter-spacing:-0.28px; line-height:20px;">Hi, Rohan!</div>
+          <div style="font-size:12px; font-weight:400; color:#8C8D8F; letter-spacing:-0.24px; line-height:18px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Galaxy Electronics Pvt. L…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ============================================================
+     MAIN CONTENT
+     ============================================================ -->
+<main id="main">
+  <!-- White content area -->
+  <div style="background:white; border-radius:16px; box-shadow: 0px 1px 3px rgba(0,0,0,0.02), 0px 0px 6px rgba(0,0,0,0.04); overflow:hidden; min-height: calc(100vh - 32px);">
+
+    <!-- ---- TOP HEADER ---- -->
+    <div style="background:white; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; box-shadow: 0px 1px 1.5px rgba(0,0,0,0.06); flex-shrink:0;">
+      <span style="font-size:24px; font-weight:500; color:#262626; letter-spacing:-0.48px; line-height:36px;">Dashboard</span>
+      <span style="font-size:14px; font-weight:500; color:#8C8D8F; letter-spacing:-0.28px; line-height:20px;">Last Updated at 11:17 AM</span>
+    </div>
+
+    <!-- ---- SCROLLABLE CONTENT ---- -->
+    <div style="padding:16px; display:flex; flex-direction:column; gap:20px;">
+
+      <!-- Welcome + Action Buttons -->
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <h2 style="font-size:24px; font-weight:600; color:#262626; letter-spacing:-0.48px; line-height:36px; margin:0;">Welcome, Rohan!</h2>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <button class="action-btn">Create Order for Delivery</button>
+          <button class="action-btn">Create Order for Cash Sales</button>
+          <button class="action-btn">Create Credit Note</button>
+          <button class="action-btn">Record a Payment</button>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div style="height:1px; background:#E3E3E5;"></div>
+
+      <!-- Overview heading + Time tabs -->
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <h3 style="font-size:24px; font-weight:600; color:#262626; letter-spacing:-0.48px; line-height:36px; margin:0;">Overview</h3>
+        <div class="tab-group" id="time-tabs" style="width:432px;">
+          <button class="tab-btn" data-period="overall">Overall</button>
+          <button class="tab-btn active" data-period="today">Today</button>
+          <button class="tab-btn" data-period="week">This Week</button>
+          <button class="tab-btn" data-period="month">This Month</button>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stat-cards-wrapper" id="stat-cards">
+        <!-- Row 1: 4 cards -->
+        <div class="stat-cards-row">
+          <div class="stat-card">
+            <span class="stat-card-label">Purchase</span>
+            <span class="stat-card-value" id="stat-purchase">SR 0<span class="cents">.00</span></span>
+          </div>
+          <div class="stat-card">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="stat-card-label">Total Sales</span>
+              <span class="info-icon" title="Total sales amount for the selected period">i</span>
+            </div>
+            <span class="stat-card-value" id="stat-sales">SR 23,586<span class="cents">.49</span></span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card-label">Total Due</span>
+            <span class="stat-card-value" id="stat-due">SR 245,698<span class="cents">.65</span></span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card-label">Total Received</span>
+            <span class="stat-card-value" id="stat-received">SR 2,469<span class="cents">.49</span></span>
+          </div>
+        </div>
+        <!-- Row 2: Full-width stocks card -->
+        <div class="stat-cards-row">
+          <div class="stat-card">
+            <span class="stat-card-label">Stocks Worth</span>
+            <span class="stat-card-value" id="stat-stocks">SR 1,254,236<span class="cents">.00</span></span>
+          </div>
+        </div>
+
+        <!-- Cashflow Card -->
+        <div class="card" style="border-radius:12px;">
+          <!-- Cashflow header with legend -->
+          <div class="card-header" style="flex-wrap:wrap; gap:8px;">
+            <span class="card-title">Cashflow</span>
+            <div style="background:white; border:1px solid #EDEDED; border-radius:4px; display:flex; align-items:stretch; overflow:hidden;">
+              <div class="cashflow-legend-item">
+                <div class="cashflow-legend-swatch" style="background:repeating-linear-gradient(-45deg, #623CEA 0px, #623CEA 2px, #D7CCFF 2px, #D7CCFF 6px); border-radius:2px;"></div>
+                <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Purchase</span>
+              </div>
+              <div class="separator-v"></div>
+              <div class="cashflow-legend-item">
+                <div class="cashflow-legend-swatch" style="background:repeating-linear-gradient(-45deg, #E07509 0px, #E07509 2px, #FFDDB0 2px, #FFDDB0 6px); border-radius:2px;"></div>
+                <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Total Sales</span>
+              </div>
+              <div class="separator-v"></div>
+              <div class="cashflow-legend-item">
+                <div class="cashflow-legend-swatch" style="background:repeating-linear-gradient(-45deg, #0E8F53 0px, #0E8F53 2px, #87D08A 2px, #87D08A 6px); border-radius:2px;"></div>
+                <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Received Payments</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-divider"></div>
+          <!-- Chart area -->
+          <div id="cashflow-wrapper" style="padding:24px 22px 32px; position:relative;">
+            <canvas id="cashflowChart" height="240"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row: Top 4 Items + Sales by Category -->
+      <div style="display:flex; gap:8px; align-items:stretch;">
+
+        <!-- Top 4 Items -->
+        <div class="card" style="width:516px; flex-shrink:0; display:flex; flex-direction:column;">
+          <div class="card-header">
+            <span class="card-title">Top 4 Items</span>
+          </div>
+          <div class="card-divider"></div>
+          <div class="card-body" style="flex:1; display:flex; flex-direction:column; gap:32px;">
+            <!-- Toggle tabs -->
+            <div class="tab-group" id="items-tabs">
+              <button class="tab-btn active" style="flex:1;" data-items="most">Most Ordered Items</button>
+              <button class="tab-btn" style="flex:1;" data-items="least">Least Ordered Items</button>
+            </div>
+            <!-- 2x2 Grid -->
+            <div id="items-grid" style="display:flex; flex-wrap:wrap; gap:40px 60px; justify-content:center; align-items:flex-start;"></div>
+          </div>
+        </div>
+
+        <!-- Sales by Category -->
+        <div class="card" style="flex:1; display:flex; flex-direction:column;">
+          <div class="card-header">
+            <span class="card-title">Sales by Category</span>
+          </div>
+          <div class="card-divider"></div>
+          <div class="card-body" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; padding-bottom:24px;">
+            <!-- Dropdown -->
+            <div style="position:relative;">
+              <div class="dropdown-input">
+                <select id="category-dropdown" style="padding-right:24px;">
+                  <option value="delivery_cash">Delivery Sales vs Cash Sales</option>
+                  <option value="by_product">By Product Category</option>
+                  <option value="by_region">By Region</option>
+                </select>
+                <div style="position:absolute; right:12px; top:50%; transform:translateY(-50%); pointer-events:none;">
+                  <img src="assets/imgVector1.svg" style="width:20px; height:20px;" alt="" />
+                </div>
+              </div>
+            </div>
+            <!-- Donut chart -->
+            <div style="display:flex; justify-content:center; align-items:center; margin:8px 0;">
+              <canvas id="donutChart" width="252" height="252" style="width:252px; height:252px;"></canvas>
+            </div>
+            <!-- Legend -->
+            <div id="donut-legend" style="display:flex; flex-direction:column; gap:12px; width:300px; align-self:center;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row: Payments + Vendors Performance -->
+      <div style="display:flex; gap:8px; align-items:stretch;">
+
+        <!-- Payments -->
+        <div class="card" style="width:516px; flex-shrink:0;">
+          <div class="card-header">
+            <span class="card-title">Payments</span>
+          </div>
+          <div class="card-divider"></div>
+          <div class="card-body" style="display:flex; flex-direction:column; gap:20px;">
+            <!-- Total Payments Received -->
+            <div style="display:flex; flex-direction:column; gap:20px;">
+              <div style="display:flex; gap:8px; align-items:center;">
+                <img src="assets/imgFrame.svg" style="width:40px; height:40px; flex-shrink:0;" alt="" />
+                <div style="flex:1; display:flex; flex-direction:column; gap:4px;">
+                  <span style="font-size:14px; font-weight:500; color:#8C8D8F; letter-spacing:-0.28px;">Total Payments Received</span>
+                  <span id="pay-transactions" style="font-size:14px; font-weight:500; color:#262626; letter-spacing:-0.28px;">14 Transactions</span>
+                </div>
+                <span style="font-size:18px; font-weight:500; color:#262626; letter-spacing:-0.36px; white-space:nowrap;" id="pay-received-total">SR 2,469<span style="font-size:14px;">.49</span></span>
+              </div>
+              <!-- Progress bar 1 -->
+              <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; gap:4px;">
+                  <div id="prog-collection" class="prog-segment" style="border-radius:8px 2px 2px 8px; background:#0E8F53; width:62%;"></div>
+                  <div id="prog-cash" class="prog-segment" style="border-radius:2px 8px 8px 2px; background:#A0DDA3; flex:1;"></div>
+                </div>
+                <div style="display:flex; gap:19px; align-items:center;">
+                  <div style="display:flex; gap:4px; align-items:center;">
+                    <div class="legend-dot" style="background:#0E8F53;"></div>
+                    <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Payment from collection</span>
+                  </div>
+                  <div style="display:flex; gap:4px; align-items:center;">
+                    <div class="legend-dot" style="background:#A0DDA3;"></div>
+                    <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Payment from Cash Sales</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-divider"></div>
+
+            <!-- Total Due to Receive -->
+            <div style="display:flex; gap:8px; align-items:center;">
+              <img src="assets/imgFrame1.svg" style="width:40px; height:40px; flex-shrink:0;" alt="" />
+              <div style="flex:1; display:flex; flex-direction:column; gap:4px;">
+                <span style="font-size:14px; font-weight:500; color:#8C8D8F; letter-spacing:-0.28px;">Total Due to Receive</span>
+                <span id="pay-invoices" style="font-size:14px; font-weight:500; color:#262626; letter-spacing:-0.28px;">5 Invoices</span>
+              </div>
+              <span style="font-size:18px; font-weight:500; color:#262626; letter-spacing:-0.36px; white-space:nowrap;" id="pay-due-total">SR 22,000<span style="font-size:14px;">.42</span></span>
+            </div>
+            <!-- Progress bar 2 -->
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div style="display:flex; gap:4px;">
+                <div id="prog-due" class="prog-segment" style="border-radius:8px 2px 2px 8px; background:#D4D4D6; width:62%;"></div>
+                <div id="prog-overdue" class="prog-segment" style="border-radius:2px 8px 8px 2px; background:#F59D9D; flex:1;"></div>
+              </div>
+              <div style="display:flex; gap:19px; align-items:center;">
+                <div style="display:flex; gap:4px; align-items:center;">
+                  <div class="legend-dot" style="background:#D4D4D6;"></div>
+                  <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Due</span>
+                </div>
+                <div style="display:flex; gap:4px; align-items:center;">
+                  <div class="legend-dot" style="background:#F59D9D;"></div>
+                  <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Overdue</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vendors Performance -->
+        <div class="card" style="flex:1; display:flex; flex-direction:column;">
+          <div class="card-header">
+            <span class="card-title">Vendors Performance</span>
+          </div>
+          <div class="card-divider"></div>
+          <!-- Vendors controls -->
+          <div style="padding:16px; display:flex; align-items:center; justify-content:space-between;">
+            <div class="tab-group" id="vendor-tabs" style="width:auto;">
+              <button class="tab-btn active" data-vendor="top">Top</button>
+              <button class="tab-btn" data-vendor="least">Least</button>
+            </div>
+            <div style="width:210px; position:relative;">
+              <div class="dropdown-input">
+                <select id="vendor-sort" style="padding-right:24px;">
+                  <option value="amount_pending">By Amount Pending</option>
+                  <option value="amount_paid">By Amount Paid</option>
+                </select>
+                <div style="position:absolute; right:12px; top:50%; transform:translateY(-50%); pointer-events:none;">
+                  <img src="assets/imgVector1.svg" style="width:20px; height:20px;" alt="" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-divider"></div>
+          <!-- Vendor list -->
+          <div id="vendor-list" style="flex:1; padding:12px 16px; display:flex; flex-direction:column; justify-content:space-between; gap:0;"></div>
+        </div>
+      </div>
+
+    </div><!-- end scrollable content -->
+  </div><!-- end white area -->
+</main>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+// =========================================================
+// DATA MODEL
+// =========================================================
+const DATA = {
+  today: {
+    purchase: 'SR 0<span class="cents">.00</span>',
+    sales: 'SR 23,586<span class="cents">.49</span>',
+    due: 'SR 245,698<span class="cents">.65</span>',
+    received: 'SR 2,469<span class="cents">.49</span>',
+    stocks: 'SR 1,254,236<span class="cents">.00</span>',
+    cashflow: {
+      purchase: { value: 2550000.65, label: 'SR 2,550,000.65' },
+      sales:    { value: 1750000.23, label: 'SR 1,750,000.23' },
+      received: { value:  750000.23, label: 'SR 750,000.23'  },
+      max: 10
+    },
+    donut: {
+      delivery_cash: { data: [82, 18], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 18,954.32', 'SR 4,124.68'], colors: ['#623CEA', '#D7CCFF'] },
+      by_product:    { data: [45, 30, 25], labels: ['Beverages', 'Snacks', 'Other'], values: ['SR 10,600.00', 'SR 7,100.00', 'SR 5,886.49'], colors: ['#623CEA', '#D7CCFF', '#FFDDB0'] },
+      by_region:     { data: [60, 40], labels: ['Victoria', 'Other Islands'], values: ['SR 14,151.89', 'SR 9,434.60'], colors: ['#623CEA', '#D7CCFF'] },
+    },
+    payments: {
+      transactions: '14 Transactions',
+      receivedTotal: 'SR 2,469<span style="font-size:14px;">.49</span>',
+      collectionPct: 62,
+      invoices: '5 Invoices',
+      dueTotal: 'SR 22,000<span style="font-size:14px;">.42</span>',
+      duePct: 62,
+    },
+    vendors: {
+      top: {
+        amount_pending: [
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 2,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 0.00',      color: '#262626', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '− SR 1,500.00', color: '#262626', bg: '#EAEFFF', icon: 'blue' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 3,500.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 3,500.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+        ],
+        amount_paid: [
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 48,000.00',  color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 32,500.00',  color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 18,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 12,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 5,500.00',   color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+        ]
+      },
+      least: {
+        amount_pending: [
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 3,500.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 3,500.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '− SR 1,500.00', color: '#262626', bg: '#EAEFFF', icon: 'blue' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 0.00',      color: '#262626', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 2,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+        ],
+        amount_paid: [
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 5,500.00',   color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 12,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 18,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 32,500.00',  color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 48,000.00',  color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
+        ]
+      }
+    }
+  },
+  overall: {
+    purchase: 'SR 145,200<span class="cents">.00</span>',
+    sales: 'SR 312,840<span class="cents">.75</span>',
+    due: 'SR 892,450<span class="cents">.30</span>',
+    received: 'SR 287,654<span class="cents">.90</span>',
+    stocks: 'SR 1,254,236<span class="cents">.00</span>',
+    cashflow: {
+      purchase: { value: 8200000.00, label: 'SR 8,200,000.00' },
+      sales:    { value: 6540000.75, label: 'SR 6,540,000.75' },
+      received: { value: 4320000.90, label: 'SR 4,320,000.90' },
+      max: 10
+    },
+    donut: {
+      delivery_cash: { data: [78, 22], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 243,895.79', 'SR 68,944.96'], colors: ['#623CEA', '#D7CCFF'] },
+      by_product:    { data: [42, 35, 23], labels: ['Beverages', 'Snacks', 'Other'], values: ['SR 131,392.72', 'SR 109,494.26', 'SR 71,953.77'], colors: ['#623CEA', '#D7CCFF', '#FFDDB0'] },
+      by_region:     { data: [65, 35], labels: ['Victoria', 'Other Islands'], values: ['SR 203,346.49', 'SR 109,494.26'], colors: ['#623CEA', '#D7CCFF'] },
+    },
+    payments: {
+      transactions: '184 Transactions',
+      receivedTotal: 'SR 287,654<span style="font-size:14px;">.90</span>',
+      collectionPct: 70,
+      invoices: '47 Invoices',
+      dueTotal: 'SR 892,450<span style="font-size:14px;">.30</span>',
+      duePct: 55,
+    },
+    vendors: {
+      top: {
+        amount_pending: [
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 45,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '+ SR 28,500.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: '+ SR 12,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 8,400.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 14,200.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+        ],
+        amount_paid: [
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 285,000.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 198,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 112,500.00', color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 76,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 42,500.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+        ]
+      },
+      least: {
+        amount_pending: [
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 14,200.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 8,400.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: '+ SR 12,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 45,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '+ SR 28,500.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
+        ],
+        amount_paid: [
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 42,500.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 76,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 112,500.00', color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 198,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 285,000.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
+        ]
+      }
+    }
+  },
+  week: {
+    purchase: 'SR 18,400<span class="cents">.00</span>',
+    sales: 'SR 84,215<span class="cents">.60</span>',
+    due: 'SR 412,350<span class="cents">.80</span>',
+    received: 'SR 31,640<span class="cents">.15</span>',
+    stocks: 'SR 1,254,236<span class="cents">.00</span>',
+    cashflow: {
+      purchase: { value: 4100000.00, label: 'SR 4,100,000.00' },
+      sales:    { value: 2850000.60, label: 'SR 2,850,000.60' },
+      received: { value: 1560000.15, label: 'SR 1,560,000.15' },
+      max: 10
+    },
+    donut: {
+      delivery_cash: { data: [80, 20], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 67,372.48', 'SR 16,843.12'], colors: ['#623CEA', '#D7CCFF'] },
+      by_product:    { data: [44, 33, 23], labels: ['Beverages', 'Snacks', 'Other'], values: ['SR 37,054.86', 'SR 27,790.75', 'SR 19,369.99'], colors: ['#623CEA', '#D7CCFF', '#FFDDB0'] },
+      by_region:     { data: [62, 38], labels: ['Victoria', 'Other Islands'], values: ['SR 52,213.67', 'SR 32,001.93'], colors: ['#623CEA', '#D7CCFF'] },
+    },
+    payments: {
+      transactions: '56 Transactions',
+      receivedTotal: 'SR 31,640<span style="font-size:14px;">.15</span>',
+      collectionPct: 65,
+      invoices: '18 Invoices',
+      dueTotal: 'SR 412,350<span style="font-size:14px;">.80</span>',
+      duePct: 58,
+    },
+    vendors: {
+      top: {
+        amount_pending: [
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '+ SR 12,000.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 8,500.00',  color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: '+ SR 4,200.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 2,800.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 5,100.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+        ],
+        amount_paid: [
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 65,000.00',  color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 48,000.00',  color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 28,500.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 19,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 12,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+        ]
+      },
+      least: {
+        amount_pending: [
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 5,100.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 2,800.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: '+ SR 4,200.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 8,500.00',  color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '+ SR 12,000.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
+        ],
+        amount_paid: [
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 12,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 19,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 28,500.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 48,000.00',  color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 65,000.00',  color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
+        ]
+      }
+    }
+  },
+  month: {
+    purchase: 'SR 58,200<span class="cents">.50</span>',
+    sales: 'SR 198,650<span class="cents">.25</span>',
+    due: 'SR 645,200<span class="cents">.90</span>',
+    received: 'SR 142,380<span class="cents">.75</span>',
+    stocks: 'SR 1,254,236<span class="cents">.00</span>',
+    cashflow: {
+      purchase: { value: 6800000.50, label: 'SR 6,800,000.50' },
+      sales:    { value: 4950000.25, label: 'SR 4,950,000.25' },
+      received: { value: 3120000.75, label: 'SR 3,120,000.75' },
+      max: 10
+    },
+    donut: {
+      delivery_cash: { data: [79, 21], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 156,933.70', 'SR 41,716.55'], colors: ['#623CEA', '#D7CCFF'] },
+      by_product:    { data: [43, 34, 23], labels: ['Beverages', 'Snacks', 'Other'], values: ['SR 85,419.61', 'SR 67,541.09', 'SR 45,689.55'], colors: ['#623CEA', '#D7CCFF', '#FFDDB0'] },
+      by_region:     { data: [63, 37], labels: ['Victoria', 'Other Islands'], values: ['SR 125,149.66', 'SR 73,500.59'], colors: ['#623CEA', '#D7CCFF'] },
+    },
+    payments: {
+      transactions: '128 Transactions',
+      receivedTotal: 'SR 142,380<span style="font-size:14px;">.75</span>',
+      collectionPct: 68,
+      invoices: '34 Invoices',
+      dueTotal: 'SR 645,200<span style="font-size:14px;">.90</span>',
+      duePct: 60,
+    },
+    vendors: {
+      top: {
+        amount_pending: [
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 28,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '+ SR 18,500.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: '+ SR 9,400.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 6,200.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 10,800.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+        ],
+        amount_paid: [
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 165,000.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 125,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 72,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 45,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 28,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+        ]
+      },
+      least: {
+        amount_pending: [
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 10,800.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 6,200.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: '+ SR 9,400.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 28,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '+ SR 18,500.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
+        ],
+        amount_paid: [
+          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 28,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 45,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
+          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 72,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
+          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 125,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
+          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 165,000.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
+        ]
+      }
+    }
+  }
+};
+
+const ITEMS = {
+  most: [
+    { img: 'assets/imgImage59.png', rank: '1st', rankColor: '#B88D00', name: 'Seybrew 50cl', profit: '25.12%' },
+    { img: 'assets/imgImage61.png', rank: '2nd', rankColor: '#98A2B3', name: 'PET Cocktail 90cl', profit: '12.89%' },
+    { img: 'assets/imgImage60.png', rank: '3rd', rankColor: '#DD6A4F', name: 'RedBull Energy Drink', profit: '10.58%' },
+    { img: 'assets/imgImage60.png', rank: '4th', rankColor: '#DD6A4F', name: 'RedBull Energy Drink', profit: '10.58%' },
+  ],
+  least: [
+    { img: 'assets/imgImage61.png', rank: '1st', rankColor: '#B88D00', name: 'Sparkling Water 1.5L', profit: '3.24%' },
+    { img: 'assets/imgImage59.png', rank: '2nd', rankColor: '#98A2B3', name: 'Iced Tea Peach 330ml', profit: '2.88%' },
+    { img: 'assets/imgImage60.png', rank: '3rd', rankColor: '#DD6A4F', name: 'Energy Shot 60ml', profit: '1.95%' },
+    { img: 'assets/imgImage59.png', rank: '4th', rankColor: '#DD6A4F', name: 'Aloe Vera Drink', profit: '1.42%' },
+  ]
+};
+
+const ICON_COLORS = {
+  yellow: { bg: '#FCF4CA', icon: '#D6C66B' },
+  pink:   { bg: '#FFEBF3', icon: '#E5B8CB' },
+  blue:   { bg: '#EAEFFF', icon: '#ABB5D6' },
+  brown:  { bg: '#F1E4DD', icon: '#D6BEAB' },
+};
+
+// Building SVG paths by icon color
+const BUILDING_ICONS = {
+  yellow: 'assets/imgBuilding4.svg',
+  brown:  'assets/imgBuilding3.svg',
+  blue:   'assets/imgBuilding2.svg',
+  pink:   'assets/imgBuilding1.svg',
+};
+
+// =========================================================
+// STATE
+// =========================================================
+let currentPeriod = 'today';
+let currentItems = 'most';
+let currentCategory = 'delivery_cash';
+let currentVendorSide = 'top';
+let currentVendorSort = 'amount_pending';
+
+// =========================================================
+// CHART INSTANCES
+// =========================================================
+let cashflowChart = null;
+let donutChartInstance = null;
+
+// =========================================================
+// PATTERN HELPERS for hatched bars
+// =========================================================
+function createHatchPattern(darkColor, lightColor) {
+  // Use an offscreen canvas drawn with proper stroke
+  const patCanvas = document.createElement('canvas');
+  patCanvas.width = 8;
+  patCanvas.height = 8;
+  const pctx = patCanvas.getContext('2d');
+  // Background fill
+  pctx.fillStyle = lightColor;
+  pctx.fillRect(0, 0, 8, 8);
+  // Diagonal lines at 45 degrees
+  pctx.strokeStyle = darkColor;
+  pctx.lineWidth = 2;
+  pctx.beginPath();
+  // Each line goes top-right to bottom-left (NE to SW diagonal)
+  const offsets = [-4, 4, 12];
+  offsets.forEach(o => {
+    pctx.moveTo(o, 0);
+    pctx.lineTo(o + 8, 8);
+  });
+  pctx.stroke();
+  const pattern = pctx.createPattern(patCanvas, 'repeat');
+  return pattern;
+}
+
+// =========================================================
+// CASHFLOW CHART
+// =========================================================
+function buildCashflowChart(period) {
+  const d = DATA[period].cashflow;
+  const maxVal = d.max * 1000000;
+
+  const purchasePct = d.purchase.value / maxVal;
+  const salesPct    = d.sales.value / maxVal;
+  const receivedPct = d.received.value / maxVal;
+
+  const canvas = document.getElementById('cashflowChart');
+  const ctx = canvas.getContext('2d');
+
+  const purplePattern = createHatchPattern('#623CEA', '#D7CCFF');
+  const orangePattern = createHatchPattern('#E07509', '#FFDDB0');
+  const greenPattern  = createHatchPattern('#0E8F53', '#87D08A');
+
+  if (cashflowChart) {
+    cashflowChart.destroy();
+    cashflowChart = null;
+  }
+
+  cashflowChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Purchase', 'Total Sales', 'Received'],
+      datasets: [{
+        data: [d.purchase.value, d.sales.value, d.received.value],
+        backgroundColor: [purplePattern, orangePattern, greenPattern],
+        borderColor: ['#623CEA', '#FFDDB0', '#87D08A'],
+        borderWidth: 1.5,
+        borderRadius: { topRight: 4, bottomRight: 4 },
+        borderSkipped: 'left',
+        barThickness: 56,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      aspectRatio: 4,
+      animation: { duration: 400, easing: 'easeInOutQuart' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              const labels = [d.purchase.label, d.sales.label, d.received.label];
+              return ' ' + labels[ctx.dataIndex];
+            }
+          }
+        },
+      },
+      scales: {
+        x: {
+          min: 0,
+          max: maxVal,
+          ticks: {
+            callback: (v) => (v / 1000000),
+            stepSize: 1000000,
+            color: '#262626',
+            font: { family: 'DM Sans', size: 14 },
+            maxTicksLimit: 11,
+          },
+          grid: {
+            color: (ctx) => ctx.tick.value === 0 ? '#A0A0A0' : '#E3E3E5',
+            lineWidth: 1,
+            drawBorder: false,
+          },
+          title: {
+            display: true,
+            text: 'Amount (in SCR millions)',
+            color: '#262626',
+            font: { family: 'DM Sans', size: 14, weight: '500' },
+            padding: { top: 8 },
+          },
+          border: { display: false },
+        },
+        y: {
+          ticks: { display: false },
+          grid: { display: false },
+          border: { display: false },
+        }
+      },
+      layout: { padding: { right: 130, top: 8, bottom: 8 } }
+    },
+    plugins: [{
+      id: 'valueLabels',
+      afterDatasetsDraw(chart) {
+        const { ctx, data } = chart;
+        const labels = [d.purchase.label, d.sales.label, d.received.label];
+        chart.getDatasetMeta(0).data.forEach((bar, i) => {
+          const x = bar.x + 8;
+          const y = bar.y;
+          ctx.save();
+          ctx.fillStyle = '#262626';
+          ctx.font = '500 13px DM Sans';
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(labels[i], x, y);
+          ctx.restore();
+        });
+      }
+    }]
+  });
+}
+
+// =========================================================
+// DONUT CHART
+// =========================================================
+function buildDonutChart(period, category) {
+  const d = DATA[period].donut[category];
+  const canvas = document.getElementById('donutChart');
+  const ctx = canvas.getContext('2d');
+
+  if (donutChartInstance) {
+    donutChartInstance.destroy();
+    donutChartInstance = null;
+  }
+
+  donutChartInstance = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: d.labels,
+      datasets: [{
+        data: d.data,
+        backgroundColor: d.colors,
+        borderWidth: 0,
+        hoverOffset: 4,
+      }]
+    },
+    options: {
+      responsive: false,
+      animation: { duration: 500 },
+      cutout: '70%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => ' ' + d.values[ctx.dataIndex],
+          }
+        }
+      }
+    }
+  });
+
+  // Update legend
+  const legend = document.getElementById('donut-legend');
+  legend.innerHTML = '';
+  d.labels.forEach((label, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex; align-items:center; justify-content:space-between; width:100%;';
+    row.innerHTML = `
+      <div style="display:flex; gap:8px; align-items:center;">
+        <div style="width:10px; height:10px; border-radius:50%; background:${d.colors[i]}; flex-shrink:0;"></div>
+        <span style="font-size:16px; color:#262626; letter-spacing:-0.32px; line-height:24px;">${label}</span>
+      </div>
+      <span style="font-size:16px; font-weight:500; color:#262626; letter-spacing:-0.32px;">${d.values[i]}</span>
+    `;
+    legend.appendChild(row);
+  });
+}
+
+// =========================================================
+// ITEMS GRID
+// =========================================================
+function buildItemsGrid(type) {
+  const items = ITEMS[type];
+  const grid = document.getElementById('items-grid');
+  grid.innerHTML = '';
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex; flex-direction:column; gap:18px; align-items:center; width:147px;';
+    div.innerHTML = `
+      <div style="display:flex; flex-direction:column; align-items:center;">
+        <div style="width:84px; height:84px; border-radius:300px; border:3px solid ${item.rankColor}; overflow:hidden; margin-bottom:-12px; position:relative; background:#262626;">
+          <img src="${item.img}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;" alt="${item.name}" />
+        </div>
+        <div style="background:${item.rankColor}; border:3px solid ${item.rankColor}; border-radius:8px; padding:3px 12px; position:relative; z-index:1;">
+          <span style="font-size:18px; font-weight:600; color:white; letter-spacing:-0.36px; line-height:24px;">${item.rank}</span>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:2px; width:100%;">
+        <span style="font-size:20px; font-weight:500; color:#262626; letter-spacing:-0.4px; line-height:28px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; text-align:center;">${item.name}</span>
+        <span style="font-size:18px; color:#0E8F53; letter-spacing:-0.36px; line-height:28px; text-align:center;">${item.profit} Profit</span>
+      </div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+// =========================================================
+// VENDOR LIST
+// =========================================================
+function buildVendorList() {
+  const vendors = DATA[currentPeriod].vendors[currentVendorSide][currentVendorSort];
+  const list = document.getElementById('vendor-list');
+  list.innerHTML = '';
+  vendors.forEach(v => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex; align-items:center; justify-content:space-between; padding:8px 0;';
+    const iconBg = ICON_COLORS[v.icon] ? ICON_COLORS[v.icon].bg : '#F4F4F5';
+    const iconSrc = BUILDING_ICONS[v.icon] || 'assets/imgBuilding.svg';
+    row.innerHTML = `
+      <div style="display:flex; gap:12px; align-items:center; flex:1; min-width:0;">
+        <div style="width:36px; height:36px; border-radius:70px; background:${iconBg}; display:flex; align-items:center; justify-content:center; flex-shrink:0; padding:8px;">
+          <img src="${iconSrc}" style="width:20px; height:20px;" alt="" />
+        </div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-size:14px; color:#262626; letter-spacing:-0.28px; line-height:20px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${v.name}</div>
+          <div style="font-size:14px; color:#8C8D8F; letter-spacing:-0.28px; line-height:20px;">${v.type}</div>
+        </div>
+      </div>
+      <span style="font-size:18px; font-weight:500; color:${v.color}; letter-spacing:-0.36px; white-space:nowrap; flex-shrink:0; margin-left:12px;">${v.amount}</span>
+    `;
+    list.appendChild(row);
+  });
+}
+
+// =========================================================
+// STATS UPDATE
+// =========================================================
+function updateStats(period) {
+  const d = DATA[period];
+  document.getElementById('stat-purchase').innerHTML = d.purchase;
+  document.getElementById('stat-sales').innerHTML = d.sales;
+  document.getElementById('stat-due').innerHTML = d.due;
+  document.getElementById('stat-received').innerHTML = d.received;
+  document.getElementById('stat-stocks').innerHTML = d.stocks;
+
+  // Payments
+  const p = d.payments;
+  document.getElementById('pay-transactions').textContent = p.transactions;
+  document.getElementById('pay-received-total').innerHTML = p.receivedTotal;
+  document.getElementById('pay-invoices').textContent = p.invoices;
+  document.getElementById('pay-due-total').innerHTML = p.dueTotal;
+
+  document.getElementById('prog-collection').style.width = p.collectionPct + '%';
+  document.getElementById('prog-cash').style.flex = '1';
+  document.getElementById('prog-due').style.width = p.duePct + '%';
+  document.getElementById('prog-overdue').style.flex = '1';
+}
+
+// =========================================================
+// FULL RENDER
+// =========================================================
+function render() {
+  updateStats(currentPeriod);
+  buildCashflowChart(currentPeriod);
+  buildDonutChart(currentPeriod, currentCategory);
+  buildItemsGrid(currentItems);
+  buildVendorList();
+}
+
+// =========================================================
+// EVENT LISTENERS
+// =========================================================
+
+// Time tabs
+document.getElementById('time-tabs').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-period]');
+  if (!btn) return;
+  currentPeriod = btn.dataset.period;
+  document.querySelectorAll('#time-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateStats(currentPeriod);
+  buildCashflowChart(currentPeriod);
+  buildDonutChart(currentPeriod, currentCategory);
+  buildVendorList();
+});
+
+// Items toggle
+document.getElementById('items-tabs').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-items]');
+  if (!btn) return;
+  currentItems = btn.dataset.items;
+  document.querySelectorAll('#items-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildItemsGrid(currentItems);
+});
+
+// Category dropdown
+document.getElementById('category-dropdown').addEventListener('change', (e) => {
+  currentCategory = e.target.value;
+  buildDonutChart(currentPeriod, currentCategory);
+});
+
+// Vendor tabs
+document.getElementById('vendor-tabs').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-vendor]');
+  if (!btn) return;
+  currentVendorSide = btn.dataset.vendor;
+  document.querySelectorAll('#vendor-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildVendorList();
+});
+
+// Vendor sort dropdown
+document.getElementById('vendor-sort').addEventListener('change', (e) => {
+  currentVendorSort = e.target.value;
+  buildVendorList();
+});
+
+// Sidebar nav
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+
+// =========================================================
+// INIT
+// =========================================================
+// Initialize after DOM + layout is settled. Don't wait on fonts.ready
+// so headless screenshots don't time out on Google Fonts loading.
+function initWhenReady() {
+  // Tailwind CDN compiles classes async; wait until containers have real width
+  const container = document.getElementById('cashflowChart').parentElement;
+  if (container.clientWidth === 0) {
+    setTimeout(initWhenReady, 50);
+    return;
+  }
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      render();
+      if (cashflowChart) cashflowChart.resize();
+      if (donutChartInstance) donutChartInstance.resize();
+    }, 20);
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initWhenReady);
+} else {
+  initWhenReady();
+}
+
+// Resize guard
+window.addEventListener('resize', () => {
+  if (cashflowChart) { cashflowChart.resize(); }
+  if (donutChartInstance) { donutChartInstance.resize(); }
+});
+</script>
+</body>
+</html>
