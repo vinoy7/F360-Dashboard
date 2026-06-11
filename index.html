@@ -71,10 +71,11 @@
     /* Main content */
     #main {
       margin-left: 266px;
-      min-height: 100vh;
+      height: 100vh;
       padding: 16px;
       display: flex;
       justify-content: center;
+      overflow: hidden;
     }
 
     /* Stat cards container */
@@ -90,7 +91,15 @@
     .stat-cards-row {
       display: flex;
       border-radius: 12px;
-      overflow: hidden;
+    }
+    .stat-cards-row .stat-card:first-child {
+      border-radius: 12px 0 0 12px;
+    }
+    .stat-cards-row .stat-card:last-child {
+      border-radius: 0 12px 12px 0;
+    }
+    .stat-cards-row .stat-card:only-child {
+      border-radius: 12px;
     }
 
     .stat-card {
@@ -137,11 +146,26 @@
       padding: 4px;
       display: flex;
       gap: 8px;
+      position: relative;
+    }
+
+    .tab-indicator {
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      left: 4px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0px 1px 3px 0px rgba(16,24,40,0.1), 0px 1px 2px 0px rgba(16,24,40,0.06);
+      transition: transform 250ms cubic-bezier(0.23, 1, 0.32, 1), width 250ms cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: 0;
     }
 
     .tab-btn {
       flex: 1;
       min-width: 100px;
+      position: relative;
+      z-index: 1;
       padding: 6px 12px;
       border-radius: 6px;
       font-size: 14px;
@@ -160,6 +184,11 @@
       background: white;
       color: #262626;
       box-shadow: 0px 1px 3px 0px rgba(16,24,40,0.1), 0px 1px 2px 0px rgba(16,24,40,0.06);
+    }
+
+    .tab-group:has(.tab-indicator) .tab-btn.active {
+      background: transparent;
+      box-shadow: none;
     }
 
     /* Nav items */
@@ -236,6 +265,7 @@
 
     .card-header {
       background: white;
+      border-radius: 12px 12px 0 0;
       padding: 16px;
       display: flex;
       align-items: center;
@@ -288,9 +318,62 @@
       height: 40px;
       transition: width 0.5s ease, filter 0.15s ease-out;
       cursor: pointer;
+      position: relative;
     }
     .prog-segment:hover {
       filter: brightness(0.88);
+    }
+
+    /* Payments hover tooltip — mirrors the Chart.js donut tooltip */
+    .pay-tooltip {
+      position: fixed;
+      z-index: 1000;
+      background: #fff;
+      border: 1px solid #E3E3E5;
+      border-radius: 12px;
+      padding: 10px 14px;
+      box-shadow: 0px 8px 20px rgba(16,24,40,0.14), 0px 2px 4px rgba(16,24,40,0.08);
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, -100%) scale(0.96);
+      transform-origin: bottom center;
+      transition: opacity 150ms ease-out, transform 150ms cubic-bezier(0.23, 1, 0.32, 1);
+      white-space: nowrap;
+    }
+    .pay-tooltip.show { opacity: 1; transform: translate(-50%, -100%) scale(1); }
+    .pay-tooltip .pt-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #262626;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+    .pay-tooltip .pt-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pay-tooltip .pt-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .pay-tooltip .pt-amount {
+      font-size: 15px;
+      font-weight: 500;
+      color: #262626;
+      letter-spacing: -0.3px;
+    }
+    .pay-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 7px solid transparent;
+      border-top-color: #fff;
+      filter: drop-shadow(0 1px 0 #E3E3E5);
     }
 
     /* User card at bottom of sidebar */
@@ -340,6 +423,12 @@
       color: #262626;
       letter-spacing: -0.32px;
       user-select: none;
+    }
+    .dropdown-trigger img {
+      transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .custom-dropdown:has(.dropdown-menu.open) .dropdown-trigger img {
+      transform: rotate(180deg);
     }
     .dropdown-trigger .dropdown-selected {
       flex: 1;
@@ -397,12 +486,45 @@
       font-weight: 600;
       cursor: help;
       flex-shrink: 0;
+      position: relative;
+    }
+    .info-icon[data-tip]::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      width: 240px;
+      transform: translateX(-50%) scale(0.96);
+      transform-origin: bottom center;
+      background: #262626;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 18px;
+      letter-spacing: -0.24px;
+      text-align: center;
+      padding: 8px 12px;
+      border-radius: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 150ms ease-out, transform 150ms cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: 10;
+    }
+    .info-icon[data-tip]:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
     }
 
     /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #D4D4D6; border-radius: 3px; }
+
+    /* Auto-hide scrollbar: thumb only visible while hovering/scrolling the area */
+    .scroll-area { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+    .scroll-area:hover { scrollbar-color: #D4D4D6 transparent; }
+    .scroll-area::-webkit-scrollbar-thumb { background: transparent; transition: background 200ms ease; }
+    .scroll-area:hover::-webkit-scrollbar-thumb { background: #D4D4D6; }
   </style>
 </head>
 <body>
@@ -507,16 +629,16 @@
      ============================================================ -->
 <main id="main">
   <!-- White content area -->
-  <div style="background:white; border-radius:16px; box-shadow: 0px 1px 3px rgba(0,0,0,0.02), 0px 0px 6px rgba(0,0,0,0.04); overflow:hidden; min-height: calc(100vh - 32px); display:flex; flex-direction:column; width:100%; max-width:1200px;">
+  <div style="background:white; border-radius:16px; box-shadow: 0px 1px 3px rgba(0,0,0,0.02), 0px 0px 6px rgba(0,0,0,0.04); overflow:hidden; height: calc(100vh - 32px); display:flex; flex-direction:column; width:100%; max-width:1200px;">
 
     <!-- ---- TOP HEADER ---- -->
-    <div style="background:white; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; box-shadow: 0px 1px 1.5px rgba(0,0,0,0.06); flex-shrink:0;">
+    <div style="background:white; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; box-shadow: 0px 4px 10px rgba(0,0,0,0.08); flex-shrink:0; position:relative; z-index:10;">
       <span style="font-size:24px; font-weight:500; color:#262626; letter-spacing:-0.48px; line-height:36px;">Dashboard</span>
       <span style="font-size:14px; font-weight:500; color:#8C8D8F; letter-spacing:-0.28px; line-height:20px;">Last Updated at 11:17 AM</span>
     </div>
 
     <!-- ---- SCROLLABLE CONTENT ---- -->
-    <div style="padding:16px; display:flex; flex-direction:column; gap:20px; max-width:1300px; margin:0 auto; width:100%;">
+    <div class="scroll-area" style="padding:16px; display:flex; flex-direction:column; gap:20px; max-width:1300px; margin:0 auto; width:100%; flex:1; min-height:0; overflow-y:auto;">
 
       <!-- Welcome + Action Buttons -->
       <div style="display:flex; flex-direction:column; gap:12px;">
@@ -536,6 +658,7 @@
       <div style="display:flex; align-items:center; justify-content:space-between;">
         <h3 style="font-size:24px; font-weight:600; color:#262626; letter-spacing:-0.48px; line-height:36px; margin:0;">Overview</h3>
         <div class="tab-group" id="time-tabs" style="width:432px;">
+          <div class="tab-indicator" id="time-indicator"></div>
           <button class="tab-btn active" data-period="overall">Overall</button>
           <button class="tab-btn" data-period="today">Today</button>
           <button class="tab-btn" data-period="week">This Week</button>
@@ -558,7 +681,7 @@
             <div style="display:flex; align-items:center; gap:8px;">
               <img src="assets/imgIconSales.svg" style="width:20px; height:21px; flex-shrink:0;" alt="" />
               <span class="stat-card-label">Total Sales</span>
-              <span class="info-icon" title="Total sales amount for the selected period">i</span>
+              <span class="info-icon" data-tip="Total amount of Invoices from Delivery sales that are delivered and cash sales">i</span>
             </div>
             <span class="stat-card-value" style="padding-left:26px;" id="stat-sales">SR 23,586<span class="cents">.49</span></span>
           </div>
@@ -582,7 +705,7 @@
           <div class="stat-card" style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div style="display:flex; align-items:center; gap:8px;">
               <img src="assets/imgIconStocks.svg" style="width:20px; height:21px; flex-shrink:0;" alt="" />
-              <span class="stat-card-label">Stocks Worth</span>
+              <span class="stat-card-label">Worth of Stocks available in Warehouse</span>
             </div>
             <span class="stat-card-value" style="padding-left:26px;" id="stat-stocks">SR 1,254,236<span class="cents">.00</span></span>
           </div>
@@ -595,17 +718,17 @@
             <span class="card-title">Cashflow</span>
             <div style="background:white; border:1px solid #EDEDED; border-radius:4px; display:flex; align-items:stretch; overflow:hidden;">
               <div class="cashflow-legend-item">
-                <div class="cashflow-legend-swatch" style="background:repeating-linear-gradient(-45deg, #623CEA 0px, #623CEA 2px, #D7CCFF 2px, #D7CCFF 6px); border-radius:2px;"></div>
+                <div class="cashflow-legend-swatch" style="background:repeating-linear-gradient(-45deg, #623CEA 0px, #623CEA 2px, #D7CCFF 2px, #D7CCFF 6px); border-radius:50%;"></div>
                 <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Purchase</span>
               </div>
               <div class="separator-v"></div>
               <div class="cashflow-legend-item">
-                <div class="cashflow-legend-swatch" style="background:repeating-linear-gradient(-45deg, #E07509 0px, #E07509 2px, #FFDDB0 2px, #FFDDB0 6px); border-radius:2px;"></div>
+                <div class="cashflow-legend-swatch" style="background:repeating-linear-gradient(-45deg, #E07509 0px, #E07509 2px, #FFDDB0 2px, #FFDDB0 6px); border-radius:50%;"></div>
                 <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Total Sales</span>
               </div>
               <div class="separator-v"></div>
               <div class="cashflow-legend-item">
-                <div class="cashflow-legend-swatch" style="background:repeating-linear-gradient(-45deg, #0E8F53 0px, #0E8F53 2px, #87D08A 2px, #87D08A 6px); border-radius:2px;"></div>
+                <div class="cashflow-legend-swatch" style="background:repeating-linear-gradient(-45deg, #0E8F53 0px, #0E8F53 2px, #87D08A 2px, #87D08A 6px); border-radius:50%;"></div>
                 <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Received Payments</span>
               </div>
             </div>
@@ -629,11 +752,12 @@
           <div class="card-body" style="flex:1; display:flex; flex-direction:column; gap:32px;">
             <!-- Toggle tabs -->
             <div class="tab-group" id="items-tabs">
+              <div class="tab-indicator" id="items-indicator"></div>
               <button class="tab-btn active" style="flex:1;" data-items="most">Most Ordered Items</button>
               <button class="tab-btn" style="flex:1;" data-items="least">Least Ordered Items</button>
             </div>
             <!-- 2x2 Grid -->
-            <div id="items-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:40px 60px; justify-items:center; align-items:flex-start;"></div>
+            <div id="items-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:40px 0; justify-items:center; align-items:flex-start;"></div>
           </div>
         </div>
 
@@ -648,7 +772,7 @@
             <div class="custom-dropdown" id="category-dropdown-wrapper">
               <div class="dropdown-trigger" id="category-dropdown-trigger">
                 <span class="dropdown-selected">Delivery Sales vs Cash Sales</span>
-                <img src="assets/imgVector1.svg" style="width:16px; height:9px; flex-shrink:0;" alt="" />
+                <img src="assets/imgVector1.svg" style="width:12px; height:7px; flex-shrink:0;" alt="" />
               </div>
               <ul class="dropdown-menu" id="category-dropdown-menu">
                 <li data-value="delivery_cash">Delivery Sales vs Cash Sales</li>
@@ -689,8 +813,8 @@
               <!-- Progress bar 1 -->
               <div style="display:flex; flex-direction:column; gap:12px;">
                 <div style="display:flex; gap:4px;">
-                  <div id="prog-collection" class="prog-segment" title="Payment from collection" style="border-radius:8px 2px 2px 8px; background:#0E8F53; width:62%;"></div>
-                  <div id="prog-cash" class="prog-segment" title="Payment from Cash Sales" style="border-radius:2px 8px 8px 2px; background:#A0DDA3; flex:1;"></div>
+                  <div id="prog-collection" class="prog-segment" data-tip="Payment from collection" style="border-radius:8px 2px 2px 8px; background:#0E8F53; width:62%;"></div>
+                  <div id="prog-cash" class="prog-segment" data-tip="Payment from Cash Sales" style="border-radius:2px 8px 8px 2px; background:#A0DDA3; flex:1;"></div>
                 </div>
                 <div style="display:flex; gap:19px; align-items:center;">
                   <div style="display:flex; gap:4px; align-items:center;">
@@ -719,8 +843,8 @@
             <!-- Progress bar 2 -->
             <div style="display:flex; flex-direction:column; gap:12px;">
               <div style="display:flex; gap:4px;">
-                <div id="prog-due" class="prog-segment" title="Due" style="border-radius:8px 2px 2px 8px; background:#D4D4D6; width:62%;"></div>
-                <div id="prog-overdue" class="prog-segment" title="Overdue" style="border-radius:2px 8px 8px 2px; background:#F59D9D; flex:1;"></div>
+                <div id="prog-due" class="prog-segment" data-tip="Due" style="border-radius:8px 2px 2px 8px; background:#D4D4D6; width:62%;"></div>
+                <div id="prog-overdue" class="prog-segment" data-tip="Overdue" style="border-radius:2px 8px 8px 2px; background:#F59D9D; flex:1;"></div>
               </div>
               <div style="display:flex; gap:19px; align-items:center;">
                 <div style="display:flex; gap:4px; align-items:center;">
@@ -745,13 +869,14 @@
           <!-- Vendors controls -->
           <div style="padding:16px; display:flex; align-items:center; justify-content:space-between;">
             <div class="tab-group" id="vendor-tabs" style="width:auto;">
+              <div class="tab-indicator" id="vendor-indicator"></div>
               <button class="tab-btn active" data-vendor="top">Top</button>
               <button class="tab-btn" data-vendor="least">Least</button>
             </div>
             <div class="custom-dropdown" id="vendor-sort-wrapper" style="width:210px;">
               <div class="dropdown-trigger" id="vendor-sort-trigger">
                 <span class="dropdown-selected">By Amount Pending</span>
-                <img src="assets/imgVector1.svg" style="width:16px; height:9px; flex-shrink:0;" alt="" />
+                <img src="assets/imgVector1.svg" style="width:12px; height:7px; flex-shrink:0;" alt="" />
               </div>
               <ul class="dropdown-menu" id="vendor-sort-menu">
                 <li data-value="amount_pending">By Amount Pending</li>
@@ -788,7 +913,7 @@ const DATA = {
       purchase: { value: 2550000.65, label: 'SR 2,550,000.65' },
       sales:    { value: 1750000.23, label: 'SR 1,750,000.23' },
       received: { value:  750000.23, label: 'SR 750,000.23'  },
-      max: 10
+      max: 11
     },
     donut: {
       delivery_cash: { data: [82, 18], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 18,954.32', 'SR 4,124.68'], colors: ['#623CEA', '#D7CCFF'] },
@@ -848,7 +973,7 @@ const DATA = {
       purchase: { value: 8200000.00, label: 'SR 8,200,000.00' },
       sales:    { value: 6540000.75, label: 'SR 6,540,000.75' },
       received: { value: 4320000.90, label: 'SR 4,320,000.90' },
-      max: 10
+      max: 11
     },
     donut: {
       delivery_cash: { data: [78, 22], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 243,895.79', 'SR 68,944.96'], colors: ['#623CEA', '#D7CCFF'] },
@@ -908,7 +1033,7 @@ const DATA = {
       purchase: { value: 4100000.00, label: 'SR 4,100,000.00' },
       sales:    { value: 2850000.60, label: 'SR 2,850,000.60' },
       received: { value: 1560000.15, label: 'SR 1,560,000.15' },
-      max: 10
+      max: 11
     },
     donut: {
       delivery_cash: { data: [80, 20], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 67,372.48', 'SR 16,843.12'], colors: ['#623CEA', '#D7CCFF'] },
@@ -968,7 +1093,7 @@ const DATA = {
       purchase: { value: 6800000.50, label: 'SR 6,800,000.50' },
       sales:    { value: 4950000.25, label: 'SR 4,950,000.25' },
       received: { value: 3120000.75, label: 'SR 3,120,000.75' },
-      max: 10
+      max: 11
     },
     donut: {
       delivery_cash: { data: [79, 21], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 156,933.70', 'SR 41,716.55'], colors: ['#623CEA', '#D7CCFF'] },
@@ -1049,6 +1174,14 @@ const BUILDING_ICONS = {
   blue:   'assets/imgBuilding2.svg',
   pink:   'assets/imgBuilding1.svg',
 };
+
+// Extra businesses shown in the Least-performers list (amount magnitude drives sort)
+const EXTRA_LEAST = [
+  { name: 'Verdant Supplies Co.', type: 'Wholesaler', amount: 'SR 6,200.00',  icon: 'blue'   },
+  { name: 'Crestline Foods',      type: 'Retailer',   amount: 'SR 9,800.00',  icon: 'yellow' },
+  { name: 'Nordic Tool Works',    type: 'Wholesaler', amount: 'SR 21,400.00', icon: 'brown'  },
+  { name: 'Bluepeak Traders',     type: 'Retailer',   amount: 'SR 33,900.00', icon: 'pink'   },
+];
 
 // =========================================================
 // STATE
@@ -1137,19 +1270,9 @@ function buildCashflowChart(period) {
       maintainAspectRatio: false,
       aspectRatio: 4,
       animation: {
-        duration: 300,
+        duration: 900,
         easing: 'easeOutQuart',
-        delay: (ctx) => ctx.type === 'data' ? ctx.dataIndex * 55 : 0,
-        onComplete: () => {
-          let alpha = 0;
-          const fade = () => {
-            alpha = Math.min(1, alpha + 0.12);
-            _cashflowLabelAlpha = alpha;
-            if (cashflowChart) cashflowChart.draw();
-            if (alpha < 1) requestAnimationFrame(fade);
-          };
-          requestAnimationFrame(fade);
-        },
+        delay: (ctx) => ctx.type === 'data' ? ctx.dataIndex * 90 : 0,
       },
       hover: { mode: null },
       events: [],
@@ -1173,7 +1296,7 @@ function buildCashflowChart(period) {
             stepSize: 1000000,
             color: '#262626',
             font: { family: 'DM Sans', size: 14 },
-            maxTicksLimit: 11,
+            maxTicksLimit: 12,
           },
           grid: {
             color: '#EDEDED',
@@ -1195,32 +1318,36 @@ function buildCashflowChart(period) {
           border: { display: true, color: '#E3E3E5' },
         }
       },
-      layout: { padding: { right: 130, top: 8, bottom: 8 } }
+      layout: { padding: { right: 20, top: 8, bottom: 8 } }
     },
     plugins: [{
       id: 'endCapsAndLabels',
       afterDatasetsDraw(chart) {
         const { ctx } = chart;
-        const labels = [d.purchase.label, d.sales.label, d.received.label];
+        const xScale = chart.scales.x;
+        const targets = [d.purchase.value, d.sales.value, d.received.value];
         chart.getDatasetMeta(0).data.forEach((bar, i) => {
-          const { x, y, height } = bar.getProps(['x', 'y', 'height'], true);
+          // current animated position — cap + label ride the bar tip
+          const { x, y, height } = bar.getProps(['x', 'y', 'height'], false);
           const top = y - height / 2;
-          // End cap — moves with bar each frame
+          // End cap, glued to the bar's leading edge
           ctx.save();
           ctx.fillStyle = capColors[i];
           ctx.fillRect(x - CAP_W, top, CAP_W, height);
           ctx.restore();
-          // Value label fades in after bars finish
-          if (_cashflowLabelAlpha > 0) {
-            ctx.save();
-            ctx.globalAlpha = _cashflowLabelAlpha;
-            ctx.fillStyle = '#262626';
-            ctx.font = '500 13px DM Sans';
-            ctx.textAlign = 'left';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(labels[i], x + 8, y);
-            ctx.restore();
-          }
+          // Rolling value label: counts up as the bar grows, snaps to exact target on settle
+          let val = xScale.getValueForPixel(x);
+          if (val < 0) val = 0;
+          if (val > targets[i]) val = targets[i];
+          if (Math.abs(x - xScale.getPixelForValue(targets[i])) < 0.5) val = targets[i];
+          const text = 'SR ' + val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          ctx.save();
+          ctx.fillStyle = '#262626';
+          ctx.font = '500 15px DM Sans';
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(text, x + 8, y);
+          ctx.restore();
         });
       }
     }]
@@ -1309,8 +1436,8 @@ function buildItemsGrid(type) {
         </div>
       </div>
       <div style="display:flex; flex-direction:column; align-items:center; gap:2px; width:100%;">
-        <span style="font-size:20px; font-weight:500; color:#262626; letter-spacing:-0.4px; line-height:28px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; text-align:center;">${item.name}</span>
-        <span style="font-size:18px; color:#0E8F53; letter-spacing:-0.36px; line-height:28px; text-align:center;">${item.profit} Profit</span>
+        <span style="font-size:18px; font-weight:500; color:#262626; letter-spacing:-0.4px; line-height:28px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; text-align:center;">${item.name}</span>
+        <span style="font-size:16px; font-weight:400; color:#0E8F53; letter-spacing:-0.36px; line-height:28px; text-align:center;">${item.profit} Profit</span>
       </div>
     `;
     grid.appendChild(div);
@@ -1321,7 +1448,14 @@ function buildItemsGrid(type) {
 // VENDOR LIST
 // =========================================================
 function buildVendorList() {
-  const vendors = DATA[currentPeriod].vendors[currentVendorSide][currentVendorSort];
+  let vendors = DATA[currentPeriod].vendors[currentVendorSide][currentVendorSort];
+  // Least performers: force all amounts negative, sort ascending (most negative on top)
+  if (currentVendorSide === 'least') {
+    vendors = vendors.concat(EXTRA_LEAST).map(v => {
+      const mag = parseFloat(v.amount.replace(/[^0-9.]/g, '')) || 0;
+      return { ...v, _mag: mag, amount: '− SR ' + mag.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), color: '#262626' };
+    }).sort((a, b) => a._mag - b._mag).slice(0, 5);
+  }
   const list = document.getElementById('vendor-list');
   list.innerHTML = '';
   vendors.forEach(v => {
@@ -1348,13 +1482,32 @@ function buildVendorList() {
 // =========================================================
 // STATS UPDATE
 // =========================================================
+// Count-up: rolls a KPI value from 0 to its target, matching "SR 1,234<span class="cents">.56</span>"
+function fmtKpi(num) {
+  const [intp, dec] = num.toFixed(2).split('.');
+  return `SR ${Number(intp).toLocaleString('en-US')}<span class="cents">.${dec}</span>`;
+}
+function rollKpi(el, htmlTarget) {
+  const target = parseFloat(htmlTarget.replace(/<[^>]*>/g, '').replace(/[^0-9.]/g, ''));
+  if (el._raf) cancelAnimationFrame(el._raf);
+  const duration = 900, start = performance.now();
+  const tick = (now) => {
+    const t = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - t, 4);
+    el.innerHTML = fmtKpi(target * eased);
+    if (t < 1) { el._raf = requestAnimationFrame(tick); }
+    else { el.innerHTML = htmlTarget; el._raf = null; }
+  };
+  el._raf = requestAnimationFrame(tick);
+}
+
 function updateStats(period) {
   const d = DATA[period];
-  document.getElementById('stat-purchase').innerHTML = d.purchase;
-  document.getElementById('stat-sales').innerHTML = d.sales;
-  document.getElementById('stat-due').innerHTML = d.due;
-  document.getElementById('stat-received').innerHTML = d.received;
-  document.getElementById('stat-stocks').innerHTML = d.stocks;
+  rollKpi(document.getElementById('stat-purchase'), d.purchase);
+  rollKpi(document.getElementById('stat-sales'), d.sales);
+  rollKpi(document.getElementById('stat-due'), d.due);
+  rollKpi(document.getElementById('stat-received'), d.received);
+  rollKpi(document.getElementById('stat-stocks'), d.stocks);
 
   // Payments
   const p = d.payments;
@@ -1367,6 +1520,24 @@ function updateStats(period) {
   document.getElementById('prog-cash').style.flex = '1';
   document.getElementById('prog-due').style.width = p.duePct + '%';
   document.getElementById('prog-overdue').style.flex = '1';
+
+  // Tooltip splits: label + computed amount + swatch color (mirrors the donut hover)
+  const parseAmt = (html) => parseFloat(html.replace(/<[^>]*>/g, '').replace(/[^0-9.]/g, ''));
+  const fmtAmt = (n) => 'SR ' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const recv = parseAmt(p.receivedTotal);
+  const col = recv * p.collectionPct / 100;
+  const dueT = parseAmt(p.dueTotal);
+  const dueAmt = dueT * p.duePct / 100;
+  const setTip = (id, label, amount, color) => {
+    const el = document.getElementById(id);
+    el.dataset.label = label;
+    el.dataset.amount = amount;
+    el.dataset.color = color;
+  };
+  setTip('prog-collection', 'Payment from collection', fmtAmt(col), '#0E8F53');
+  setTip('prog-cash', 'Payment from Cash Sales', fmtAmt(recv - col), '#A0DDA3');
+  setTip('prog-due', 'Due', fmtAmt(dueAmt), '#D4D4D6');
+  setTip('prog-overdue', 'Overdue', fmtAmt(dueT - dueAmt), '#F59D9D');
 }
 
 // =========================================================
@@ -1384,6 +1555,41 @@ function render() {
 // EVENT LISTENERS
 // =========================================================
 
+// Payments hover tooltip (donut-style: title + swatch + amount)
+(function() {
+  const tip = document.createElement('div');
+  tip.className = 'pay-tooltip';
+  tip.innerHTML = '<div class="pt-title"></div><div class="pt-row"><span class="pt-swatch"></span><span class="pt-amount"></span></div>';
+  document.body.appendChild(tip);
+  document.querySelectorAll('.prog-segment').forEach(seg => {
+    seg.addEventListener('mouseenter', () => {
+      tip.querySelector('.pt-title').textContent = seg.dataset.label || '';
+      tip.querySelector('.pt-amount').textContent = seg.dataset.amount || '';
+      tip.querySelector('.pt-swatch').style.background = seg.dataset.color || '#262626';
+      const r = seg.getBoundingClientRect();
+      tip.style.left = (r.left + r.width / 2) + 'px';
+      tip.style.top = (r.top - 10) + 'px';
+      tip.classList.add('show');
+    });
+    seg.addEventListener('mouseleave', () => tip.classList.remove('show'));
+  });
+})();
+
+// Sliding tab indicator (shared by time / items / vendor tab groups)
+function moveIndicator(indicatorId, btn) {
+  const indicator = document.getElementById(indicatorId);
+  indicator.style.width = btn.offsetWidth + 'px';
+  indicator.style.transform = `translateX(${btn.offsetLeft - 4}px)`;
+}
+
+function initIndicator(groupId, indicatorId) {
+  (function poll() {
+    const btn = document.querySelector(`#${groupId} .tab-btn.active`);
+    if (btn.offsetWidth > 0) { moveIndicator(indicatorId, btn); }
+    else { requestAnimationFrame(poll); }
+  })();
+}
+
 // Time tabs
 document.getElementById('time-tabs').addEventListener('click', (e) => {
   const btn = e.target.closest('[data-period]');
@@ -1391,11 +1597,16 @@ document.getElementById('time-tabs').addEventListener('click', (e) => {
   currentPeriod = btn.dataset.period;
   document.querySelectorAll('#time-tabs .tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  moveIndicator('time-indicator', btn);
   updateStats(currentPeriod);
   buildCashflowChart(currentPeriod);
   buildDonutChart(currentPeriod, currentCategory);
   buildVendorList();
 });
+
+initIndicator('time-tabs', 'time-indicator');
+initIndicator('items-tabs', 'items-indicator');
+initIndicator('vendor-tabs', 'vendor-indicator');
 
 // Items toggle
 document.getElementById('items-tabs').addEventListener('click', (e) => {
@@ -1404,6 +1615,7 @@ document.getElementById('items-tabs').addEventListener('click', (e) => {
   currentItems = btn.dataset.items;
   document.querySelectorAll('#items-tabs .tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  moveIndicator('items-indicator', btn);
   buildItemsGrid(currentItems);
 });
 
@@ -1449,6 +1661,7 @@ document.getElementById('vendor-tabs').addEventListener('click', (e) => {
   currentVendorSide = btn.dataset.vendor;
   document.querySelectorAll('#vendor-tabs .tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  moveIndicator('vendor-indicator', btn);
   buildVendorList();
 });
 
