@@ -72,8 +72,9 @@
     #main {
       margin-left: 266px;
       min-height: 100vh;
-      padding: 16px 16px 16px 0;
-      max-width: 1440px;
+      padding: 16px;
+      max-width: 1300px;
+      margin-right: auto;
     }
 
     /* Stat cards container */
@@ -140,6 +141,7 @@
 
     .tab-btn {
       flex: 1;
+      min-width: 100px;
       padding: 6px 12px;
       border-radius: 6px;
       font-size: 14px;
@@ -284,7 +286,11 @@
     /* Payments progress bar segments */
     .prog-segment {
       height: 40px;
-      transition: width 0.5s ease;
+      transition: width 0.5s ease, filter 0.15s ease-out;
+      cursor: pointer;
+    }
+    .prog-segment:hover {
+      filter: brightness(0.88);
     }
 
     /* User card at bottom of sidebar */
@@ -318,8 +324,9 @@
       align-self: stretch;
     }
 
-    /* Dropdown */
-    .dropdown-input {
+    /* Custom dropdown */
+    .custom-dropdown { position: relative; }
+    .dropdown-trigger {
       background: white;
       border: 1px solid #D4D4D6;
       border-radius: 8px;
@@ -327,25 +334,44 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 8px;
       cursor: pointer;
       font-size: 16px;
       color: #262626;
       letter-spacing: -0.32px;
-      position: relative;
+      user-select: none;
     }
-
-    .dropdown-input select {
-      appearance: none;
+    .dropdown-trigger .dropdown-selected {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: white;
       border: none;
-      outline: none;
-      background: transparent;
+      border-radius: 8px;
+      z-index: 200;
+      list-style: none;
+      padding: 4px 0;
+      margin: 0;
+      display: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-menu li {
+      padding: 8px 12px;
+      cursor: pointer;
       font-size: 16px;
       font-family: 'DM Sans', sans-serif;
       color: #262626;
-      width: 100%;
-      cursor: pointer;
       letter-spacing: -0.32px;
     }
+    .dropdown-menu li:hover { background: #F5F5F5; }
 
     /* Chart animation */
     .bar-fill {
@@ -387,7 +413,7 @@
 <aside id="sidebar">
   <!-- Logo -->
   <div style="padding: 16px 0 12px; height: 64px; display: flex; align-items: center;">
-    <img src="assets/imgLogo.svg" alt="Fusepay" style="width:116px; height:auto;" />
+    <img src="assets/imgLogo.svg" alt="Fusepay" style="width:116px; height:32px; object-fit:contain;" />
   </div>
 
   <!-- Separator -->
@@ -481,7 +507,7 @@
      ============================================================ -->
 <main id="main">
   <!-- White content area -->
-  <div style="background:white; border-radius:16px; box-shadow: 0px 1px 3px rgba(0,0,0,0.02), 0px 0px 6px rgba(0,0,0,0.04); overflow:hidden; min-height: calc(100vh - 32px);">
+  <div style="background:white; border-radius:16px; box-shadow: 0px 1px 3px rgba(0,0,0,0.02), 0px 0px 6px rgba(0,0,0,0.04); overflow:hidden; min-height: calc(100vh - 32px); display:flex; flex-direction:column;">
 
     <!-- ---- TOP HEADER ---- -->
     <div style="background:white; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; box-shadow: 0px 1px 1.5px rgba(0,0,0,0.06); flex-shrink:0;">
@@ -490,7 +516,7 @@
     </div>
 
     <!-- ---- SCROLLABLE CONTENT ---- -->
-    <div style="padding:16px; display:flex; flex-direction:column; gap:20px;">
+    <div style="padding:16px; display:flex; flex-direction:column; gap:20px; max-width:1300px; margin:0 auto; width:100%;">
 
       <!-- Welcome + Action Buttons -->
       <div style="display:flex; flex-direction:column; gap:12px;">
@@ -510,8 +536,8 @@
       <div style="display:flex; align-items:center; justify-content:space-between;">
         <h3 style="font-size:24px; font-weight:600; color:#262626; letter-spacing:-0.48px; line-height:36px; margin:0;">Overview</h3>
         <div class="tab-group" id="time-tabs" style="width:432px;">
-          <button class="tab-btn" data-period="overall">Overall</button>
-          <button class="tab-btn active" data-period="today">Today</button>
+          <button class="tab-btn active" data-period="overall">Overall</button>
+          <button class="tab-btn" data-period="today">Today</button>
           <button class="tab-btn" data-period="week">This Week</button>
           <button class="tab-btn" data-period="month">This Month</button>
         </div>
@@ -574,16 +600,15 @@
           <div class="card-divider"></div>
           <!-- Chart area -->
           <div id="cashflow-wrapper" style="padding:24px 22px 32px; position:relative;">
-            <canvas id="cashflowChart" height="240"></canvas>
+            <canvas id="cashflowChart" height="484"></canvas>
           </div>
         </div>
-      </div>
 
-      <!-- Row: Top 4 Items + Sales by Category -->
-      <div style="display:flex; gap:8px; align-items:stretch;">
+        <!-- Row: Top 4 Items + Sales by Category -->
+        <div style="display:flex; gap:8px; align-items:stretch;">
 
         <!-- Top 4 Items -->
-        <div class="card" style="width:516px; flex-shrink:0; display:flex; flex-direction:column;">
+        <div class="card" style="flex:1; min-width:0; display:flex; flex-direction:column;">
           <div class="card-header">
             <span class="card-title">Top 4 Items</span>
           </div>
@@ -595,29 +620,28 @@
               <button class="tab-btn" style="flex:1;" data-items="least">Least Ordered Items</button>
             </div>
             <!-- 2x2 Grid -->
-            <div id="items-grid" style="display:flex; flex-wrap:wrap; gap:40px 60px; justify-content:center; align-items:flex-start;"></div>
+            <div id="items-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:40px 60px; justify-items:center; align-items:flex-start;"></div>
           </div>
         </div>
 
         <!-- Sales by Category -->
-        <div class="card" style="flex:1; display:flex; flex-direction:column;">
+        <div class="card" style="flex:1; display:flex; flex-direction:column; overflow:visible;">
           <div class="card-header">
             <span class="card-title">Sales by Category</span>
           </div>
           <div class="card-divider"></div>
           <div class="card-body" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; padding-bottom:24px;">
             <!-- Dropdown -->
-            <div style="position:relative;">
-              <div class="dropdown-input">
-                <select id="category-dropdown" style="padding-right:24px;">
-                  <option value="delivery_cash">Delivery Sales vs Cash Sales</option>
-                  <option value="by_product">By Product Category</option>
-                  <option value="by_region">By Region</option>
-                </select>
-                <div style="position:absolute; right:12px; top:50%; transform:translateY(-50%); pointer-events:none;">
-                  <img src="assets/imgVector1.svg" style="width:20px; height:20px;" alt="" />
-                </div>
+            <div class="custom-dropdown" id="category-dropdown-wrapper">
+              <div class="dropdown-trigger" id="category-dropdown-trigger">
+                <span class="dropdown-selected">Delivery Sales vs Cash Sales</span>
+                <img src="assets/imgVector1.svg" style="width:16px; height:9px; flex-shrink:0;" alt="" />
               </div>
+              <ul class="dropdown-menu" id="category-dropdown-menu">
+                <li data-value="delivery_cash">Delivery Sales vs Cash Sales</li>
+                <li data-value="retail_wholesale">Retail vs Wholesale</li>
+                <li data-value="product_categories">Product Categories</li>
+              </ul>
             </div>
             <!-- Donut chart -->
             <div style="display:flex; justify-content:center; align-items:center; margin:8px 0;">
@@ -627,18 +651,18 @@
             <div id="donut-legend" style="display:flex; flex-direction:column; gap:12px; width:300px; align-self:center;"></div>
           </div>
         </div>
-      </div>
+        </div><!-- end Top 4 + Sales row -->
 
-      <!-- Row: Payments + Vendors Performance -->
-      <div style="display:flex; gap:8px; align-items:stretch;">
+        <!-- Row: Payments + Vendors Performance -->
+        <div style="display:flex; gap:8px; align-items:stretch;">
 
         <!-- Payments -->
-        <div class="card" style="width:516px; flex-shrink:0;">
+        <div class="card" style="flex:1; min-width:0;">
           <div class="card-header">
             <span class="card-title">Payments</span>
           </div>
           <div class="card-divider"></div>
-          <div class="card-body" style="display:flex; flex-direction:column; gap:20px;">
+          <div class="card-body" style="display:flex; flex-direction:column; gap:24px;">
             <!-- Total Payments Received -->
             <div style="display:flex; flex-direction:column; gap:20px;">
               <div style="display:flex; gap:8px; align-items:center;">
@@ -652,8 +676,8 @@
               <!-- Progress bar 1 -->
               <div style="display:flex; flex-direction:column; gap:12px;">
                 <div style="display:flex; gap:4px;">
-                  <div id="prog-collection" class="prog-segment" style="border-radius:8px 2px 2px 8px; background:#0E8F53; width:62%;"></div>
-                  <div id="prog-cash" class="prog-segment" style="border-radius:2px 8px 8px 2px; background:#A0DDA3; flex:1;"></div>
+                  <div id="prog-collection" class="prog-segment" title="Payment from collection" style="border-radius:8px 2px 2px 8px; background:#0E8F53; width:62%;"></div>
+                  <div id="prog-cash" class="prog-segment" title="Payment from Cash Sales" style="border-radius:2px 8px 8px 2px; background:#A0DDA3; flex:1;"></div>
                 </div>
                 <div style="display:flex; gap:19px; align-items:center;">
                   <div style="display:flex; gap:4px; align-items:center;">
@@ -682,8 +706,8 @@
             <!-- Progress bar 2 -->
             <div style="display:flex; flex-direction:column; gap:12px;">
               <div style="display:flex; gap:4px;">
-                <div id="prog-due" class="prog-segment" style="border-radius:8px 2px 2px 8px; background:#D4D4D6; width:62%;"></div>
-                <div id="prog-overdue" class="prog-segment" style="border-radius:2px 8px 8px 2px; background:#F59D9D; flex:1;"></div>
+                <div id="prog-due" class="prog-segment" title="Due" style="border-radius:8px 2px 2px 8px; background:#D4D4D6; width:62%;"></div>
+                <div id="prog-overdue" class="prog-segment" title="Overdue" style="border-radius:2px 8px 8px 2px; background:#F59D9D; flex:1;"></div>
               </div>
               <div style="display:flex; gap:19px; align-items:center;">
                 <div style="display:flex; gap:4px; align-items:center;">
@@ -711,23 +735,23 @@
               <button class="tab-btn active" data-vendor="top">Top</button>
               <button class="tab-btn" data-vendor="least">Least</button>
             </div>
-            <div style="width:210px; position:relative;">
-              <div class="dropdown-input">
-                <select id="vendor-sort" style="padding-right:24px;">
-                  <option value="amount_pending">By Amount Pending</option>
-                  <option value="amount_paid">By Amount Paid</option>
-                </select>
-                <div style="position:absolute; right:12px; top:50%; transform:translateY(-50%); pointer-events:none;">
-                  <img src="assets/imgVector1.svg" style="width:20px; height:20px;" alt="" />
-                </div>
+            <div class="custom-dropdown" id="vendor-sort-wrapper" style="width:210px;">
+              <div class="dropdown-trigger" id="vendor-sort-trigger">
+                <span class="dropdown-selected">By Amount Pending</span>
+                <img src="assets/imgVector1.svg" style="width:16px; height:9px; flex-shrink:0;" alt="" />
               </div>
+              <ul class="dropdown-menu" id="vendor-sort-menu">
+                <li data-value="amount_pending">By Amount Pending</li>
+                <li data-value="amount_paid">By Amount Paid</li>
+              </ul>
             </div>
           </div>
           <div class="card-divider"></div>
           <!-- Vendor list -->
           <div id="vendor-list" style="flex:1; padding:12px 16px; display:flex; flex-direction:column; justify-content:space-between; gap:0;"></div>
         </div>
-      </div>
+        </div><!-- end Payments + Vendors row -->
+      </div><!-- end stat-cards-wrapper -->
 
     </div><!-- end scrollable content -->
   </div><!-- end white area -->
@@ -755,8 +779,8 @@ const DATA = {
     },
     donut: {
       delivery_cash: { data: [82, 18], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 18,954.32', 'SR 4,124.68'], colors: ['#623CEA', '#D7CCFF'] },
-      by_product:    { data: [45, 30, 25], labels: ['Beverages', 'Snacks', 'Other'], values: ['SR 10,600.00', 'SR 7,100.00', 'SR 5,886.49'], colors: ['#623CEA', '#D7CCFF', '#FFDDB0'] },
-      by_region:     { data: [60, 40], labels: ['Victoria', 'Other Islands'], values: ['SR 14,151.89', 'SR 9,434.60'], colors: ['#623CEA', '#D7CCFF'] },
+      product_categories: { data: [40, 30, 20, 10], labels: ['Beverages', 'Snacks', 'Dairy', 'Others'], values: ['SR 9,440.00', 'SR 7,080.00', 'SR 4,720.00', 'SR 2,360.00'], colors: ['#623CEA', '#D7CCFF', '#FFDDB0', '#87D08A'] },
+      retail_wholesale: { data: [65, 35], labels: ['Retail', 'Wholesale'], values: ['SR 15,330.82', 'SR 8,255.50'], colors: ['#623CEA', '#D7CCFF'] },
     },
     payments: {
       transactions: '14 Transactions',
@@ -1016,7 +1040,7 @@ const BUILDING_ICONS = {
 // =========================================================
 // STATE
 // =========================================================
-let currentPeriod = 'today';
+let currentPeriod = 'overall';
 let currentItems = 'most';
 let currentCategory = 'delivery_cash';
 let currentVendorSide = 'top';
@@ -1027,6 +1051,7 @@ let currentVendorSort = 'amount_pending';
 // =========================================================
 let cashflowChart = null;
 let donutChartInstance = null;
+let _cashflowLabelAlpha = 0;
 
 // =========================================================
 // PATTERN HELPERS for hatched bars
@@ -1069,14 +1094,18 @@ function buildCashflowChart(period) {
   const canvas = document.getElementById('cashflowChart');
   const ctx = canvas.getContext('2d');
 
-  const purplePattern = createHatchPattern('#623CEA', '#D7CCFF');
-  const orangePattern = createHatchPattern('#E07509', '#FFDDB0');
-  const greenPattern  = createHatchPattern('#0E8F53', '#87D08A');
+  const purplePattern = createHatchPattern('#D7CCFF', '#F3F0FF');
+  const orangePattern = createHatchPattern('#FFDDB0', '#FFFCF7');
+  const greenPattern  = createHatchPattern('#87D08A', '#D7F0D8');
+
+  const capColors = ['#623CEA', '#E07509', '#0E8F53'];
+  const CAP_W = 4;
 
   if (cashflowChart) {
     cashflowChart.destroy();
     cashflowChart = null;
   }
+  _cashflowLabelAlpha = 0;
 
   cashflowChart = new Chart(ctx, {
     type: 'bar',
@@ -1085,10 +1114,7 @@ function buildCashflowChart(period) {
       datasets: [{
         data: [d.purchase.value, d.sales.value, d.received.value],
         backgroundColor: [purplePattern, orangePattern, greenPattern],
-        borderColor: ['#623CEA', '#FFDDB0', '#87D08A'],
-        borderWidth: 1.5,
-        borderRadius: { topRight: 4, bottomRight: 4 },
-        borderSkipped: 'left',
+        borderWidth: 0,
         barThickness: 56,
       }]
     },
@@ -1097,7 +1123,23 @@ function buildCashflowChart(period) {
       responsive: true,
       maintainAspectRatio: false,
       aspectRatio: 4,
-      animation: { duration: 400, easing: 'easeInOutQuart' },
+      animation: {
+        duration: 300,
+        easing: 'easeOutQuart',
+        delay: (ctx) => ctx.type === 'data' ? ctx.dataIndex * 55 : 0,
+        onComplete: () => {
+          let alpha = 0;
+          const fade = () => {
+            alpha = Math.min(1, alpha + 0.12);
+            _cashflowLabelAlpha = alpha;
+            if (cashflowChart) cashflowChart.draw();
+            if (alpha < 1) requestAnimationFrame(fade);
+          };
+          requestAnimationFrame(fade);
+        },
+      },
+      hover: { mode: null },
+      events: [],
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -1121,9 +1163,9 @@ function buildCashflowChart(period) {
             maxTicksLimit: 11,
           },
           grid: {
-            color: (ctx) => ctx.tick.value === 0 ? '#A0A0A0' : '#E3E3E5',
+            color: '#EDEDED',
             lineWidth: 1,
-            drawBorder: false,
+            borderDash: [4, 4],
           },
           title: {
             display: true,
@@ -1132,31 +1174,40 @@ function buildCashflowChart(period) {
             font: { family: 'DM Sans', size: 14, weight: '500' },
             padding: { top: 8 },
           },
-          border: { display: false },
+          border: { display: true, color: '#E3E3E5' },
         },
         y: {
           ticks: { display: false },
           grid: { display: false },
-          border: { display: false },
+          border: { display: true, color: '#E3E3E5' },
         }
       },
       layout: { padding: { right: 130, top: 8, bottom: 8 } }
     },
     plugins: [{
-      id: 'valueLabels',
+      id: 'endCapsAndLabels',
       afterDatasetsDraw(chart) {
-        const { ctx, data } = chart;
+        const { ctx } = chart;
         const labels = [d.purchase.label, d.sales.label, d.received.label];
         chart.getDatasetMeta(0).data.forEach((bar, i) => {
-          const x = bar.x + 8;
-          const y = bar.y;
+          const { x, y, height } = bar.getProps(['x', 'y', 'height'], true);
+          const top = y - height / 2;
+          // End cap — moves with bar each frame
           ctx.save();
-          ctx.fillStyle = '#262626';
-          ctx.font = '500 13px DM Sans';
-          ctx.textAlign = 'left';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(labels[i], x, y);
+          ctx.fillStyle = capColors[i];
+          ctx.fillRect(x - CAP_W, top, CAP_W, height);
           ctx.restore();
+          // Value label fades in after bars finish
+          if (_cashflowLabelAlpha > 0) {
+            ctx.save();
+            ctx.globalAlpha = _cashflowLabelAlpha;
+            ctx.fillStyle = '#262626';
+            ctx.font = '500 13px DM Sans';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(labels[i], x + 8, y);
+            ctx.restore();
+          }
         });
       }
     }]
@@ -1184,7 +1235,7 @@ function buildDonutChart(period, category) {
         data: d.data,
         backgroundColor: d.colors,
         borderWidth: 0,
-        hoverOffset: 4,
+        hoverOffset: 0,
       }]
     },
     options: {
@@ -1194,6 +1245,12 @@ function buildDonutChart(period, category) {
       plugins: {
         legend: { display: false },
         tooltip: {
+          backgroundColor: '#FFFFFF',
+          borderColor: '#D4D4D6',
+          borderWidth: 1,
+          titleColor: '#262626',
+          bodyColor: '#262626',
+          padding: 10,
           callbacks: {
             label: (ctx) => ' ' + d.values[ctx.dataIndex],
           }
@@ -1228,7 +1285,7 @@ function buildItemsGrid(type) {
   grid.innerHTML = '';
   items.forEach(item => {
     const div = document.createElement('div');
-    div.style.cssText = 'display:flex; flex-direction:column; gap:18px; align-items:center; width:147px;';
+    div.style.cssText = 'display:flex; flex-direction:column; gap:10px; align-items:center; width:147px;';
     div.innerHTML = `
       <div style="display:flex; flex-direction:column; align-items:center;">
         <div style="width:84px; height:84px; border-radius:300px; border:3px solid ${item.rankColor}; overflow:hidden; margin-bottom:-12px; position:relative; background:#262626;">
@@ -1337,11 +1394,40 @@ document.getElementById('items-tabs').addEventListener('click', (e) => {
   buildItemsGrid(currentItems);
 });
 
-// Category dropdown
-document.getElementById('category-dropdown').addEventListener('change', (e) => {
-  currentCategory = e.target.value;
-  buildDonutChart(currentPeriod, currentCategory);
-});
+// Custom dropdowns
+(function() {
+  function initDropdown(triggerId, menuId, onSelect) {
+    const trigger = document.getElementById(triggerId);
+    const menu = document.getElementById(menuId);
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('.dropdown-menu.open').forEach(m => { if (m !== menu) m.classList.remove('open'); });
+      menu.classList.toggle('open');
+    });
+    menu.querySelectorAll('li').forEach(li => {
+      li.addEventListener('click', (e) => {
+        e.stopPropagation();
+        trigger.querySelector('.dropdown-selected').textContent = li.textContent;
+        menu.classList.remove('open');
+        onSelect(li.dataset.value);
+      });
+    });
+  }
+
+  initDropdown('category-dropdown-trigger', 'category-dropdown-menu', (val) => {
+    currentCategory = val;
+    buildDonutChart(currentPeriod, currentCategory);
+  });
+
+  initDropdown('vendor-sort-trigger', 'vendor-sort-menu', (val) => {
+    currentVendorSort = val;
+    buildVendorList();
+  });
+
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
+  });
+})();
 
 // Vendor tabs
 document.getElementById('vendor-tabs').addEventListener('click', (e) => {
@@ -1350,12 +1436,6 @@ document.getElementById('vendor-tabs').addEventListener('click', (e) => {
   currentVendorSide = btn.dataset.vendor;
   document.querySelectorAll('#vendor-tabs .tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  buildVendorList();
-});
-
-// Vendor sort dropdown
-document.getElementById('vendor-sort').addEventListener('change', (e) => {
-  currentVendorSort = e.target.value;
   buildVendorList();
 });
 
