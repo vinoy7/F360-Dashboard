@@ -547,31 +547,46 @@
       <div class="stat-cards-wrapper" id="stat-cards">
         <!-- Row 1: 4 cards -->
         <div class="stat-cards-row">
-          <div class="stat-card">
-            <span class="stat-card-label">Purchase</span>
-            <span class="stat-card-value" id="stat-purchase">SR 0<span class="cents">.00</span></span>
-          </div>
-          <div class="stat-card">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span class="stat-card-label">Total Sales</span>
-              <span class="info-icon" title="Total sales amount for the selected period">i</span>
+          <div class="stat-card" style="display:flex; gap:8px; align-items:flex-start;">
+            <img src="assets/imgIconPurchase.svg" style="width:20px; height:21px; flex-shrink:0; margin-top:2px;" alt="" />
+            <div style="display:flex; flex-direction:column; gap:8px; flex:1;">
+              <span class="stat-card-label">Purchase</span>
+              <span class="stat-card-value" id="stat-purchase">SR 0<span class="cents">.00</span></span>
             </div>
-            <span class="stat-card-value" id="stat-sales">SR 23,586<span class="cents">.49</span></span>
           </div>
-          <div class="stat-card">
-            <span class="stat-card-label">Total Due</span>
-            <span class="stat-card-value" id="stat-due">SR 245,698<span class="cents">.65</span></span>
+          <div class="stat-card" style="display:flex; gap:8px; align-items:flex-start;">
+            <img src="assets/imgIconSales.svg" style="width:20px; height:21px; flex-shrink:0; margin-top:2px;" alt="" />
+            <div style="display:flex; flex-direction:column; gap:8px; flex:1;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="stat-card-label">Total Sales</span>
+                <span class="info-icon" title="Total sales amount for the selected period">i</span>
+              </div>
+              <span class="stat-card-value" id="stat-sales">SR 23,586<span class="cents">.49</span></span>
+            </div>
           </div>
-          <div class="stat-card">
-            <span class="stat-card-label">Total Received</span>
-            <span class="stat-card-value" id="stat-received">SR 2,469<span class="cents">.49</span></span>
+          <div class="stat-card" style="display:flex; gap:8px; align-items:flex-start;">
+            <img src="assets/imgIconDue.svg" style="width:20px; height:21px; flex-shrink:0; margin-top:2px;" alt="" />
+            <div style="display:flex; flex-direction:column; gap:8px; flex:1;">
+              <span class="stat-card-label">Total Due</span>
+              <span class="stat-card-value" id="stat-due">SR 245,698<span class="cents">.65</span></span>
+            </div>
+          </div>
+          <div class="stat-card" style="display:flex; gap:8px; align-items:flex-start;">
+            <img src="assets/imgIconReceived.svg" style="width:20px; height:21px; flex-shrink:0; margin-top:2px;" alt="" />
+            <div style="display:flex; flex-direction:column; gap:8px; flex:1;">
+              <span class="stat-card-label">Total Received</span>
+              <span class="stat-card-value" id="stat-received">SR 2,469<span class="cents">.49</span></span>
+            </div>
           </div>
         </div>
         <!-- Row 2: Full-width stocks card -->
         <div class="stat-cards-row">
-          <div class="stat-card">
-            <span class="stat-card-label">Stocks Worth</span>
-            <span class="stat-card-value" id="stat-stocks">SR 1,254,236<span class="cents">.00</span></span>
+          <div class="stat-card" style="display:flex; gap:8px; align-items:flex-start;">
+            <img src="assets/imgIconStocks.svg" style="width:20px; height:21px; flex-shrink:0; margin-top:2px;" alt="" />
+            <div style="display:flex; flex-direction:column; gap:8px; flex:1;">
+              <span class="stat-card-label">Stocks Worth</span>
+              <span class="stat-card-value" id="stat-stocks">SR 1,254,236<span class="cents">.00</span></span>
+            </div>
           </div>
         </div>
 
