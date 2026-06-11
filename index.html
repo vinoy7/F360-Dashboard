@@ -1458,17 +1458,20 @@ function buildDonutChart(period, category) {
   const legend = document.getElementById('donut-legend');
   legend.innerHTML = '';
   d.labels.forEach((label, i) => {
-    const [whole, cents] = d.values[i].split('.');
+    const target = parseFloat(d.values[i].replace(/[^0-9.]/g, ''));
     const row = document.createElement('div');
     row.style.cssText = 'display:flex; align-items:center; justify-content:space-between; width:100%;';
+    const valSpan = document.createElement('span');
+    valSpan.style.cssText = 'font-size:16px; font-weight:500; color:#262626; letter-spacing:-0.32px; line-height:24px;';
     row.innerHTML = `
       <div style="display:flex; gap:8px; align-items:center;">
         <div style="width:10px; height:10px; border-radius:50%; background:${d.colors[i]}; flex-shrink:0;"></div>
         <span style="font-size:16px; font-weight:400; color:#262626; letter-spacing:-0.32px; line-height:24px;">${label}</span>
       </div>
-      <span style="font-size:16px; font-weight:500; color:#262626; letter-spacing:-0.32px; line-height:24px;">${whole}<span style="font-size:14px; font-weight:500; letter-spacing:-0.28px;">.${cents}</span></span>
     `;
+    row.appendChild(valSpan);
     legend.appendChild(row);
+    rollSR(valSpan, target, true);
   });
 }
 
@@ -1493,10 +1496,12 @@ function buildItemsGrid(type) {
       </div>
       <div style="display:flex; flex-direction:column; align-items:center; gap:2px; width:100%;">
         <span style="font-size:18px; font-weight:500; color:#262626; letter-spacing:-0.4px; line-height:28px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; text-align:center;">${item.name}</span>
-        <span style="font-size:16px; font-weight:400; color:#0E8F53; letter-spacing:-0.36px; line-height:28px; text-align:center;">${item.profit} Profit</span>
+        <span class="item-profit" style="font-size:16px; font-weight:400; color:#0E8F53; letter-spacing:-0.36px; line-height:28px; text-align:center;"></span>
       </div>
     `;
     grid.appendChild(div);
+    const pctTarget = parseFloat(item.profit);
+    rollPct(div.querySelector('.item-profit'), pctTarget);
   });
 }
 
@@ -1529,9 +1534,11 @@ function buildVendorList() {
           <div style="font-size:14px; color:#8C8D8F; letter-spacing:-0.28px; line-height:20px;">${v.type}</div>
         </div>
       </div>
-      <span style="font-size:18px; font-weight:500; color:#262626; letter-spacing:-0.36px; white-space:nowrap; flex-shrink:0; margin-left:12px;">${(() => { const a = v.amount.replace(/^[+−\-]\s*/, ''); const [w,c] = a.split('.'); return c ? w + '.<span style="font-size:14px;font-weight:500;">' + c + '</span>' : a; })()}</span>
+      <span class="vendor-amt" style="font-size:18px; font-weight:500; color:#262626; letter-spacing:-0.36px; white-space:nowrap; flex-shrink:0; margin-left:12px;"></span>
     `;
     list.appendChild(row);
+    const amtTarget = parseFloat(v.amount.replace(/[^0-9.]/g, '')) || 0;
+    rollSR(row.querySelector('.vendor-amt'), amtTarget, true);
   });
 }
 
@@ -1556,6 +1563,39 @@ function rollKpi(el, htmlTarget) {
   };
   el._raf = requestAnimationFrame(tick);
 }
+// Roll plain SR amount with small cents (used in donut legend + vendor list)
+function rollSR(el, target, centsSmall) {
+  if (el._raf) cancelAnimationFrame(el._raf);
+  const duration = 900, start = performance.now();
+  const fmt = (n) => {
+    const [w, c] = n.toFixed(2).split('.');
+    const whole = 'SR ' + Number(w).toLocaleString('en-US');
+    return centsSmall
+      ? `${whole}<span style="font-size:14px;font-weight:500;">.${c}</span>`
+      : `${whole}.${c}`;
+  };
+  const tick = (now) => {
+    const t = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - t, 4);
+    el.innerHTML = fmt(target * eased);
+    if (t < 1) { el._raf = requestAnimationFrame(tick); }
+    else { el.innerHTML = fmt(target); el._raf = null; }
+  };
+  el._raf = requestAnimationFrame(tick);
+}
+// Roll percentage (used in top 4 items profit)
+function rollPct(el, target) {
+  if (el._raf) cancelAnimationFrame(el._raf);
+  const duration = 900, start = performance.now();
+  const tick = (now) => {
+    const t = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - t, 4);
+    el.textContent = (target * eased).toFixed(2) + '%';
+    if (t < 1) { el._raf = requestAnimationFrame(tick); }
+    else { el.textContent = target.toFixed(2) + '%'; el._raf = null; }
+  };
+  el._raf = requestAnimationFrame(tick);
+}
 
 function updateStats(period) {
   const d = DATA[period];
@@ -1568,9 +1608,9 @@ function updateStats(period) {
   // Payments
   const p = d.payments;
   document.getElementById('pay-transactions').textContent = p.transactions;
-  document.getElementById('pay-received-total').innerHTML = p.receivedTotal;
+  rollKpi(document.getElementById('pay-received-total'), p.receivedTotal);
   document.getElementById('pay-invoices').textContent = p.invoices;
-  document.getElementById('pay-due-total').innerHTML = p.dueTotal;
+  rollKpi(document.getElementById('pay-due-total'), p.dueTotal);
 
   document.getElementById('prog-collection').style.width = p.collectionPct + '%';
   document.getElementById('prog-cash').style.flex = '1';
