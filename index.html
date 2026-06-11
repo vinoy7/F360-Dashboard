@@ -1382,7 +1382,6 @@ function initWhenReady() {
     setTimeout(() => {
       render();
       if (cashflowChart) cashflowChart.resize();
-      if (donutChartInstance) donutChartInstance.resize();
     }, 20);
   });
 }
@@ -1396,7 +1395,6 @@ if (document.readyState === 'loading') {
 // Resize guard
 window.addEventListener('resize', () => {
   if (cashflowChart) { cashflowChart.resize(); }
-  if (donutChartInstance) { donutChartInstance.resize(); }
 });
 </script>
 </body>
