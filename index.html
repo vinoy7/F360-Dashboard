@@ -589,32 +589,6 @@
       flex-shrink: 0;
       position: relative;
     }
-    .info-icon[data-tip]::after {
-      content: attr(data-tip);
-      position: absolute;
-      bottom: calc(100% + 10px);
-      left: 50%;
-      width: 240px;
-      transform: translateX(-50%) scale(0.96);
-      transform-origin: bottom center;
-      background: #262626;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 18px;
-      letter-spacing: -0.24px;
-      text-align: center;
-      padding: 8px 12px;
-      border-radius: 8px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 150ms ease-out, transform 150ms cubic-bezier(0.23, 1, 0.32, 1);
-      z-index: 10;
-    }
-    .info-icon[data-tip]:hover::after {
-      opacity: 1;
-      transform: translateX(-50%) scale(1);
-    }
 
     /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
@@ -824,7 +798,7 @@
             <div style="display:flex; align-items:center; gap:8px;">
               <img src="assets/imgIconSales.svg" style="width:20px; height:21px; flex-shrink:0;" alt="" />
               <span class="stat-card-label">Total Sales</span>
-              <span class="info-icon" data-tip="Total amount of Invoices from Delivery sales that are delivered and cash sales">i</span>
+              <span class="info-icon" onmouseenter="showInfoTooltip(this)" onmouseleave="hideInfoTooltip()" data-tip="Total amount of Invoices from Delivery sales that are delivered and cash sales">i</span>
             </div>
             <span class="stat-card-value" style="padding-left:26px;" id="stat-sales">SR 23,586<span class="cents">.49</span></span>
           </div>
@@ -2108,6 +2082,22 @@ function ciBarData(b, vi, bi) {
   }
   return null;
 }
+function showInfoTooltip(el) {
+  const tt = document.getElementById('info-tooltip');
+  tt.textContent = el.dataset.tip;
+  tt.style.display = 'block';
+  const rect = el.getBoundingClientRect();
+  const ttRect = tt.getBoundingClientRect();
+  let left = rect.left + rect.width / 2 - ttRect.width / 2;
+  let top = rect.top - ttRect.height - 10;
+  left = Math.max(8, Math.min(left, window.innerWidth - ttRect.width - 8));
+  if (top < 8) top = rect.bottom + 10;
+  tt.style.left = left + 'px';
+  tt.style.top = top + 'px';
+}
+function hideInfoTooltip() {
+  document.getElementById('info-tooltip').style.display = 'none';
+}
 function showCIBarTooltip(el) {
   const tt = document.getElementById('ci-bar-tooltip');
   document.getElementById('ci-bar-tt-line1').textContent = el.dataset.ttLine1;
@@ -2346,7 +2336,7 @@ function getBorderInset(s) {
   return { width: w, color };
 }
 
-const LISSE_SKIP = '.action-btn, .dropdown-trigger, .dropdown-menu, .user-card, .nav-indicator, .nav-item, .nav-section, #sidebar, .pay-tooltip, .pt-swatch, #ci-bar-tooltip';
+const LISSE_SKIP = '.action-btn, .dropdown-trigger, .dropdown-menu, .user-card, .nav-indicator, .nav-item, .nav-section, #sidebar, .pay-tooltip, .pt-swatch, #ci-bar-tooltip, #info-tooltip';
 
 function applyLisse(el) {
   if (lisseMap.has(el)) return;
@@ -2386,6 +2376,7 @@ window.addEventListener('load', () => {
   mo.observe(document.body, { childList: true, subtree: true });
 });
 </script>
+<div id="info-tooltip" data-no-lisse style="display:none;position:fixed;z-index:9999;pointer-events:none;background:#262626;color:#fff;font-size:14px;font-weight:500;line-height:18px;letter-spacing:-0.24px;text-align:center;padding:8px 12px;border-radius:8px;width:240px;box-sizing:border-box;"></div>
 <div id="ci-bar-tooltip" data-no-lisse style="display:none;position:fixed;z-index:9999;pointer-events:none;background:white;border-radius:8px;padding:8px 10px;box-shadow:0 4px 16px rgba(0,0,0,0.12);min-width:140px;">
   <div id="ci-bar-tt-line1" style="font-size:14px;font-weight:500;color:#262626;letter-spacing:-0.28px;line-height:20px;white-space:nowrap;"></div>
   <div id="ci-bar-tt-line2" style="font-size:14px;font-weight:400;letter-spacing:-0.28px;line-height:20px;white-space:nowrap;margin-top:2px;"></div>
