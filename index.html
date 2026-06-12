@@ -1042,12 +1042,12 @@
             <div>
               <div class="tab-group" id="credit-tabs" style="width:220px;">
                 <div class="tab-indicator" id="credit-indicator"></div>
-                <button class="tab-btn" data-credit="vendors">Vendors</button>
-                <button class="tab-btn active" data-credit="invoices">Invoices</button>
+                <button class="tab-btn active" data-credit="vendors">Vendors</button>
+                <button class="tab-btn" data-credit="invoices">Invoices</button>
               </div>
             </div>
             <!-- Invoices panel -->
-            <div id="credit-invoices-panel" style="display:flex; gap:24px; align-items:stretch;">
+            <div id="credit-invoices-panel" style="display:none; gap:24px; align-items:stretch;">
               <!-- Card 1: Overdue 30+ days (red) -->
               <div data-no-lisse style="position:relative; flex:1; min-width:0; height:260px; border-radius:10px; border:2px solid #FFDBDB; overflow:hidden; background:white; display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; padding:20px 12px; box-sizing:border-box;">
                 <div style="position:relative; display:flex; flex-direction:column; gap:16px; align-items:center; width:220px;">
@@ -1097,9 +1097,56 @@
                 <div data-no-lisse style="position:absolute; inset:0; pointer-events:none; box-shadow:inset 0px 0px 20px 2px rgba(227,227,229,0.6);"></div>
               </div>
             </div>
-            <!-- Vendors panel (placeholder) -->
-            <div id="credit-vendors-panel" style="display:none; padding:32px 0; text-align:center; color:#8C8D8F; font-size:14px; font-family:'DM Sans',sans-serif;">
-              No vendor credit data available.
+            <!-- Vendors panel -->
+            <div id="credit-vendors-panel" style="display:block;">
+              <div data-no-lisse style="border:1px solid #EDEDED; border-radius:8px; overflow:hidden; display:flex; align-items:flex-start; justify-content:space-between;">
+                <!-- Column 1: Vendor Name (flex:1) -->
+                <div style="flex:1; min-width:0; display:flex; flex-direction:column;">
+                  <div style="background:#F4F4F5; padding:10px 12px; display:flex; align-items:center;">
+                    <div style="display:flex; gap:2px; align-items:center; padding:2px 4px; border-radius:4px;">
+                      <span style="font-size:12px; font-weight:500; color:#8C8D8F; letter-spacing:-0.24px; line-height:16px; white-space:nowrap;">Vendor Name</span>
+                      <img src="assets/credit-sorting.svg" style="width:10px; height:16px; display:block;" alt="" />
+                    </div>
+                  </div>
+                  <div id="ci-vendor-rows"></div>
+                </div>
+                <!-- Column 2: Total Due (SR) — 140px -->
+                <div style="width:140px; flex-shrink:0; display:flex; flex-direction:column;">
+                  <div style="background:#F4F4F5; padding:10px 12px; display:flex; align-items:center;">
+                    <div style="display:flex; gap:4px; align-items:center; padding:2px 4px; border-radius:4px;">
+                      <span style="font-size:12px; font-weight:500; color:#8C8D8F; letter-spacing:-0.24px; line-height:16px; white-space:nowrap;">Total Due (SR)</span>
+                    </div>
+                  </div>
+                  <div id="ci-due-rows"></div>
+                </div>
+                <!-- Column 3: Amt. Overdue (SR) — 140px -->
+                <div style="width:140px; flex-shrink:0; display:flex; flex-direction:column;">
+                  <div style="background:#F4F4F5; padding:10px 12px; display:flex; align-items:center;">
+                    <div style="display:flex; gap:4px; align-items:center; padding:2px 4px; border-radius:4px;">
+                      <span style="font-size:12px; font-weight:500; color:#8C8D8F; letter-spacing:-0.24px; line-height:16px; white-space:nowrap;">Amt. Overdue (SR)</span>
+                    </div>
+                  </div>
+                  <div id="ci-overdue-rows"></div>
+                </div>
+                <!-- Column 4: Last 10 Invoice trend — 250px -->
+                <div style="width:250px; flex-shrink:0; display:flex; flex-direction:column;">
+                  <div style="background:#F4F4F5; padding:10px 12px; display:flex; align-items:center;">
+                    <div style="display:flex; gap:4px; align-items:center; padding:2px 4px; border-radius:4px;">
+                      <span style="font-size:12px; font-weight:500; color:#8C8D8F; letter-spacing:-0.24px; line-height:16px; white-space:nowrap;">Last 10 Invoice trend</span>
+                    </div>
+                  </div>
+                  <div id="ci-payments-rows"></div>
+                </div>
+                <!-- Column 5: Risk Status — 120px -->
+                <div style="width:120px; flex-shrink:0; display:flex; flex-direction:column;">
+                  <div style="background:#F4F4F5; padding:10px 12px; display:flex; align-items:center;">
+                    <div style="display:flex; gap:4px; align-items:center; padding:2px 4px; border-radius:4px;">
+                      <span style="font-size:12px; font-weight:500; color:#8C8D8F; letter-spacing:-0.24px; line-height:16px; white-space:nowrap;">Risk Status</span>
+                    </div>
+                  </div>
+                  <div id="ci-risk-rows"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1380,18 +1427,22 @@ const ITEMS = {
 };
 
 const ICON_COLORS = {
-  yellow: { bg: '#FCF4CA', icon: '#D6C66B' },
-  pink:   { bg: '#FFEBF3', icon: '#E5B8CB' },
-  blue:   { bg: '#EAEFFF', icon: '#ABB5D6' },
-  brown:  { bg: '#F1E4DD', icon: '#D6BEAB' },
+  yellow:  { bg: '#FCF4CA', icon: '#D6C66B' },
+  pink:    { bg: '#FFEBF3', icon: '#E5B8CB' },
+  blue:    { bg: '#EAEFFF', icon: '#ABB5D6' },
+  brown:   { bg: '#F1E4DD', icon: '#D6BEAB' },
+  orange:  { bg: '#FFECD6', icon: '#E1BB8F' },
+  teal:    { bg: '#E1F0F5', icon: '#ABCCD6' },
 };
 
 // Building SVG paths by icon color
 const BUILDING_ICONS = {
-  yellow: 'assets/imgBuilding4.svg',
-  brown:  'assets/imgBuilding3.svg',
-  blue:   'assets/imgBuilding2.svg',
-  pink:   'assets/imgBuilding1.svg',
+  yellow:  'assets/imgBuilding4.svg',
+  brown:   'assets/imgBuilding3.svg',
+  blue:    'assets/imgBuilding2.svg',
+  pink:    'assets/imgBuilding1.svg',
+  orange:  'assets/imgBuildingOrange.svg',
+  teal:    'assets/imgBuildingTeal.svg',
 };
 
 // Extra businesses shown in the Least-performers list (amount magnitude drives sort)
@@ -1976,6 +2027,103 @@ document.querySelectorAll('#credit-tabs .tab-btn').forEach(b => b.addEventListen
   document.getElementById('credit-invoices-panel').style.display = tab === 'invoices' ? 'flex' : 'none';
   document.getElementById('credit-vendors-panel').style.display = tab === 'vendors' ? 'block' : 'none';
 }));
+
+// Credit Intelligence — vendor table
+const CI_VENDORS = [
+  { name: 'Atlas Digital Systems', type: 'Wholesaler', icon: 'pink',
+    due: { val: 120500, prefix: '-' }, overdue: { val: 20000, prefix: '-' },
+    bars: ['G','G','G','O','O','G','G','G','G','O','R','R'],
+    summary: '7/10 paid on or before due date', risk: 'High' },
+  { name: 'Horizon Systems Group', type: 'Retailer', icon: 'yellow',
+    due: { val: 120000, prefix: '-' }, overdue: { val: 60000, prefix: '-' },
+    bars: ['O','O','G','G','O','G','G','G','G','O','O','R'],
+    summary: '6/10 paid on or before due date', risk: 'High' },
+  { name: 'Meridian Dynamics Solutions', type: 'Retailer', icon: 'orange',
+    due: { val: 0, prefix: '' }, overdue: { val: 0, prefix: '' },
+    bars: ['G','G','G','G','G','G','G','G','G','O','G','G'],
+    summary: '9/10 paid on or before due date', risk: 'Medium' },
+  { name: 'Mitsuishi Engineering & Shipbuilding Co Ltd', type: 'Retailer', icon: 'brown',
+    due: { val: 4000, prefix: '+' }, overdue: { val: 0, prefix: '' },
+    bars: ['G','G','G','G','G','G','G','G','G','G','G','G'],
+    summary: '10/10 paid on or before due date', risk: 'Low' },
+  { name: 'Quantum Dynamics Solutions and Innovations LLC', type: 'Retailer', icon: 'blue',
+    due: { val: 0, prefix: '' }, overdue: { val: 0, prefix: '' },
+    bars: ['G','G','G','G','O','G','G','G','G','O','O','G'],
+    summary: '7/10 paid on or before due date', risk: null },
+  { name: 'Stellar Innovations Inc.', type: 'Retailer', icon: 'teal',
+    due: { val: 170000, prefix: '-' }, overdue: { val: 60000, prefix: '-' },
+    bars: ['G','G','G','O','O','G','G','G','G','O','G','R'],
+    summary: '6/10 paid on or before due date', risk: 'Medium' }
+];
+const CI_BAR_COLORS = { G: '#0E8F53', O: '#E07509', R: '#E72D2D', '-': '#CACACC' };
+
+function formatCIAmount(val, prefix) {
+  if (val === 0) return { text: '0', cents: '.00', color: '#262626' };
+  const formatted = val.toLocaleString('en-US');
+  const color = prefix === '+' ? '#0E8F53' : '#262626';
+  return { text: (prefix === '+' ? '+ ' : '- ') + formatted, cents: '.00', color };
+}
+
+const CI_RISK = {
+  High:   { bg: '#FEE2E0', color: '#E72D2D' },
+  Medium: { bg: '#FFF0DB', color: '#E07509' },
+  Low:    { bg: '#F4F4F5', color: '#8C8D8F' }
+};
+
+function buildCIVendorTable() {
+  const vendorRows = document.getElementById('ci-vendor-rows');
+  const dueRows = document.getElementById('ci-due-rows');
+  const overdueRows = document.getElementById('ci-overdue-rows');
+  const payRows = document.getElementById('ci-payments-rows');
+  const riskRows = document.getElementById('ci-risk-rows');
+  if (!vendorRows) return;
+  vendorRows.innerHTML = dueRows.innerHTML = overdueRows.innerHTML = payRows.innerHTML = riskRows.innerHTML = '';
+  CI_VENDORS.forEach((v, i) => {
+    const isLast = i === CI_VENDORS.length - 1;
+    const divider = isLast ? '' : '<div style="height:1px;background:#EDEDED;"></div>';
+    const iconBg = ICON_COLORS[v.icon] ? ICON_COLORS[v.icon].bg : '#F4F4F5';
+    const iconSrc = BUILDING_ICONS[v.icon] || 'assets/imgBuilding1.svg';
+    vendorRows.insertAdjacentHTML('beforeend',
+      `<div style="display:flex;align-items:center;gap:12px;padding:14px 16px;">
+        <div style="width:36px;height:36px;border-radius:70px;background:${iconBg};display:flex;align-items:center;justify-content:center;flex-shrink:0;box-sizing:border-box;padding:8px;">
+          <img src="${iconSrc}" style="width:20px;height:20px;" alt=""/>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:14px;font-weight:400;color:#262626;letter-spacing:-0.28px;line-height:20px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${v.name}</div>
+          <div style="font-size:14px;font-weight:400;color:#8C8D8F;letter-spacing:-0.28px;line-height:20px;">${v.type}</div>
+        </div>
+      </div>${divider}`);
+    function amtCell(val, prefix) {
+      const { text, cents, color } = formatCIAmount(val, prefix);
+      const pl = val === 0 ? '27px' : '16px';
+      return `<div style="display:flex;align-items:center;padding:14px 16px 14px ${pl};height:68px;box-sizing:border-box;">
+        <span style="font-size:0;color:${color};white-space:nowrap;">
+          <span style="font-size:14px;font-weight:400;line-height:20px;letter-spacing:-0.28px;">${text}</span><span style="font-size:10px;font-weight:500;line-height:16px;letter-spacing:-0.2px;">${cents}</span>
+        </span>
+      </div>${divider}`;
+    }
+    dueRows.insertAdjacentHTML('beforeend', amtCell(v.due.val, v.due.prefix));
+    overdueRows.insertAdjacentHTML('beforeend', amtCell(v.overdue.val, v.overdue.prefix));
+    const bars = v.bars.map(b => `<div style="width:6px;height:18px;border-radius:1px;background:${CI_BAR_COLORS[b]||'#CACACC'};flex-shrink:0;"></div>`).join('');
+    payRows.insertAdjacentHTML('beforeend',
+      `<div style="padding:12px 16px 10px;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:3px;align-items:flex-start;">${bars}</div>
+        <span style="font-size:14px;font-weight:400;color:#8C8D8F;letter-spacing:-0.28px;line-height:20px;white-space:nowrap;">${v.summary}</span>
+      </div>${divider}`);
+    if (v.risk && CI_RISK[v.risk]) {
+      const r = CI_RISK[v.risk];
+      riskRows.insertAdjacentHTML('beforeend',
+        `<div style="display:flex;align-items:center;padding:14px 16px;height:68px;box-sizing:border-box;">
+          <div style="background:${r.bg};border-radius:4px;padding:4px 8px;height:28px;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:14px;font-weight:500;color:${r.color};letter-spacing:-0.28px;line-height:20px;white-space:nowrap;">${v.risk}</span>
+          </div>
+        </div>${divider}`);
+    } else {
+      riskRows.insertAdjacentHTML('beforeend', amtCell(0, ''));
+    }
+  });
+}
+buildCIVendorTable();
 
 // Sidebar nav with single sliding indicator
 function moveNavIndicator(item) {
