@@ -248,6 +248,32 @@
       box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
     }
 
+    .nav-section {
+      position: relative;
+    }
+
+    .nav-indicator {
+      position: absolute;
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+      transition: top 250ms cubic-bezier(0.23, 1, 0.32, 1), height 250ms cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .nav-section .nav-item {
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav-section .nav-item.active {
+      background: transparent;
+      box-shadow: none;
+    }
+
     .nav-item-content {
       display: flex;
       align-items: center;
@@ -607,7 +633,8 @@
   <!-- Nav items + lower group -->
   <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; overflow:hidden;">
     <!-- Top nav -->
-    <nav id="top-nav" style="display:flex; flex-direction:column; gap:4px;">
+    <nav id="top-nav" class="nav-section" style="display:flex; flex-direction:column; gap:4px;">
+      <div id="nav-indicator-top" class="nav-indicator"></div>
       <div class="nav-item" data-nav="Dashboard">
         <div class="nav-item-content">
           <svg viewBox="0 0 13.2501 13.2501" fill="none" xmlns="http://www.w3.org/2000/svg" class="nav-icon"><g><path d="M0.625049 2.75838C0.625049 2.01172 0.625049 1.63838 0.770383 1.35305C0.898212 1.10218 1.10218 0.898212 1.35305 0.770383C1.63838 0.625049 2.01172 0.625049 2.75838 0.625049H3.15838C3.90505 0.625049 4.27838 0.625049 4.56372 0.770383C4.81459 0.898212 5.01855 1.10218 5.14638 1.35305C5.29172 1.63838 5.29172 2.01172 5.29172 2.75838V4.49172C5.29172 5.23838 5.29172 5.61172 5.14638 5.89705C5.01855 6.14792 4.81459 6.35189 4.56372 6.47972C4.27838 6.62505 3.90505 6.62505 3.15838 6.62505H2.75838C2.01172 6.62505 1.63838 6.62505 1.35305 6.47972C1.10218 6.35189 0.898212 6.14792 0.770383 5.89705C0.625049 5.61172 0.625049 5.23838 0.625049 4.49172V2.75838Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/><path d="M0.625049 10.9584C0.625049 10.6484 0.62505 10.4937 0.650383 10.3651C0.701786 10.1063 0.828802 9.86858 1.01535 9.68202C1.20191 9.49547 1.43961 9.36845 1.69838 9.31705C1.82705 9.29172 1.98172 9.29172 2.29172 9.29172H3.62505C3.93505 9.29172 4.08972 9.29172 4.21838 9.31705C4.47715 9.36845 4.71486 9.49547 4.90141 9.68202C5.08796 9.86858 5.21498 10.1063 5.26638 10.3651C5.29172 10.4937 5.29172 10.6484 5.29172 10.9584C5.29172 11.2684 5.29172 11.423 5.26638 11.5517C5.21498 11.8105 5.08796 12.0482 4.90141 12.2347C4.71486 12.4213 4.47715 12.5483 4.21838 12.5997C4.08972 12.625 3.93505 12.625 3.62505 12.625H2.29172C1.98172 12.625 1.82705 12.625 1.69838 12.5997C1.43961 12.5483 1.20191 12.4213 1.01535 12.2347C0.828802 12.0482 0.701786 11.8105 0.650383 11.5517C0.62505 11.423 0.625049 11.2684 0.625049 10.9584Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.95838 2.29172C7.95838 1.98172 7.95838 1.82705 7.98372 1.69838C8.03512 1.43961 8.16213 1.20191 8.34869 1.01535C8.53524 0.828802 8.77295 0.701786 9.03172 0.650383C9.16038 0.62505 9.31505 0.625049 9.62505 0.625049H10.9584C11.2684 0.625049 11.423 0.62505 11.5517 0.650383C11.8105 0.701786 12.0482 0.828802 12.2347 1.01535C12.4213 1.20191 12.5483 1.43961 12.5997 1.69838C12.625 1.82705 12.625 1.98172 12.625 2.29172C12.625 2.60172 12.625 2.75638 12.5997 2.88505C12.5483 3.14382 12.4213 3.38152 12.2347 3.56808C12.0482 3.75463 11.8105 3.88165 11.5517 3.93305C11.423 3.95838 11.2684 3.95838 10.9584 3.95838H9.62505C9.31505 3.95838 9.16038 3.95838 9.03172 3.93305C8.77295 3.88165 8.53524 3.75463 8.34869 3.56808C8.16213 3.38152 8.03512 3.14382 7.98372 2.88505C7.95838 2.75638 7.95838 2.60172 7.95838 2.29172Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.95838 8.75838C7.95838 8.01172 7.95838 7.63838 8.10372 7.35305C8.23155 7.10218 8.43551 6.89821 8.68638 6.77038C8.97172 6.62505 9.34505 6.62505 10.0917 6.62505H10.4917C11.2384 6.62505 11.6117 6.62505 11.897 6.77038C12.1479 6.89821 12.3519 7.10218 12.4797 7.35305C12.625 7.63838 12.625 8.01172 12.625 8.75838V10.4917C12.625 11.2384 12.625 11.6117 12.4797 11.897C12.3519 12.1479 12.1479 12.3519 11.897 12.4797C11.6117 12.625 11.2384 12.625 10.4917 12.625H10.0917C9.34505 12.625 8.97172 12.625 8.68638 12.4797C8.43551 12.3519 8.23155 12.1479 8.10372 11.897C7.95838 11.6117 7.95838 11.2384 7.95838 10.4917V8.75838Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
@@ -653,7 +680,8 @@
     </nav>
 
     <!-- Bottom nav -->
-    <div style="display:flex; flex-direction:column; gap:4px;">
+    <div id="bottom-nav" class="nav-section" style="display:flex; flex-direction:column; gap:4px;">
+      <div id="nav-indicator-bottom" class="nav-indicator"></div>
       <div class="nav-item" data-nav="Help">
         <div class="nav-item-content">
           <svg viewBox="0 0 13.25 13.25" fill="none" xmlns="http://www.w3.org/2000/svg" class="nav-icon"><path d="M4.81266 5.10402C4.81266 4.10308 5.62408 3.29167 6.62502 3.29167C7.62595 3.29167 8.43737 4.10308 8.43737 5.10402C8.43737 5.74152 8.10822 6.30215 7.61059 6.62522C7.12792 6.93857 6.62502 7.38288 6.62502 7.95833M6.62502 9.95833H6.62568M12.625 6.625C12.625 9.93871 9.93871 12.625 6.625 12.625C3.31129 12.625 0.625 9.93871 0.625 6.625C0.625 3.31129 3.31129 0.625 6.625 0.625C9.93871 0.625 12.625 3.31129 12.625 6.625Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1811,14 +1839,47 @@ document.getElementById('vendor-tabs').addEventListener('click', (e) => {
   buildVendorList();
 });
 
-// Sidebar nav
+// Sidebar nav with sliding indicator
+function moveNavIndicator(indicatorId, item) {
+  const indicator = document.getElementById(indicatorId);
+  indicator.style.top = item.offsetTop + 'px';
+  indicator.style.height = item.offsetHeight + 'px';
+}
+
+function setNavIndicator(item) {
+  const inTop = document.getElementById('top-nav').contains(item);
+  const indTop = document.getElementById('nav-indicator-top');
+  const indBot = document.getElementById('nav-indicator-bottom');
+  if (inTop) {
+    indTop.style.display = '';
+    indBot.style.display = 'none';
+    moveNavIndicator('nav-indicator-top', item);
+  } else {
+    indBot.style.display = '';
+    indTop.style.display = 'none';
+    moveNavIndicator('nav-indicator-bottom', item);
+  }
+}
+
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', () => {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
     item.classList.add('active');
+    setNavIndicator(item);
   });
 });
-document.querySelector('[data-nav="Dashboard"]').classList.add('active');
+
+// Init: position indicator on Dashboard (default active)
+(function initNavIndicator() {
+  const active = document.querySelector('[data-nav="Dashboard"]');
+  active.classList.add('active');
+  if (active.offsetHeight > 0) {
+    document.getElementById('nav-indicator-bottom').style.display = 'none';
+    moveNavIndicator('nav-indicator-top', active);
+  } else {
+    requestAnimationFrame(initNavIndicator);
+  }
+})();
 
 // =========================================================
 // INIT
