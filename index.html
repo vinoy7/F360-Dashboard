@@ -979,7 +979,7 @@
           <div class="card-divider"></div>
           <!-- Vendors controls -->
           <div style="padding:16px; display:flex; align-items:center; justify-content:space-between;">
-            <div class="tab-group" id="vendor-tabs" style="width:auto;">
+            <div class="tab-group" id="vendor-tabs" style="width:160px;">
               <div class="tab-indicator" id="vendor-indicator"></div>
               <button class="tab-btn active" data-vendor="top">Top</button>
               <button class="tab-btn" data-vendor="least">Least</button>
@@ -1910,9 +1910,13 @@ function checkNarrowScreen() {
 checkNarrowScreen();
 window.addEventListener('resize', checkNarrowScreen);
 
-// Resize guard
+// Resize guard + re-position tab indicators
 window.addEventListener('resize', () => {
   if (cashflowChart) { cashflowChart.resize(); }
+  [['time-tabs','time-indicator'],['items-tabs','items-indicator'],['vendor-tabs','vendor-indicator']].forEach(([groupId, indId]) => {
+    const btn = document.querySelector(`#${groupId} .tab-btn.active`);
+    if (btn) moveIndicator(indId, btn);
+  });
 });
 
 // Refresh data
