@@ -1572,12 +1572,13 @@ function buildCashflowChart(period) {
         ctx.save();
         ctx.strokeStyle = '#EDEDED';
         ctx.lineWidth = 1;
-        ctx.setLineDash([8, 4]);
+        ctx.setLineDash([4, 4]);
         scales.x.ticks.forEach((_, i) => {
           const x = scales.x.getPixelForTick(i);
+          if (x <= chartArea.left + 1) return;
           ctx.beginPath();
           ctx.moveTo(x, chartArea.top);
-          ctx.lineTo(x, chartArea.bottom);
+          ctx.lineTo(x, chartArea.bottom - 1);
           ctx.stroke();
         });
         ctx.restore();
