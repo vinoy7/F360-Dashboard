@@ -2104,7 +2104,7 @@ function ciBarData(b, vi, bi) {
   }
   if (b === 'R') {
     const days = ((vi * 11 + bi * 7 + 13) % 40) + 1;
-    return { line1: amtFmt, line2: `Overdue by ${days} days`, color: '#E72D2D' };
+    return { line1: amtFmt, line2: `Overdue since ${days} days`, color: '#E72D2D' };
   }
   return null;
 }
