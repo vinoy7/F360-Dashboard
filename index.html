@@ -180,6 +180,10 @@
       font-family: 'DM Sans', sans-serif;
     }
 
+    .tab-btn:not(.active):hover {
+      color: #262626;
+    }
+
     .tab-btn.active {
       background: white;
       color: #262626;
@@ -1590,9 +1594,9 @@ function rollPct(el, target) {
   const tick = (now) => {
     const t = Math.min(1, (now - start) / duration);
     const eased = 1 - Math.pow(1 - t, 4);
-    el.textContent = (target * eased).toFixed(2) + '%';
+    el.textContent = (target * eased).toFixed(2) + '% Profit';
     if (t < 1) { el._raf = requestAnimationFrame(tick); }
-    else { el.textContent = target.toFixed(2) + '%'; el._raf = null; }
+    else { el.textContent = target.toFixed(2) + '% Profit'; el._raf = null; }
   };
   el._raf = requestAnimationFrame(tick);
 }
