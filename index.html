@@ -1547,11 +1547,7 @@ function buildCashflowChart(period) {
             font: { family: 'DM Sans', size: 14 },
             maxTicksLimit: 12,
           },
-          grid: {
-            color: '#EDEDED',
-            lineWidth: 1,
-            borderDash: [4, 4],
-          },
+          grid: { display: false },
           title: {
             display: true,
             text: 'Amount (in SCR millions)',
@@ -1570,6 +1566,23 @@ function buildCashflowChart(period) {
       layout: { padding: { right: 20, top: 8, bottom: 8 } }
     },
     plugins: [{
+      id: 'dashedGridLines',
+      beforeDatasetsDraw(chart) {
+        const { ctx, chartArea, scales } = chart;
+        ctx.save();
+        ctx.strokeStyle = '#EDEDED';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([8, 4]);
+        scales.x.ticks.forEach((_, i) => {
+          const x = scales.x.getPixelForTick(i);
+          ctx.beginPath();
+          ctx.moveTo(x, chartArea.top);
+          ctx.lineTo(x, chartArea.bottom);
+          ctx.stroke();
+        });
+        ctx.restore();
+      }
+    }, {
       id: 'endCapsAndLabels',
       afterDatasetsDraw(chart) {
         const { ctx } = chart;
