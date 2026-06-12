@@ -358,6 +358,35 @@
       padding: 16px;
     }
 
+    /* Credit Intelligence — invoice link buttons */
+    .credit-link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 6px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #623CEA;
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      white-space: nowrap;
+    }
+    .credit-link-btn:hover {
+      background: #F3F0FF;
+    }
+    .credit-link-divider {
+      width: 1px;
+      height: 20px;
+      background: #D9D9D9;
+      border-radius: 1px;
+      flex-shrink: 0;
+    }
+
     /* Product item ring colors */
     .ring-gold { border-color: #B88D00 !important; }
     .ring-silver { border-color: #98A2B3 !important; }
@@ -1000,6 +1029,81 @@
           <div id="vendor-list" style="flex:1; padding:12px 16px; display:flex; flex-direction:column; justify-content:space-between; gap:0;"></div>
         </div>
         </div><!-- end Payments + Vendors row -->
+
+        <!-- Credit Intelligence -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Credit Intelligence</span>
+          </div>
+          <div class="card-divider"></div>
+          <!-- Tabs + cards in one container (no divider between) -->
+          <div style="padding:16px; display:flex; flex-direction:column; gap:16px;">
+            <!-- Vendors / Invoices tab switcher -->
+            <div>
+              <div class="tab-group" id="credit-tabs" style="width:220px;">
+                <div class="tab-indicator" id="credit-indicator"></div>
+                <button class="tab-btn" data-credit="vendors">Vendors</button>
+                <button class="tab-btn active" data-credit="invoices">Invoices</button>
+              </div>
+            </div>
+            <!-- Invoices panel -->
+            <div id="credit-invoices-panel" style="display:flex; gap:24px; align-items:stretch;">
+              <!-- Card 1: Overdue 30+ days (red) -->
+              <div data-no-lisse style="position:relative; flex:1; min-width:0; height:260px; border-radius:10px; border:2px solid #FFDBDB; overflow:hidden; background:white; display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; padding:20px 12px; box-sizing:border-box;">
+                <div style="position:relative; display:flex; flex-direction:column; gap:16px; align-items:center; width:220px;">
+                  <img src="assets/credit-invoice-red.svg" style="width:50px; height:50px; display:block;" alt="" />
+                  <div style="display:flex; flex-direction:column; align-items:center; color:#262626;">
+                    <span style="font-size:18px; font-weight:600; line-height:28px; letter-spacing:-0.36px; white-space:nowrap;">24 Invoices Overdue</span>
+                    <span style="font-size:16px; font-weight:400; line-height:24px; letter-spacing:-0.32px; text-align:center; white-space:nowrap;">for more than 30 days</span>
+                  </div>
+                </div>
+                <div style="position:relative; display:flex; gap:8px; align-items:center; justify-content:center;">
+                  <button class="credit-link-btn">Send Reminder</button>
+                  <div class="credit-link-divider"></div>
+                  <button class="credit-link-btn">View Details</button>
+                </div>
+                <div data-no-lisse style="position:absolute; inset:0; pointer-events:none; box-shadow:inset 0px 0px 20px 2px rgba(245,157,157,0.5);"></div>
+              </div>
+              <!-- Card 2: Overdue <30 days (orange) -->
+              <div data-no-lisse style="position:relative; flex:1; min-width:0; height:260px; border-radius:10px; border:2px solid #FFE8CA; overflow:hidden; background:white; display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; padding:20px 12px; box-sizing:border-box;">
+                <div style="position:relative; display:flex; flex-direction:column; gap:16px; align-items:center; width:220px;">
+                  <img src="assets/credit-invoice-orange.svg" style="width:50px; height:50px; display:block;" alt="" />
+                  <div style="display:flex; flex-direction:column; align-items:center; color:#262626;">
+                    <span style="font-size:18px; font-weight:600; line-height:28px; letter-spacing:-0.36px; white-space:nowrap;">12 Invoices Overdue</span>
+                    <span style="font-size:16px; font-weight:400; line-height:24px; letter-spacing:-0.32px; text-align:center; white-space:nowrap;">for less than 30 days</span>
+                  </div>
+                </div>
+                <div style="position:relative; display:flex; gap:8px; align-items:center; justify-content:center;">
+                  <button class="credit-link-btn">Send Reminder</button>
+                  <div class="credit-link-divider"></div>
+                  <button class="credit-link-btn">View Details</button>
+                </div>
+                <div data-no-lisse style="position:absolute; inset:0; pointer-events:none; box-shadow:inset 0px 0px 20px 2px rgba(224,117,9,0.25);"></div>
+              </div>
+              <!-- Card 3: Due soon (grey) -->
+              <div data-no-lisse style="position:relative; flex:1; min-width:0; height:260px; border-radius:10px; border:2px solid #F2F2F2; overflow:hidden; background:white; display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; padding:20px 12px; box-sizing:border-box;">
+                <div style="position:relative; display:flex; flex-direction:column; gap:16px; align-items:center; width:220px;">
+                  <img src="assets/credit-invoice-grey.svg" style="width:50px; height:50px; display:block;" alt="" />
+                  <div style="display:flex; flex-direction:column; align-items:center; color:#262626;">
+                    <span style="font-size:18px; font-weight:600; line-height:28px; letter-spacing:-0.36px; white-space:nowrap;">8 Invoices Due</span>
+                    <span style="font-size:16px; font-weight:400; line-height:24px; letter-spacing:-0.32px; text-align:center; white-space:nowrap;">for in 2 days or less</span>
+                  </div>
+                </div>
+                <div style="position:relative; display:flex; gap:8px; align-items:center; justify-content:center;">
+                  <button class="credit-link-btn">Send Reminder</button>
+                  <div class="credit-link-divider"></div>
+                  <button class="credit-link-btn">View Details</button>
+                </div>
+                <div data-no-lisse style="position:absolute; inset:0; pointer-events:none; box-shadow:inset 0px 0px 20px 2px rgba(227,227,229,0.6);"></div>
+              </div>
+            </div>
+            <!-- Vendors panel (placeholder) -->
+            <div id="credit-vendors-panel" style="display:none; padding:32px 0; text-align:center; color:#8C8D8F; font-size:14px; font-family:'DM Sans',sans-serif;">
+              No vendor credit data available.
+            </div>
+          </div>
+        </div>
+
       </div><!-- end stat-cards-wrapper -->
       </div><!-- end overview section wrapper -->
 
@@ -1750,7 +1854,8 @@ function render() {
 (function() {
   const tip = document.createElement('div');
   tip.className = 'pay-tooltip';
-  tip.innerHTML = '<div class="pt-title"></div><div class="pt-row"><span class="pt-swatch"></span><span class="pt-amount"></span></div>';
+  tip.dataset.noLisse = '';
+  tip.innerHTML = '<div class="pt-title"></div><div class="pt-row"><span class="pt-swatch" data-no-lisse></span><span class="pt-amount"></span></div>';
   document.body.appendChild(tip);
   document.querySelectorAll('.prog-segment').forEach(seg => {
     seg.addEventListener('mouseenter', (e) => {
@@ -1861,6 +1966,17 @@ document.getElementById('vendor-tabs').addEventListener('click', (e) => {
   buildVendorList();
 });
 
+// Credit Intelligence tabs
+initIndicator('credit-tabs', 'credit-indicator');
+document.querySelectorAll('#credit-tabs .tab-btn').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('#credit-tabs .tab-btn').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  moveIndicator('credit-indicator', b);
+  const tab = b.dataset.credit;
+  document.getElementById('credit-invoices-panel').style.display = tab === 'invoices' ? 'flex' : 'none';
+  document.getElementById('credit-vendors-panel').style.display = tab === 'vendors' ? 'block' : 'none';
+}));
+
 // Sidebar nav with single sliding indicator
 function moveNavIndicator(item) {
   const wrapper = document.getElementById('nav-wrapper');
@@ -1936,7 +2052,7 @@ window.addEventListener('resize', checkNarrowScreen);
 // Resize guard + re-position tab indicators
 window.addEventListener('resize', () => {
   if (cashflowChart) { cashflowChart.resize(); }
-  [['time-tabs','time-indicator'],['items-tabs','items-indicator'],['vendor-tabs','vendor-indicator']].forEach(([groupId, indId]) => {
+  [['time-tabs','time-indicator'],['items-tabs','items-indicator'],['vendor-tabs','vendor-indicator'],['credit-tabs','credit-indicator']].forEach(([groupId, indId]) => {
     const btn = document.querySelector(`#${groupId} .tab-btn.active`);
     if (btn) moveIndicator(indId, btn);
   });
@@ -2010,7 +2126,7 @@ function getBorderInset(s) {
   return { width: w, color };
 }
 
-const LISSE_SKIP = '.action-btn, .dropdown-trigger, .dropdown-menu, .user-card, .nav-indicator, .nav-item, .nav-section, #sidebar';
+const LISSE_SKIP = '.action-btn, .dropdown-trigger, .dropdown-menu, .user-card, .nav-indicator, .nav-item, .nav-section, #sidebar, .pay-tooltip, .pt-swatch';
 
 function applyLisse(el) {
   if (lisseMap.has(el)) return;
