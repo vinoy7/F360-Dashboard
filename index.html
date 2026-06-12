@@ -1312,6 +1312,7 @@ let currentVendorSort = 'amount_pending';
 // =========================================================
 let cashflowChart = null;
 let donutChartInstance = null;
+let donutMouseLeave = null;
 let _cashflowLabelAlpha = 0;
 
 // =========================================================
@@ -1472,6 +1473,9 @@ function buildCashflowChart(period) {
 // =========================================================
 // DONUT CHART
 // =========================================================
+function dimHex() { return '#E3E3E5'; }
+
+
 function buildDonutChart(period, category) {
   const d = DATA[period].donut[category];
   const canvas = document.getElementById('donutChart');
@@ -1492,6 +1496,7 @@ function buildDonutChart(period, category) {
       datasets: [{
         data: d.data,
         backgroundColor: d.colors,
+        hoverBackgroundColor: d.colors,
         borderWidth: 0,
         hoverOffset: 0,
       }]
@@ -1500,6 +1505,13 @@ function buildDonutChart(period, category) {
       responsive: false,
       animation: { duration: 500 },
       cutout: '32%',
+      onHover: (event, elements) => {
+        if (elements.length === 0) return;
+        const colors = d.colors.map((c, i) => i === elements[0].index ? c : dimHex());
+        donutChartInstance.data.datasets[0].backgroundColor = colors;
+        donutChartInstance.data.datasets[0].hoverBackgroundColor = colors;
+        donutChartInstance.update('none');
+      },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -1509,6 +1521,7 @@ function buildDonutChart(period, category) {
           titleColor: '#262626',
           bodyColor: '#262626',
           padding: 10,
+          caretSize: 0,
           callbacks: {
             label: (ctx) => ' ' + d.values[ctx.dataIndex],
           }
@@ -1536,6 +1549,15 @@ function buildDonutChart(period, category) {
     legend.appendChild(row);
     rollSR(valSpan, target, true);
   });
+
+  if (donutMouseLeave) canvas.removeEventListener('mouseleave', donutMouseLeave);
+  donutMouseLeave = () => {
+    donutChartInstance._lastEvent = null;
+    donutChartInstance.data.datasets[0].backgroundColor = [...d.colors];
+    donutChartInstance.data.datasets[0].hoverBackgroundColor = [...d.colors];
+    donutChartInstance.update('none');
+  };
+  canvas.addEventListener('mouseleave', donutMouseLeave);
 }
 
 // =========================================================
@@ -1554,6 +1576,7 @@ function buildItemsGrid(type) {
       const avatarBg = idx < 2 ? '#262626' : '#FFFFFF';
       const borderWidth = idx < 2 ? '3px' : '4.5px';
       const card = document.createElement('div');
+      card.dataset.noLisse = '';
       card.style.cssText = 'flex:1; min-width:0; border:1px solid #E3E3E5; border-radius:8px; padding:20px 12px; display:flex; flex-direction:column; gap:16px; align-items:center;';
       card.innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center;">
@@ -1930,6 +1953,101 @@ document.getElementById('refresh-data').addEventListener('click', () => {
     const t = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
     document.getElementById('last-updated').textContent = 'Last Updated at ' + t;
   }, 400);
+});
+</script>
+
+<script type="module">
+import { generateClipPath } from './node_modules/@lisse/core/dist/path.js';
+
+const lisseMap = new WeakMap();
+
+function parseRadii(el) {
+  const s = getComputedStyle(el);
+  const raw = [
+    s.borderTopLeftRadius,
+    s.borderTopRightRadius,
+    s.borderBottomRightRadius,
+    s.borderBottomLeftRadius,
+  ];
+  if (raw.some(v => v.includes('%'))) return null;
+  const vals = raw.map(v => parseFloat(v) || 0);
+  const max = Math.max(...vals);
+  if (max <= 3 || max >= 50) return null;
+  return { tl: vals[0], tr: vals[1], br: vals[2], bl: vals[3] };
+}
+
+function updateClipPath(el, radii) {
+  const w = el.offsetWidth;
+  const h = el.offsetHeight;
+  if (!w || !h) return;
+  el.style.clipPath = generateClipPath(w, h, {
+    topLeft: radii.tl,
+    topRight: radii.tr,
+    bottomRight: radii.br,
+    bottomLeft: radii.bl,
+  });
+}
+
+const ro = new ResizeObserver(entries => {
+  for (const { target } of entries) {
+    const radii = lisseMap.get(target);
+    if (radii) updateClipPath(target, radii);
+  }
+});
+
+function getBorderInset(s) {
+  const sides = ['Top', 'Right', 'Bottom', 'Left'];
+  const widths = sides.map(side => parseFloat(s[`border${side}Width`]) || 0);
+  const colors = sides.map(side => s[`border${side}Color`]);
+  const styles = sides.map(side => s[`border${side}Style`]);
+  const w = widths[0];
+  if (!w) return null;
+  if (!widths.every(x => x === w)) return null;
+  if (!styles.every(st => st === 'solid')) return null;
+  const color = colors[0];
+  if (!color || color === 'transparent' || color === 'rgba(0, 0, 0, 0)') return null;
+  if (!colors.every(c => c === color)) return null;
+  return { width: w, color };
+}
+
+const LISSE_SKIP = '.action-btn, .dropdown-trigger, .dropdown-menu, .user-card';
+
+function applyLisse(el) {
+  if (lisseMap.has(el)) return;
+  if (el.dataset?.noLisse !== undefined || el.matches?.(LISSE_SKIP)) return;
+  const radii = parseRadii(el);
+  if (!radii) return;
+  const s = getComputedStyle(el);
+  const border = getBorderInset(s);
+  if (border) {
+    const inset = `inset 0 0 0 ${border.width}px ${border.color}`;
+    const existing = s.boxShadow && s.boxShadow !== 'none' ? s.boxShadow : '';
+    el.style.boxShadow = existing ? `${inset}, ${existing}` : inset;
+    el.style.border = 'none';
+  }
+  el.style.borderRadius = '0';
+  lisseMap.set(el, radii);
+  updateClipPath(el, radii);
+  ro.observe(el);
+}
+
+function scanAndApply(root) {
+  if (root.nodeType !== 1) return;
+  applyLisse(root);
+  root.querySelectorAll('*').forEach(applyLisse);
+}
+
+const mo = new MutationObserver(mutations => {
+  for (const m of mutations) {
+    for (const node of m.addedNodes) {
+      scanAndApply(node);
+    }
+  }
+});
+
+window.addEventListener('load', () => {
+  scanAndApply(document.body);
+  mo.observe(document.body, { childList: true, subtree: true });
 });
 </script>
 </body>

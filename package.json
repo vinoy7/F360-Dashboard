@@ -1,0 +1,24 @@
+{
+  "name": "fusepay-dashboard-prototype",
+  "version": "1.0.0",
+  "description": "Dashboard prototype",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vinoy7/F360-Dashboard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/vinoy7/F360-Dashboard/issues"
+  },
+  "homepage": "https://github.com/vinoy7/F360-Dashboard#readme",
+  "dependencies": {
+    "@lisse/core": "^0.4.0"
+  }
+}
