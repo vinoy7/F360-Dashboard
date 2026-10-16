@@ -1421,6 +1421,19 @@ const EXTRA_LEAST = [
   { name: 'Bluepeak Traders',     type: 'Retailer',   amount: 'SR 33,900.00', icon: 'pink'   },
 ];
 
+// Vendor area shown under name in Vendors Performance (replaces Retailer/Wholesaler)
+const VENDOR_AREA = {
+  'Atlas Digital Systems':         'Mahe',
+  'Mitsuishi Engineering':         'Grand Anse',
+  'Emmanuel Transports Pvt. Ltd.': 'Anse Royale',
+  'Redox Steel Pvt Ltd':           'Grand Anse',
+  'Whimsi Works':                  'Mahe',
+  'Verdant Supplies Co.':          'Anse Royale',
+  'Crestline Foods':               'Mahe',
+  'Nordic Tool Works':             'Grand Anse',
+  'Bluepeak Traders':              'Anse Royale',
+};
+
 // =========================================================
 // STATE
 // =========================================================
@@ -1763,7 +1776,7 @@ function buildVendorList() {
         </div>
         <div style="flex:1; min-width:0;">
           <div style="font-size:14px; color:#262626; letter-spacing:-0.28px; line-height:20px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${v.name}</div>
-          <div style="font-size:14px; color:#8C8D8F; letter-spacing:-0.28px; line-height:20px;">${v.type}</div>
+          <div style="font-size:14px; color:#8C8D8F; letter-spacing:-0.28px; line-height:20px;">${VENDOR_AREA[v.name] || 'Mahe'}</div>
         </div>
       </div>
       <span class="vendor-amt" style="font-size:18px; font-weight:500; color:#262626; letter-spacing:-0.36px; white-space:nowrap; flex-shrink:0; margin-left:12px;"></span>
