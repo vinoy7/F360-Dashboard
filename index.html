@@ -1421,7 +1421,7 @@ const EXTRA_LEAST = [
   { name: 'Bluepeak Traders',     type: 'Retailer',   amount: 'SR 33,900.00', icon: 'pink'   },
 ];
 
-// Vendor area shown under name in Vendors Performance (replaces Retailer/Wholesaler)
+// Vendor area shown under name in Vendors Performance + Credit Intelligence (replaces Retailer/Wholesaler)
 const VENDOR_AREA = {
   'Atlas Digital Systems':         'Mahe',
   'Mitsuishi Engineering':         'Grand Anse',
@@ -1432,6 +1432,11 @@ const VENDOR_AREA = {
   'Crestline Foods':               'Mahe',
   'Nordic Tool Works':             'Grand Anse',
   'Bluepeak Traders':              'Anse Royale',
+  'Horizon Systems Group':         'Anse Royale',
+  'Mitsuishi Engineering & Shipbuilding Co Ltd':    'Grand Anse',
+  'Meridian Dynamics Solutions':   'Mahe',
+  'Quantum Dynamics Solutions and Innovations LLC': 'Anse Royale',
+  'Stellar Innovations Inc.':      'Grand Anse',
 };
 
 // =========================================================
@@ -1665,11 +1670,10 @@ function buildDonutChart(period, category) {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: '#FFFFFF',
-          borderColor: '#D4D4D6',
-          borderWidth: 1,
-          titleColor: '#262626',
-          bodyColor: '#262626',
+          backgroundColor: '#262626',
+          borderWidth: 0,
+          titleColor: '#FFFFFF',
+          bodyColor: '#FFFFFF',
           padding: 10,
           caretSize: 0,
           callbacks: {
@@ -1724,7 +1728,7 @@ function buildItemsGrid(type) {
       const item = items[r * 2 + c];
       const idx = r * 2 + c;
       const avatarBg = idx < 2 ? '#262626' : '#FFFFFF';
-      const borderWidth = idx < 2 ? '3px' : '4.5px';
+      const borderWidth = '3px';
       const card = document.createElement('div');
       card.dataset.noLisse = '';
       card.style.cssText = 'flex:1; min-width:0; border:1px solid #E3E3E5; border-radius:8px; padding:20px 12px; display:flex; flex-direction:column; gap:16px; align-items:center;';
@@ -1739,7 +1743,7 @@ function buildItemsGrid(type) {
         </div>
         <div style="display:flex; flex-direction:column; align-items:center; width:100%;">
           <span style="font-size:18px; font-weight:500; color:#262626; letter-spacing:-0.36px; line-height:28px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; text-align:center;">${item.name}</span>
-          <span class="item-profit" style="font-size:16px; font-weight:400; color:#0E8F53; letter-spacing:-0.32px; line-height:24px; text-align:center;"></span>
+          <span class="item-profit" style="font-size:16px; font-weight:500; color:#0E8F53; letter-spacing:-0.32px; line-height:24px; text-align:center;"></span>
         </div>
       `;
       row.appendChild(card);
@@ -2164,7 +2168,7 @@ function buildCIVendorTable() {
         </div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:14px;font-weight:400;color:#262626;letter-spacing:-0.28px;line-height:20px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${v.name}</div>
-          <div style="font-size:14px;font-weight:400;color:#8C8D8F;letter-spacing:-0.28px;line-height:20px;">${v.type}</div>
+          <div style="font-size:14px;font-weight:400;color:#8C8D8F;letter-spacing:-0.28px;line-height:20px;">${VENDOR_AREA[v.name] || 'Mahe'}</div>
         </div>
       </div>${divider}`);
     function amtCell(val, prefix) {
