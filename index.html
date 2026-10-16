@@ -920,13 +920,13 @@
               <!-- Progress bar 1 -->
               <div style="display:flex; flex-direction:column; gap:12px;">
                 <div style="display:flex; gap:4px;">
-                  <div id="prog-collection" class="prog-segment" data-tip="Payment from collection" style="border-radius:8px 2px 2px 8px; background:#0E8F53; width:62%;"></div>
+                  <div id="prog-collection" class="prog-segment" data-tip="Payment from Collection" style="border-radius:8px 2px 2px 8px; background:#0E8F53; width:62%;"></div>
                   <div id="prog-cash" class="prog-segment" data-tip="Payment from Cash Sales" style="border-radius:2px 8px 8px 2px; background:#A0DDA3; flex:1;"></div>
                 </div>
                 <div style="display:flex; gap:19px; align-items:center;">
                   <div style="display:flex; gap:4px; align-items:center;">
                     <div class="legend-dot" style="background:#0E8F53;"></div>
-                    <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Payment from collection</span>
+                    <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Payment from Collection</span>
                   </div>
                   <div style="display:flex; gap:4px; align-items:center;">
                     <div class="legend-dot" style="background:#A0DDA3;"></div>
@@ -1879,7 +1879,7 @@ function updateStats(period) {
     el.dataset.amount = amount;
     el.dataset.color = color;
   };
-  setTip('prog-collection', 'Payment from collection', fmtAmt(col), '#0E8F53');
+  setTip('prog-collection', 'Payment from Collection', fmtAmt(col), '#0E8F53');
   setTip('prog-cash', 'Payment from Cash Sales', fmtAmt(recv - col), '#A0DDA3');
   setTip('prog-due', 'Due', fmtAmt(dueAmt), '#D4D4D6');
   setTip('prog-overdue', 'Overdue', fmtAmt(dueT - dueAmt), '#F59D9D');
