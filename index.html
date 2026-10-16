@@ -812,7 +812,7 @@
           <div class="stat-card" style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div style="display:flex; align-items:center; gap:8px;">
               <img src="assets/imgIconStocks.svg" style="width:20px; height:21px; flex-shrink:0;" alt="" />
-              <span class="stat-card-label">Worth of Stocks available in Warehouse</span>
+              <span class="stat-card-label">Worth of Stock available in Warehouse</span>
             </div>
             <span class="stat-card-value" style="padding-left:26px;" id="stat-stocks">SR 1,254,236<span class="cents">.00</span></span>
           </div>
@@ -2110,7 +2110,7 @@ function showInfoTooltip(el) {
   const rect = el.getBoundingClientRect();
   const ttRect = tt.getBoundingClientRect();
   let left = rect.left + rect.width / 2 - ttRect.width / 2;
-  let top = rect.bottom + 10;
+  let top = rect.bottom + 6;
   left = Math.max(8, Math.min(left, window.innerWidth - ttRect.width - 8));
   tt.style.left = left + 'px';
   tt.style.top = top + 'px';
