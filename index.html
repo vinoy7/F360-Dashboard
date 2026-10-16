@@ -574,7 +574,7 @@
       color: #8C8D8F;
       font-size: 10px;
       font-weight: 600;
-      cursor: help;
+      cursor: default;
       flex-shrink: 0;
       position: relative;
     }
@@ -823,7 +823,7 @@
           <!-- Cashflow header with legend -->
           <div class="card-header" style="flex-wrap:wrap; gap:8px;">
             <span class="card-title">Cashflow</span>
-            <div style="background:white; border:1px solid #EDEDED; border-radius:4px; display:flex; align-items:stretch; overflow:hidden;">
+            <div style="background:white; border:1px solid #D9D9D9; border-radius:4px; display:flex; align-items:stretch; overflow:hidden;">
               <div class="cashflow-legend-item">
                 <div class="cashflow-legend-swatch" style="background:repeating-linear-gradient(-45deg, #623CEA 0px, #623CEA 2px, #D7CCFF 2px, #D7CCFF 6px); border-radius:50%;"></div>
                 <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Purchase</span>
@@ -2110,9 +2110,8 @@ function showInfoTooltip(el) {
   const rect = el.getBoundingClientRect();
   const ttRect = tt.getBoundingClientRect();
   let left = rect.left + rect.width / 2 - ttRect.width / 2;
-  let top = rect.top - ttRect.height - 10;
+  let top = rect.bottom + 10;
   left = Math.max(8, Math.min(left, window.innerWidth - ttRect.width - 8));
-  if (top < 8) top = rect.bottom + 10;
   tt.style.left = left + 'px';
   tt.style.top = top + 'px';
 }
