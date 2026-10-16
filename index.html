@@ -595,7 +595,7 @@
 <body>
 
 <!-- ============================================================
-     NARROW SCREEN OVERLAY (< 1200px)
+     NARROW SCREEN OVERLAY (< 1250px)
      ============================================================ -->
 <div id="narrow-overlay" style="display:none; position:fixed; inset:0; background:#F9FAFB; z-index:9999; align-items:center; justify-content:center;">
   <div style="background:white; border-radius:12px; padding:48px 24px; width:432px; max-width:calc(100vw - 32px); display:flex; flex-direction:column; align-items:center; gap:32px; box-shadow:0px 0px 6px rgba(0,0,0,0.04), 0px 1px 3px rgba(0,0,0,0.02);">
@@ -604,7 +604,7 @@
       <p style="font-size:16px; font-weight:400; color:#262626; line-height:24px; letter-spacing:-0.32px; text-align:center; margin:0; font-family:'DM Sans',sans-serif;">
         Fuse360 works best on larger screens.<br>
         You need a screen with resolution width of<br>
-        <span style="font-weight:600;">1200px</span> or higher<br><br>
+        <span style="font-weight:600;">1250px</span> or higher<br><br>
         If you're using a small screen, our app<br>
         might not work properly.
       </p>
@@ -2270,7 +2270,7 @@ if (document.readyState === 'loading') {
 // Narrow screen overlay
 function checkNarrowScreen() {
   const overlay = document.getElementById('narrow-overlay');
-  if (window.innerWidth < 1200) {
+  if (window.innerWidth < 1250) {
     overlay.style.display = 'flex';
   } else {
     overlay.style.display = 'none';
