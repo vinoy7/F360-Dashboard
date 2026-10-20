@@ -885,6 +885,7 @@
                 <li data-value="delivery_cash">Delivery Sales vs Cash Sales</li>
                 <li data-value="retail_wholesale">Retailer vs Wholesaler</li>
                 <li data-value="product_categories">Product Category</li>
+                <li data-value="sales_points">Sales Point</li>
               </ul>
             </div>
             <!-- Donut chart -->
@@ -1149,6 +1150,7 @@ const DATA = {
     donut: {
       delivery_cash: { data: [82, 18], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 18,954.32', 'SR 4,124.68'], colors: ['#623CEA', '#D7CCFF'] },
       product_categories: { data: [44, 23, 12, 22], labels: ['Alcoholic', 'Juices', 'Packet Chips', 'Others'], values: ['SR 128,954.32', 'SR 68,454.00', 'SR 34,124.68', 'SR 64,124.28'], colors: ['#D7CCFF', '#C1B2FF', '#8F76F5', '#623CEA'] },
+      sales_points:  { data: [38, 27, 21, 14], labels: ['Mahe', 'Grand Anse', 'Anse Royale', 'Mont Fleuri'], values: ['SR 112,349.77', 'SR 79,827.47', 'SR 62,088.03', 'SR 41,392.01'], colors: ['#D7CCFF', '#C1B2FF', '#8F76F5', '#623CEA'] },
       retail_wholesale: { data: [27, 73], labels: ['Retailer', 'Wholesaler'], values: ['SR 88,954.32', 'SR 242,124.68'], colors: ['#623CEA', '#D7CCFF'] },
     },
     payments: {
@@ -1209,6 +1211,7 @@ const DATA = {
     donut: {
       delivery_cash: { data: [78, 22], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 243,895.79', 'SR 68,944.96'], colors: ['#623CEA', '#D7CCFF'] },
       product_categories: { data: [43, 22, 12, 23], labels: ['Alcoholic', 'Juices', 'Packet Chips', 'Others'], values: ['SR 131,392.72', 'SR 70,054.86', 'SR 35,124.68', 'SR 76,268.68'], colors: ['#D7CCFF', '#C1B2FF', '#8F76F5', '#623CEA'] },
+      sales_points:  { data: [37, 28, 20, 15], labels: ['Mahe', 'Grand Anse', 'Anse Royale', 'Mont Fleuri'], values: ['SR 115,751.15', 'SR 87,595.46', 'SR 62,568.19', 'SR 46,926.14'], colors: ['#D7CCFF', '#C1B2FF', '#8F76F5', '#623CEA'] },
       retail_wholesale: { data: [27, 73], labels: ['Retailer', 'Wholesaler'], values: ['SR 295,680.46', 'SR 799,160.28'], colors: ['#623CEA', '#D7CCFF'] },
       by_region:     { data: [65, 35], labels: ['Victoria', 'Other Islands'], values: ['SR 203,346.49', 'SR 109,494.26'], colors: ['#623CEA', '#D7CCFF'] },
     },
@@ -1270,6 +1273,7 @@ const DATA = {
     donut: {
       delivery_cash: { data: [80, 20], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 67,372.48', 'SR 16,843.12'], colors: ['#623CEA', '#D7CCFF'] },
       product_categories: { data: [44, 23, 11, 22], labels: ['Alcoholic', 'Juices', 'Packet Chips', 'Others'], values: ['SR 37,054.86', 'SR 19,369.99', 'SR 9,184.68', 'SR 18,606.09'], colors: ['#D7CCFF', '#C1B2FF', '#8F76F5', '#623CEA'] },
+      sales_points:  { data: [39, 26, 21, 14], labels: ['Mahe', 'Grand Anse', 'Anse Royale', 'Mont Fleuri'], values: ['SR 32,844.09', 'SR 21,896.06', 'SR 17,685.28', 'SR 11,790.19'], colors: ['#D7CCFF', '#C1B2FF', '#8F76F5', '#623CEA'] },
       retail_wholesale: { data: [27, 73], labels: ['Retailer', 'Wholesaler'], values: ['SR 72,557.72', 'SR 196,057.88'], colors: ['#623CEA', '#D7CCFF'] },
       by_region:     { data: [62, 38], labels: ['Victoria', 'Other Islands'], values: ['SR 52,213.67', 'SR 32,001.93'], colors: ['#623CEA', '#D7CCFF'] },
     },
@@ -1331,6 +1335,7 @@ const DATA = {
     donut: {
       delivery_cash: { data: [79, 21], labels: ['Delivery Sales', 'Cash Sales'], values: ['SR 156,933.70', 'SR 41,716.55'], colors: ['#623CEA', '#D7CCFF'] },
       product_categories: { data: [43, 23, 11, 23], labels: ['Alcoholic', 'Juices', 'Packet Chips', 'Others'], values: ['SR 85,419.61', 'SR 45,689.55', 'SR 21,844.28', 'SR 45,696.56'], colors: ['#D7CCFF', '#C1B2FF', '#8F76F5', '#623CEA'] },
+      sales_points:  { data: [38, 27, 20, 15], labels: ['Mahe', 'Grand Anse', 'Anse Royale', 'Mont Fleuri'], values: ['SR 75,487.00', 'SR 53,635.50', 'SR 39,730.00', 'SR 29,797.50'], colors: ['#D7CCFF', '#C1B2FF', '#8F76F5', '#623CEA'] },
       retail_wholesale: { data: [27, 73], labels: ['Retailer', 'Wholesaler'], values: ['SR 185,040.07', 'SR 500,108.28'], colors: ['#623CEA', '#D7CCFF'] },
       by_region:     { data: [63, 37], labels: ['Victoria', 'Other Islands'], values: ['SR 125,149.66', 'SR 73,500.59'], colors: ['#623CEA', '#D7CCFF'] },
     },
@@ -1634,7 +1639,7 @@ function dimHex() { return '#E3E3E5'; }
 function buildDonutChart(period, category) {
   const d = DATA[period].donut[category];
   const canvas = document.getElementById('donutChart');
-  const size = category === 'product_categories' ? 220 : 252;
+  const size = (category === 'product_categories' || category === 'sales_points') ? 220 : 252;
   canvas.width = size; canvas.height = size;
   canvas.style.width = size + 'px'; canvas.style.height = size + 'px';
   const ctx = canvas.getContext('2d');
