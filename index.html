@@ -228,6 +228,124 @@
       to { transform: rotate(360deg); }
     }
 
+    /* Hide / unhide dashboard */
+    #dash-toggle {
+      box-sizing: border-box;
+      width: 40px;
+      height: 40px;
+      padding: 8px;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #FFFFFF;
+      border: 1px solid #623CEA;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    #dash-toggle:hover { background: #F3F0FF; }
+    #dash-toggle img { display: block; width: 24px; height: 24px; }
+    #dash-toggle .icon-hidden,
+    .dash-hidden #dash-toggle .icon-visible,
+    .dash-hidden .dash-meta,
+    .dash-hidden #refresh-data,
+    .dash-hidden #stat-cards { display: none; }
+    .dash-hidden #dash-toggle .icon-hidden { display: block; }
+    #dash-hidden-card { display: none; }
+    .dash-hidden #dash-hidden-card { display: flex; }
+    .btn-primary {
+      min-width: 100px;
+      padding: 10px 16px;
+      background: #623CEA;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      letter-spacing: -0.28px;
+      cursor: pointer;
+    }
+    .btn-primary:disabled { background: #D7CCFF; cursor: default; }
+    .btn-primary.loading { background: #C0AEFF; display: flex; justify-content: center; padding: 8px 12px; }
+
+    /* PIN modal */
+    #pin-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(26,26,26,0.3);
+      backdrop-filter: blur(12.5px);
+      -webkit-backdrop-filter: blur(12.5px);
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 120px;
+    }
+    #pin-modal.open { display: flex; }
+    #pin-card {
+      position: relative;
+      width: 432px;
+      box-sizing: border-box;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      background: #FFFFFF;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 0 6px rgba(0,0,0,0.04);
+    }
+    #pin-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 28px;
+      height: 28px;
+      padding: 2px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      cursor: pointer;
+    }
+    #pin-close:hover { background: #F3F0FF; }
+    #pin-close img { display: block; width: 24px; height: 24px; }
+    .pin-box {
+      box-sizing: border-box;
+      width: 56px;
+      height: 56px;
+      padding: 0;
+      border: 1px solid #D4D4D6;
+      border-radius: 8px;
+      background: #FFFFFF;
+      box-shadow: 0 0 3px rgba(0,0,0,0.04);
+      outline: none;
+      text-align: center;
+      font-size: 32px;
+      color: transparent;
+      caret-color: #262626;
+    }
+    .pin-box:focus { border-color: #623CEA; box-shadow: 0 0 0 2px rgba(98,60,234,0.2); }
+    /* Filled digit renders as a 16px dot, per Figma */
+    .pin-box.filled { background: radial-gradient(circle, #262626 7.5px, #FFFFFF 8px); }
+    #pin-forgot {
+      padding: 2px 4px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: #623CEA;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      letter-spacing: -0.28px;
+      cursor: pointer;
+    }
+    #pin-card.loading #pin-forgot { color: #D7CCFF; pointer-events: none; }
+    #pin-card.loading #pin-close { opacity: 0.5; pointer-events: none; }
+    #pin-card.loading .pin-box { pointer-events: none; }
+    #pin-submit .loader { width: 24px; height: 24px; animation: refresh-spin 0.8s linear infinite; }
+
     /* Nav items */
     .nav-item {
       display: flex;
@@ -756,19 +874,41 @@
       <div style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
         <h3 style="font-size:24px; font-weight:500; color:#262626; letter-spacing:-0.48px; line-height:36px; margin:0;">Overview</h3>
         <div style="display:flex; align-items:center; gap:16px;">
-          <span id="last-updated" style="font-size:16px; font-weight:500; color:#8C8D8F; letter-spacing:-0.32px; line-height:24px;">Last Updated at 11:17 AM</span>
-          <button id="refresh-data" aria-label="Refresh data" style="margin-left:-4px;">
+          <span id="last-updated" class="dash-meta" style="font-size:16px; font-weight:500; color:#8C8D8F; letter-spacing:-0.32px; line-height:24px;">Last Updated at 11:17 AM</span>
+          <button id="refresh-data" class="dash-meta" aria-label="Refresh data" style="margin-left:-4px;">
             <svg width="20" height="20" viewBox="0 0 18.0013 21.0535" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M11.501 6.19626C12.7228 6.04915 13.9218 5.75125 15.071 5.31126L15.252 5.24126C15.3522 5.20126 15.436 5.1287 15.4899 5.03527C15.5437 4.94184 15.5646 4.83298 15.549 4.72626C15.3621 3.44421 15.0098 2.19179 14.501 1.00026M15.071 5.31126C13.9179 3.96749 12.3515 3.04528 10.6173 2.68731C8.88311 2.32934 7.07917 2.55684 5.48817 3.33415C3.89717 4.11147 2.60902 5.39467 1.82559 6.98267C1.04216 8.57067 0.807728 10.3737 1.15903 12.1093M3.50103 20.0533C2.99148 18.8615 2.63854 17.6087 2.45103 16.3263C2.43547 16.2195 2.45632 16.1107 2.5102 16.0172C2.56408 15.9238 2.64786 15.8512 2.74803 15.8113L2.93003 15.7413C4.06204 17.06 5.5937 17.9742 7.29149 18.3456C8.98929 18.717 10.7619 18.5255 12.3411 17.7999C13.9204 17.0744 15.2204 15.8543 16.0445 14.3242C16.8687 12.794 17.1722 11.0372 16.909 9.31926M6.50103 14.8563C5.27927 15.0034 4.08026 15.3003 2.93103 15.7403" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <div style="width:1px; height:24px; background:#E3E3E5;"></div>
-          <div class="tab-group" id="time-tabs" style="width:432px;">
+          <div class="dash-meta" style="width:1px; height:24px; background:#E3E3E5;"></div>
+          <div style="display:flex; align-items:center; gap:8px;">
+          <button id="dash-toggle" data-no-lisse aria-label="Hide dashboard">
+            <img class="icon-visible" src="assets/icon-eye.svg" width="24" height="24" alt="" />
+            <img class="icon-hidden" src="assets/icon-eye-off.svg" width="24" height="24" alt="" />
+          </button>
+          <div class="tab-group dash-meta" id="time-tabs" style="width:432px;">
             <div class="tab-indicator" id="time-indicator"></div>
             <button class="tab-btn active" data-period="overall">Overall</button>
             <button class="tab-btn" data-period="today">Today</button>
             <button class="tab-btn" data-period="week">This Week</button>
             <button class="tab-btn" data-period="month">This Month</button>
+          </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hidden-dashboard state (Figma 7849:149516) -->
+      <div class="stat-cards-wrapper" id="dash-hidden-card">
+        <div style="flex:1; min-height:408px; background:#FFFFFF; border-radius:12px; display:flex; align-items:center; justify-content:center; padding:16px;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:16px; padding:52px 16px; text-align:center;">
+            <div style="background:#EDE8FF; border-radius:100px; padding:12px; display:flex;">
+              <img src="assets/icon-eye-off-32.svg" width="32" height="32" alt="" />
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+              <p style="margin:0; font-size:18px; font-weight:500; line-height:28px; letter-spacing:-0.36px; color:#262626;">Dashboard is hidden</p>
+              <p style="margin:0; width:340px; font-size:16px; font-weight:400; line-height:24px; letter-spacing:-0.32px; color:#8C8D8F;">The dashboard is currently hidden. Show it to view the business overview and recent activity.</p>
+            </div>
+            <button class="btn-primary" id="dash-show">Show dashboard</button>
           </div>
         </div>
       </div>
@@ -1127,10 +1267,34 @@
   </div><!-- end white area -->
 </main>
 
+<!-- PIN modal for unhiding dashboard (Figma 7870:18913 / 7870:19919) -->
+<div id="pin-modal">
+  <div id="pin-card" data-no-lisse role="dialog" aria-modal="true" aria-labelledby="pin-title">
+    <div style="display:flex; flex-direction:column; align-items:center; gap:24px;">
+      <h2 id="pin-title" style="margin:0; font-size:24px; font-weight:500; line-height:36px; letter-spacing:-0.48px; color:#262626;">Enter PIN</h2>
+      <div style="display:flex; flex-direction:column; align-items:center;">
+        <div style="height:80px; display:flex; gap:8px; align-items:flex-start;">
+          <input class="pin-box" data-no-lisse type="password" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="PIN digit 1" />
+          <input class="pin-box" data-no-lisse type="password" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="PIN digit 2" />
+          <input class="pin-box" data-no-lisse type="password" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="PIN digit 3" />
+          <input class="pin-box" data-no-lisse type="password" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="PIN digit 4" />
+        </div>
+        <button id="pin-forgot" type="button">Forgot PIN?</button>
+      </div>
+    </div>
+    <button class="btn-primary" id="pin-submit" type="button" style="width:100%;" disabled>Continue</button>
+    <button id="pin-close" type="button" aria-label="Close"><img src="assets/icon-close.svg" width="24" height="24" alt="" /></button>
+  </div>
+</div>
+
 <!-- ============================================================
      JAVASCRIPT
      ============================================================ -->
 <script>
+// Hidden-dashboard flag persists across reloads; applied before first render
+const DASH_HIDDEN_KEY = 'f360-dashboard-hidden';
+try { if (localStorage.getItem(DASH_HIDDEN_KEY) === '1') document.body.classList.add('dash-hidden'); } catch (e) {}
+
 // =========================================================
 // DATA MODEL
 // =========================================================
@@ -2252,6 +2416,8 @@ document.querySelectorAll('.nav-item').forEach(item => {
 // Initialize after DOM + layout is settled. Don't wait on fonts.ready
 // so headless screenshots don't time out on Google Fonts loading.
 function initWhenReady() {
+  // Hidden on load: first render happens on unhide instead
+  if (document.body.classList.contains('dash-hidden')) return;
   // Tailwind CDN compiles classes async; wait until containers have real width
   const container = document.getElementById('cashflowChart').parentElement;
   if (container.clientWidth === 0) {
@@ -2305,6 +2471,102 @@ document.getElementById('refresh-data').addEventListener('click', () => {
     document.getElementById('last-updated').textContent = 'Last Updated at ' + t;
   }, 400);
 });
+
+// Hide / unhide dashboard (unhide requires PIN; prototype accepts any 4 digits)
+(function() {
+  const toggle = document.getElementById('dash-toggle');
+  const modal = document.getElementById('pin-modal');
+  const card = document.getElementById('pin-card');
+  const boxes = [...document.querySelectorAll('.pin-box')];
+  const submit = document.getElementById('pin-submit');
+
+  if (document.body.classList.contains('dash-hidden')) toggle.setAttribute('aria-label', 'Show dashboard');
+
+  function saveHidden(v) { try { localStorage.setItem(DASH_HIDDEN_KEY, v ? '1' : '0'); } catch (e) {} }
+
+  function hideDashboard() {
+    document.body.classList.add('dash-hidden');
+    toggle.setAttribute('aria-label', 'Show dashboard');
+    saveHidden(true);
+  }
+
+  function showDashboard() {
+    document.body.classList.remove('dash-hidden');
+    toggle.setAttribute('aria-label', 'Hide dashboard');
+    saveHidden(false);
+    render(); // replays count-ups + chart builds
+    window.dispatchEvent(new Event('resize')); // re-measure charts + tab indicators
+  }
+
+  function syncPin() {
+    boxes.forEach(b => b.classList.toggle('filled', b.value !== ''));
+    submit.disabled = boxes.some(b => b.value === '');
+  }
+
+  function openModal() {
+    boxes.forEach(b => { b.value = ''; });
+    syncPin();
+    modal.classList.add('open');
+    boxes[0].focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    card.classList.remove('loading');
+    submit.classList.remove('loading');
+    submit.textContent = 'Continue';
+    toggle.focus();
+  }
+
+  toggle.addEventListener('click', () => {
+    document.body.classList.contains('dash-hidden') ? openModal() : hideDashboard();
+  });
+  document.getElementById('dash-show').addEventListener('click', openModal);
+  document.getElementById('pin-close').addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('open') && !card.classList.contains('loading')) closeModal();
+  });
+
+  boxes.forEach((box, i) => {
+    box.addEventListener('focus', () => box.select()); // retyping replaces the digit
+    box.addEventListener('input', () => {
+      box.value = box.value.replace(/\D/g, '').slice(-1);
+      syncPin();
+      if (box.value && boxes[i + 1]) boxes[i + 1].focus();
+    });
+    box.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !box.value && boxes[i - 1]) {
+        boxes[i - 1].value = '';
+        boxes[i - 1].focus();
+        syncPin();
+        e.preventDefault();
+      } else if (e.key === 'Enter' && !submit.disabled) {
+        submit.click();
+      }
+    });
+    box.addEventListener('paste', (e) => {
+      const digits = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, boxes.length - i);
+      if (!digits) return;
+      e.preventDefault();
+      [...digits].forEach((d, j) => { boxes[i + j].value = d; });
+      syncPin();
+      boxes[Math.min(i + digits.length, boxes.length - 1)].focus();
+    });
+  });
+
+  submit.addEventListener('click', () => {
+    if (submit.disabled || card.classList.contains('loading')) return;
+    card.classList.add('loading');
+    submit.classList.add('loading');
+    submit.innerHTML = '<img class="loader" src="assets/icon-loader.svg" width="24" height="24" alt="Verifying" />';
+    document.activeElement.blur();
+    // ponytail: fake verification delay, real PIN check goes here when wired to backend
+    setTimeout(() => {
+      closeModal();
+      showDashboard();
+    }, 1000);
+  });
+})();
 </script>
 
 <script type="module">
