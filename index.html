@@ -113,6 +113,61 @@
       gap: 8px;
     }
 
+    /* Warehouse carousel beside Stocks Worth */
+    .wh-carousel {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+      background: white;
+      border-left: 1px solid #E3E3E5;
+      border-radius: 0 12px 12px 0;
+      overflow: hidden;
+    }
+    .wh-track {
+      position: absolute;
+      inset: 0 60px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding: 0 16px;
+      scrollbar-width: none;
+    }
+    .wh-track::-webkit-scrollbar { display: none; }
+    .wh-item {
+      flex: 0 0 230px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      scroll-snap-align: start;
+      white-space: nowrap;
+    }
+    .wh-pad {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 11px;
+      background: white;
+    }
+    .wh-pad-prev { left: 0; box-shadow: 4px 0 6px rgba(0,0,0,0.05); }
+    .wh-pad-next { right: 0; box-shadow: -4px 0 6px rgba(0,0,0,0.05); }
+    .wh-btn {
+      display: flex;
+      padding: 8px;
+      background: #FFFFFF;
+      border: 1px solid #EDEDED;
+      border-radius: 8px;
+      color: #939596;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .wh-btn:hover:not(:disabled) { background: #F3F0FF; color: #623CEA; }
+    .wh-btn:disabled { background: #FAFAFA; color: #D4D4D6; cursor: default; }
+
     .stat-card + .stat-card {
       border-left: 1px solid #E3E3E5;
     }
@@ -949,12 +1004,18 @@
         </div>
         <!-- Row 2: Full-width stocks card -->
         <div class="stat-cards-row">
-          <div class="stat-card" style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="stat-card" style="flex:0 0 280px; display:flex; justify-content:space-between; align-items:flex-start;">
             <div style="display:flex; align-items:center; gap:8px;">
               <img src="assets/imgIconStocks.svg" style="width:20px; height:21px; flex-shrink:0;" alt="" />
-              <span class="stat-card-label">Worth of Stock available in Warehouse</span>
+              <span class="stat-card-label">Stocks Worth</span>
             </div>
             <span class="stat-card-value" style="padding-left:26px;" id="stat-stocks">SR 1,254,236<span class="cents">.00</span></span>
+          </div>
+          <!-- Warehouse carousel (Figma 7870:19019, chevron states 7882:126240) -->
+          <div class="wh-carousel">
+            <div class="wh-track" id="wh-track"></div>
+            <div class="wh-pad wh-pad-prev"><button class="wh-btn" id="wh-prev" data-no-lisse aria-label="Previous warehouse"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15.0004C10.6827 13.6862 9.05299 12.148 7.65236 10.4255C7.44921 10.1757 7.44921 9.82513 7.65236 9.5753C9.05299 7.85285 10.6827 6.31458 12.5 5.00041" stroke="currentColor" stroke-width="1.45833" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+            <div class="wh-pad wh-pad-next"><button class="wh-btn" id="wh-next" data-no-lisse aria-label="Next warehouse"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.5 15C9.31733 13.6858 10.947 12.1476 12.3476 10.4251C12.5508 10.1753 12.5508 9.82473 12.3476 9.5749C10.947 7.85245 9.31733 6.31417 7.5 5" stroke="currentColor" stroke-width="1.45833" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
           </div>
         </div>
 
@@ -1298,13 +1359,15 @@ try { if (localStorage.getItem(DASH_HIDDEN_KEY) === '1') document.body.classList
 // =========================================================
 // DATA MODEL
 // =========================================================
+const WAREHOUSE_NAMES = ['Primary Warehouse', 'WH Mahé', 'WH Praslin', 'WH La Digue', 'WH Providence', 'WH Anse Royale'];
+
 const DATA = {
   today: {
     purchase: 'SR 0<span class="cents">.00</span>',
     sales: 'SR 23,586<span class="cents">.49</span>',
     due: 'SR 245,698<span class="cents">.65</span>',
     received: 'SR 2,469<span class="cents">.49</span>',
-    stocks: 'SR 1,254,236<span class="cents">.00</span>',
+    warehouses: [198410.00, 52875.50, 405120.75, 311640.00, 171980.25, 87214.50], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
     cashflow: {
       purchase: { value: 2550000.65, label: 'SR 2,550,000.65' },
       sales:    { value: 1750000.23, label: 'SR 1,750,000.23' },
@@ -1365,7 +1428,7 @@ const DATA = {
     sales: 'SR 312,840<span class="cents">.75</span>',
     due: 'SR 892,450<span class="cents">.30</span>',
     received: 'SR 287,654<span class="cents">.90</span>',
-    stocks: 'SR 1,254,236<span class="cents">.00</span>',
+    warehouses: [203236.00, 54000.00, 412580.50, 318904.25, 176215.75, 89299.50], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
     cashflow: {
       purchase: { value: 8200000.00, label: 'SR 8,200,000.00' },
       sales:    { value: 6540000.75, label: 'SR 6,540,000.75' },
@@ -1427,7 +1490,7 @@ const DATA = {
     sales: 'SR 84,215<span class="cents">.60</span>',
     due: 'SR 412,350<span class="cents">.80</span>',
     received: 'SR 31,640<span class="cents">.15</span>',
-    stocks: 'SR 1,254,236<span class="cents">.00</span>',
+    warehouses: [201050.25, 53420.00, 408765.50, 315230.75, 174105.00, 88310.50], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
     cashflow: {
       purchase: { value: 4100000.00, label: 'SR 4,100,000.00' },
       sales:    { value: 2850000.60, label: 'SR 2,850,000.60' },
@@ -1489,7 +1552,7 @@ const DATA = {
     sales: 'SR 198,650<span class="cents">.25</span>',
     due: 'SR 645,200<span class="cents">.90</span>',
     received: 'SR 142,380<span class="cents">.75</span>',
-    stocks: 'SR 1,254,236<span class="cents">.00</span>',
+    warehouses: [205880.00, 55210.75, 418300.25, 322615.50, 179440.00, 90125.25], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
     cashflow: {
       purchase: { value: 6800000.50, label: 'SR 6,800,000.50' },
       sales:    { value: 4950000.25, label: 'SR 4,950,000.25' },
@@ -2021,7 +2084,22 @@ function updateStats(period) {
   rollKpi(document.getElementById('stat-sales'), d.sales);
   rollKpi(document.getElementById('stat-due'), d.due);
   rollKpi(document.getElementById('stat-received'), d.received);
-  rollKpi(document.getElementById('stat-stocks'), d.stocks);
+  // Stocks Worth is the sum of the warehouse split (summed in cents to avoid float drift)
+  const stockCents = d.warehouses.reduce((a, v) => a + Math.round(v * 100), 0);
+  rollKpi(document.getElementById('stat-stocks'), fmtKpi(stockCents / 100));
+  const track = document.getElementById('wh-track');
+  if (!track.children.length) {
+    track.innerHTML = WAREHOUSE_NAMES.map(n => `
+      <div class="wh-item">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <img src="assets/icon-warehouse.svg" width="20" height="20" style="flex-shrink:0;" alt="" />
+          <span class="stat-card-label">${n}</span>
+        </div>
+        <span class="stat-card-value" style="padding-left:28px;"></span>
+      </div>`).join('');
+  }
+  [...track.children].forEach((item, i) => rollKpi(item.lastElementChild, fmtKpi(d.warehouses[i])));
+  track.dispatchEvent(new Event('scroll')); // refresh chevron disabled states
 
   // Payments
   const p = d.payments;
@@ -2471,6 +2549,23 @@ document.getElementById('refresh-data').addEventListener('click', () => {
     document.getElementById('last-updated').textContent = 'Last Updated at ' + t;
   }, 400);
 });
+
+// Warehouse carousel: one item per chevron click
+(function() {
+  const track = document.getElementById('wh-track');
+  const prev = document.getElementById('wh-prev');
+  const next = document.getElementById('wh-next');
+  const step = () => (track.firstElementChild ? track.firstElementChild.offsetWidth + 8 : 0);
+  const smooth = () => (matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth');
+  function syncChevrons() {
+    prev.disabled = track.scrollLeft <= 1;
+    next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
+  }
+  prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: smooth() }));
+  next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: smooth() }));
+  track.addEventListener('scroll', syncChevrons, { passive: true });
+  new ResizeObserver(syncChevrons).observe(track);
+})();
 
 // Hide / unhide dashboard (unhide requires PIN; prototype accepts any 4 digits)
 (function() {
