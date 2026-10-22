@@ -929,7 +929,7 @@
       <div style="display:flex; flex-direction:column; gap:8px;">
         <h3 style="font-size:24px; font-weight:500; color:#262626; letter-spacing:-0.48px; line-height:36px; margin:0;">Overview</h3>
         <div style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
-          <div class="tab-group dash-meta" id="time-tabs" style="width:432px;">
+          <div class="tab-group" id="time-tabs" style="width:432px;">
             <div class="tab-indicator" id="time-indicator"></div>
             <button class="tab-btn active" data-period="overall">Overall</button>
             <button class="tab-btn" data-period="today">Today</button>
@@ -1362,7 +1362,7 @@ try { if (localStorage.getItem(DASH_HIDDEN_KEY) === '1') document.body.classList
 // =========================================================
 // DATA MODEL
 // =========================================================
-const WAREHOUSE_NAMES = ['Primary Warehouse', 'WH Mahé', 'WH Praslin', 'WH La Digue', 'WH Providence', 'WH Anse Royale'];
+const WAREHOUSE_NAMES = ['Primary Warehouse', 'WH Mahé', 'WH Praslin', 'WH La Digue', 'WH Providence', 'WH Anse Royale', 'Dead Stock'];
 
 const DATA = {
   today: {
@@ -1370,7 +1370,7 @@ const DATA = {
     sales: 'SR 23,586<span class="cents">.49</span>',
     due: 'SR 245,698<span class="cents">.65</span>',
     received: 'SR 2,469<span class="cents">.49</span>',
-    warehouses: [198410.00, 52875.50, 405120.75, 311640.00, 171980.25, 87214.50], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
+    warehouses: [194194.25, 52875.50, 405120.75, 311640.00, 171980.25, 87214.50, 4215.75], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
     cashflow: {
       purchase: { value: 2550000.65, label: 'SR 2,550,000.65' },
       sales:    { value: 1750000.23, label: 'SR 1,750,000.23' },
@@ -1431,7 +1431,7 @@ const DATA = {
     sales: 'SR 312,840<span class="cents">.75</span>',
     due: 'SR 892,450<span class="cents">.30</span>',
     received: 'SR 287,654<span class="cents">.90</span>',
-    warehouses: [3702815.60, 1466290.25, 2085447.80, 1298962.45, 1194576.90, 623121.17], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
+    warehouses: [3655430.00, 1466290.25, 2085447.80, 1298962.45, 1194576.90, 623121.17, 47385.60], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
     cashflow: {
       purchase: { value: 8200000.00, label: 'SR 8,200,000.00' },
       sales:    { value: 6540000.75, label: 'SR 6,540,000.75' },
@@ -1493,7 +1493,7 @@ const DATA = {
     sales: 'SR 84,215<span class="cents">.60</span>',
     due: 'SR 412,350<span class="cents">.80</span>',
     received: 'SR 31,640<span class="cents">.15</span>',
-    warehouses: [201050.25, 53420.00, 408765.50, 315230.75, 174105.00, 88310.50], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
+    warehouses: [196790.25, 53420.00, 408765.50, 315230.75, 174105.00, 88310.50, 4260.00], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
     cashflow: {
       purchase: { value: 4100000.00, label: 'SR 4,100,000.00' },
       sales:    { value: 2850000.60, label: 'SR 2,850,000.60' },
@@ -1555,7 +1555,7 @@ const DATA = {
     sales: 'SR 198,650<span class="cents">.25</span>',
     due: 'SR 645,200<span class="cents">.90</span>',
     received: 'SR 142,380<span class="cents">.75</span>',
-    warehouses: [205880.00, 55210.75, 418300.25, 322615.50, 179440.00, 90125.25], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
+    warehouses: [201569.75, 55210.75, 418300.25, 322615.50, 179440.00, 90125.25, 4310.25], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
     cashflow: {
       purchase: { value: 6800000.50, label: 'SR 6,800,000.50' },
       sales:    { value: 4950000.25, label: 'SR 4,950,000.25' },
