@@ -236,7 +236,7 @@
       font-family: 'DM Sans', sans-serif;
     }
 
-    .tab-btn:not(.active):hover {
+    .tab-btn:not(.active):not(:disabled):hover {
       color: #262626;
     }
 
@@ -250,6 +250,8 @@
       background: transparent;
       box-shadow: none;
     }
+
+    .tab-btn:disabled { color: #C1C1C3; cursor: default; }
 
     /* Refresh button (Buttons 28px) */
     #refresh-data {
@@ -322,6 +324,21 @@
       letter-spacing: -0.28px;
       cursor: pointer;
     }
+    .btn-outline {
+      min-width: 100px;
+      padding: 9px 15px; /* 10/16 minus 1px border = 40px tall like Figma */
+      background: #FFFFFF;
+      color: #623CEA;
+      border: 1px solid #623CEA;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      letter-spacing: -0.28px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-outline:hover { background: #F3F0FF; }
     .btn-primary:disabled { background: #D7CCFF; cursor: default; }
     .btn-primary.loading { background: #C0AEFF; display: flex; justify-content: center; padding: 8px 12px; }
 
@@ -739,17 +756,10 @@
     .info-icon {
       width: 16px;
       height: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      border: 1.5px solid #8C8D8F;
-      color: #8C8D8F;
-      font-size: 10px;
-      font-weight: 600;
-      cursor: default;
+      display: block;
       flex-shrink: 0;
-      position: relative;
+      margin-left: auto;
+      cursor: default;
     }
 
     /* Scrollbar */
@@ -938,13 +948,13 @@
           </div>
           <div style="display:flex; align-items:center; gap:12px;">
             <span id="last-updated" class="dash-meta" style="font-size:18px; font-weight:500; color:#8C8D8F; letter-spacing:-0.36px; line-height:28px; white-space:nowrap;">Last Updated at 11:17 AM</span>
-            <button id="refresh-data" class="dash-meta" aria-label="Refresh data">
+            <button id="refresh-data" class="dash-meta" aria-label="Refresh Overview" data-info="Refresh Overview">
               <svg width="20" height="20" viewBox="0 0 18.0013 21.0535" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M11.501 6.19626C12.7228 6.04915 13.9218 5.75125 15.071 5.31126L15.252 5.24126C15.3522 5.20126 15.436 5.1287 15.4899 5.03527C15.5437 4.94184 15.5646 4.83298 15.549 4.72626C15.3621 3.44421 15.0098 2.19179 14.501 1.00026M15.071 5.31126C13.9179 3.96749 12.3515 3.04528 10.6173 2.68731C8.88311 2.32934 7.07917 2.55684 5.48817 3.33415C3.89717 4.11147 2.60902 5.39467 1.82559 6.98267C1.04216 8.57067 0.807728 10.3737 1.15903 12.1093M3.50103 20.0533C2.99148 18.8615 2.63854 17.6087 2.45103 16.3263C2.43547 16.2195 2.45632 16.1107 2.5102 16.0172C2.56408 15.9238 2.64786 15.8512 2.74803 15.8113L2.93003 15.7413C4.06204 17.06 5.5937 17.9742 7.29149 18.3456C8.98929 18.717 10.7619 18.5255 12.3411 17.7999C13.9204 17.0744 15.2204 15.8543 16.0445 14.3242C16.8687 12.794 17.1722 11.0372 16.909 9.31926M6.50103 14.8563C5.27927 15.0034 4.08026 15.3003 2.93103 15.7403" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
             <div class="dash-meta" style="width:1px; height:24px; background:#E3E3E5; border-radius:1px;"></div>
-            <button id="dash-toggle" data-no-lisse aria-label="Hide dashboard">
+            <button id="dash-toggle" data-no-lisse aria-label="Hide Overview" data-info="Hide Overview">
               <img class="icon-visible" src="assets/icon-eye.svg" width="24" height="24" alt="" />
               <img class="icon-hidden" src="assets/icon-eye-off.svg" width="24" height="24" alt="" />
             </button>
@@ -952,7 +962,7 @@
         </div>
       </div>
 
-      <!-- Hidden-dashboard state (Figma 7849:149516) -->
+      <!-- Hidden-dashboard state (Figma 7931:135365) -->
       <div class="stat-cards-wrapper" id="dash-hidden-card">
         <div style="flex:1; min-height:408px; background:#FFFFFF; border-radius:12px; display:flex; align-items:center; justify-content:center; padding:16px;">
           <div style="display:flex; flex-direction:column; align-items:center; gap:16px; padding:52px 16px; text-align:center;">
@@ -960,10 +970,10 @@
               <img src="assets/icon-eye-off-32.svg" width="32" height="32" alt="" />
             </div>
             <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
-              <p style="margin:0; font-size:18px; font-weight:500; line-height:28px; letter-spacing:-0.36px; color:#262626;">Dashboard is hidden</p>
-              <p style="margin:0; width:340px; font-size:16px; font-weight:400; line-height:24px; letter-spacing:-0.32px; color:#8C8D8F;">The dashboard is currently hidden. Show it to view the business overview and recent activity.</p>
+              <p style="margin:0; font-size:18px; font-weight:500; line-height:28px; letter-spacing:-0.36px; color:#262626;">Overview is hidden</p>
+              <p style="margin:0; width:340px; font-size:16px; font-weight:400; line-height:24px; letter-spacing:-0.32px; color:#8C8D8F;">Show it to view the business overview and recent activity.</p>
             </div>
-            <button class="btn-primary" id="dash-show">Show dashboard</button>
+            <button class="btn-outline" id="dash-show" data-no-lisse>Show Overview</button>
           </div>
         </div>
       </div>
@@ -973,31 +983,34 @@
         <!-- Row 1: 4 cards -->
         <div class="stat-cards-row">
           <div class="stat-card" style="display:flex; justify-content:space-between; align-items:flex-start;">
-            <div style="display:flex; align-items:center; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; align-self:stretch;">
               <img src="assets/imgIconPurchase.svg" style="width:20px; height:21px; flex-shrink:0;" alt="" />
               <span class="stat-card-label">Purchase</span>
+              <img class="info-icon" src="assets/icon-info-16.svg" width="16" height="16" alt="Total of all Inventories" tabindex="0" data-info="Total of all Inventories" />
             </div>
             <span class="stat-card-value" style="padding-left:26px;" id="stat-purchase">SR 0<span class="cents">.00</span></span>
           </div>
           <div class="stat-card" style="display:flex; justify-content:space-between; align-items:flex-start;">
-            <div style="display:flex; align-items:center; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; align-self:stretch;">
               <img src="assets/imgIconSales.svg" style="width:20px; height:21px; flex-shrink:0;" alt="" />
               <span class="stat-card-label">Total Sales</span>
-              <span class="info-icon" onmouseenter="showInfoTooltip(this)" onmouseleave="hideInfoTooltip()" data-tip="Total amount of Invoices from Delivery sales that are delivered and cash sales">i</span>
+              <img class="info-icon" src="assets/icon-info-16.svg" width="16" height="16" alt="Total Invoice amount from delivered Orders and Cash Sales" tabindex="0" data-info="Total Invoice amount from delivered Orders and Cash Sales" />
             </div>
             <span class="stat-card-value" style="padding-left:26px;" id="stat-sales">SR 23,586<span class="cents">.49</span></span>
           </div>
           <div class="stat-card" style="display:flex; justify-content:space-between; align-items:flex-start;">
-            <div style="display:flex; align-items:center; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; align-self:stretch;">
               <img src="assets/imgIconDue.svg" style="width:20px; height:21px; flex-shrink:0;" alt="" />
               <span class="stat-card-label">Total Due</span>
+              <img class="info-icon" src="assets/icon-info-16.svg" width="16" height="16" alt="Total Invoice amount from delivered Orders" tabindex="0" data-info="Total Invoice amount from delivered Orders" />
             </div>
             <span class="stat-card-value" style="padding-left:26px;" id="stat-due">SR 245,698<span class="cents">.65</span></span>
           </div>
           <div class="stat-card" style="display:flex; justify-content:space-between; align-items:flex-start;">
-            <div style="display:flex; align-items:center; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; align-self:stretch;">
               <img src="assets/imgIconReceived.svg" style="width:20px; height:21px; flex-shrink:0;" alt="" />
               <span class="stat-card-label">Total Received</span>
+              <img class="info-icon" src="assets/icon-info-16.svg" width="16" height="16" alt="Total payments recorded for Deliveries and Cash Sales" tabindex="0" data-info="Total payments recorded for Deliveries and Cash Sales" />
             </div>
             <span class="stat-card-value" style="padding-left:26px;" id="stat-received">SR 2,469<span class="cents">.49</span></span>
           </div>
@@ -1005,9 +1018,10 @@
         <!-- Row 2: Full-width stocks card -->
         <div class="stat-cards-row">
           <div class="stat-card" style="flex:0 0 calc((100% - 3px) / 4); min-width:max-content; display:flex; justify-content:space-between; align-items:flex-start;">
-            <div style="display:flex; align-items:center; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; align-self:stretch;">
               <img src="assets/imgIconStocks.svg" style="width:20px; height:21px; flex-shrink:0;" alt="" />
               <span class="stat-card-label">Stocks Worth</span>
+              <img class="info-icon" src="assets/icon-info-16.svg" width="16" height="16" alt="Total stock value across all warehouses, including dead stock" tabindex="0" data-info="Total stock value across all warehouses, including dead stock" />
             </div>
             <span class="stat-card-value" style="padding-left:26px;" id="stat-stocks">SR 1,254,236<span class="cents">.00</span></span>
           </div>
@@ -2355,7 +2369,7 @@ function ciBarData(b, vi, bi) {
 }
 function showInfoTooltip(el) {
   const tt = document.getElementById('info-tooltip');
-  tt.textContent = el.dataset.tip;
+  tt.textContent = el.dataset.info;
   tt.style.display = 'block';
   const rect = el.getBoundingClientRect();
   const ttRect = tt.getBoundingClientRect();
@@ -2368,6 +2382,12 @@ function showInfoTooltip(el) {
 function hideInfoTooltip() {
   document.getElementById('info-tooltip').style.display = 'none';
 }
+document.querySelectorAll('[data-info]').forEach(el => {
+  el.addEventListener('mouseenter', () => showInfoTooltip(el));
+  el.addEventListener('focus', () => showInfoTooltip(el));
+  el.addEventListener('mouseleave', hideInfoTooltip);
+  el.addEventListener('blur', hideInfoTooltip);
+});
 function showCIBarTooltip(el) {
   const tt = document.getElementById('ci-bar-tooltip');
   document.getElementById('ci-bar-tt-line1').textContent = el.dataset.ttLine1;
@@ -2578,19 +2598,27 @@ document.getElementById('refresh-data').addEventListener('click', () => {
   const boxes = [...document.querySelectorAll('.pin-box')];
   const submit = document.getElementById('pin-submit');
 
-  if (document.body.classList.contains('dash-hidden')) toggle.setAttribute('aria-label', 'Show dashboard');
+  // Toggle label doubles as its tooltip; time tabs are disabled while hidden
+  function syncHiddenUI() {
+    const hidden = document.body.classList.contains('dash-hidden');
+    const label = hidden ? 'Show Overview' : 'Hide Overview';
+    toggle.setAttribute('aria-label', label);
+    toggle.dataset.info = label;
+    document.querySelectorAll('#time-tabs .tab-btn').forEach(b => b.disabled = hidden);
+  }
+  syncHiddenUI();
 
   function saveHidden(v) { try { localStorage.setItem(DASH_HIDDEN_KEY, v ? '1' : '0'); } catch (e) {} }
 
   function hideDashboard() {
     document.body.classList.add('dash-hidden');
-    toggle.setAttribute('aria-label', 'Show dashboard');
+    syncHiddenUI();
     saveHidden(true);
   }
 
   function showDashboard() {
     document.body.classList.remove('dash-hidden');
-    toggle.setAttribute('aria-label', 'Hide dashboard');
+    syncHiddenUI();
     saveHidden(false);
     render(); // replays count-ups + chart builds
     window.dispatchEvent(new Event('resize')); // re-measure charts + tab indicators
@@ -2617,6 +2645,7 @@ document.getElementById('refresh-data').addEventListener('click', () => {
   }
 
   toggle.addEventListener('click', () => {
+    hideInfoTooltip();
     document.body.classList.contains('dash-hidden') ? openModal() : hideDashboard();
   });
   document.getElementById('dash-show').addEventListener('click', openModal);
@@ -2761,7 +2790,7 @@ window.addEventListener('load', () => {
   mo.observe(document.body, { childList: true, subtree: true });
 });
 </script>
-<div id="info-tooltip" data-no-lisse style="display:none;position:fixed;z-index:9999;pointer-events:none;background:#262626;color:#fff;font-size:14px;font-weight:500;line-height:18px;letter-spacing:-0.24px;text-align:center;padding:8px 12px;border-radius:8px;width:240px;box-sizing:border-box;"></div>
+<div id="info-tooltip" data-no-lisse style="display:none;position:fixed;z-index:9999;pointer-events:none;background:#1E1E1F;color:#fff;font-size:14px;font-weight:500;line-height:20px;letter-spacing:-0.28px;text-align:center;padding:8px 12px;border-radius:6px;width:max-content;max-width:200px;box-sizing:border-box;"></div>
 <div id="ci-bar-tooltip" data-no-lisse style="display:none;position:fixed;z-index:9999;pointer-events:none;background:white;border-radius:8px;padding:8px 10px;box-shadow:0 4px 16px rgba(0,0,0,0.12);min-width:140px;">
   <div id="ci-bar-tt-line1" style="font-size:14px;font-weight:500;color:#262626;letter-spacing:-0.28px;line-height:20px;white-space:nowrap;"></div>
   <div id="ci-bar-tt-line2" style="font-size:14px;font-weight:400;letter-spacing:-0.28px;line-height:20px;white-space:nowrap;margin-top:2px;"></div>
