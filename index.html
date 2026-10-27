@@ -2570,6 +2570,7 @@ document.getElementById('refresh-data').addEventListener('click', () => {
     const now = new Date();
     const t = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
     document.getElementById('last-updated').textContent = 'Last Updated at ' + t;
+    render(); // replay count-ups + chart builds so refresh reads as fresh data
   }, 400);
 });
 
