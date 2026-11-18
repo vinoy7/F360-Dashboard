@@ -140,7 +140,9 @@
     .stock-grid .snap-label { gap: 6px; }
     .snap-status { display: flex; align-items: center; gap: 16px; }
     .snap-track { flex: 1; height: 4px; border-radius: 8px; background: #EDEDED; overflow: hidden; }
-    .snap-track > div { height: 100%; border-radius: 8px; }
+    .snap-track > div { width: 0; height: 100%; border-radius: 8px; transition: width 900ms cubic-bezier(0.25, 1, 0.5, 1); }
+    .due-bar { clip-path: inset(0 100% 0 0); }
+    .due-bar.grown { clip-path: inset(0 0 0 0); transition: clip-path 900ms cubic-bezier(0.25, 1, 0.5, 1); }
     .snap-status > span { width: 36px; text-align: right; font-weight: 500; color: #8C8D8F; }
     .snap-chevron { display: flex; justify-content: flex-end; }
     .snap-chevron img { display: block; margin: 2px; }
@@ -300,7 +302,9 @@
     .dash-hidden #dash-toggle .icon-visible,
     .dash-hidden .dash-meta,
     .dash-hidden #refresh-data, /* #refresh-data sets display by ID, which beats .dash-meta */
-    .dash-hidden #stat-cards { display: none; }
+    .dash-hidden #stat-cards,
+    .dash-hidden .snapshot,
+    .dash-hidden #time-tabs { display: none; } /* hidden state = one card only */
     .dash-hidden #dash-toggle .icon-hidden { display: block; }
     #dash-hidden-card { display: none; }
     .dash-hidden #dash-hidden-card { display: flex; }
@@ -926,7 +930,7 @@
       <div style="display:flex; flex-direction:column; gap:24px;">
 
       <!-- Total Due snapshot (Figma 8136:18332) -->
-      <div class="stat-cards-wrapper">
+      <div class="stat-cards-wrapper snapshot">
         <div class="snap-card">
           <div class="snap-head">
             <div class="snap-summary">
@@ -940,7 +944,7 @@
               </div>
             </div>
             <div class="snap-breakdown">
-              <div class="due-bar">
+              <div class="due-bar" data-no-lisse>
                 <div id="seg-due" class="prog-segment" style="background:#0A84FF; border-radius:50px 2px 2px 50px;"></div>
                 <div id="seg-overdue" class="prog-segment" style="background:#E72D2D; border-radius:2px 50px 50px 2px;"></div>
               </div>
@@ -951,7 +955,7 @@
             </div>
           </div>
           <div class="snap-table-wrap">
-            <div class="snap-table">
+            <div class="snap-table" data-no-lisse>
               <div class="snap-row snap-row-head aging-grid"><span>Aging</span><span>Amount (SR)</span><span>Invoices</span><span>Status</span><span></span></div>
               <div id="aging-rows"></div>
             </div>
@@ -960,7 +964,7 @@
       </div>
 
       <!-- Stocks Worth snapshot (Figma 8116:19055) -->
-      <div class="stat-cards-wrapper">
+      <div class="stat-cards-wrapper snapshot">
         <div class="snap-card">
           <div class="snap-head">
             <div class="snap-summary">
@@ -983,7 +987,7 @@
             </div>
           </div>
           <div class="snap-table-wrap">
-            <div class="snap-table">
+            <div class="snap-table" data-no-lisse>
               <div class="snap-row snap-row-head stock-grid"><span>Warehouse</span><span>Amount (SR)</span><span>Taxed Items</span><span>Non-Taxed Items</span><span>Status</span></div>
               <div id="stock-rows"></div>
             </div>
@@ -1851,16 +1855,19 @@ function rollSR(el, target, centsSmall) {
   el._raf = requestAnimationFrame(tick);
 }
 // Roll an integer through a formatter (invoice counts, table counts)
-function rollCount(el, target, fmt) {
+// Roll a number through an HTML formatter (snapshot tables, due/overdue amounts)
+function rollFmt(el, target, fmt) {
   if (el._raf) cancelAnimationFrame(el._raf);
   const duration = 900, start = performance.now();
   const tick = (now) => {
     const t = Math.min(1, (now - start) / duration);
-    el.textContent = fmt(Math.round(target * (1 - Math.pow(1 - t, 4))));
+    el.innerHTML = fmt(t < 1 ? target * (1 - Math.pow(1 - t, 4)) : target);
     el._raf = t < 1 ? requestAnimationFrame(tick) : null;
   };
   el._raf = requestAnimationFrame(tick);
 }
+// Integer variant (invoice counts, item counts, sales values)
+function rollCount(el, target, fmt) { rollFmt(el, target, n => fmt(Math.round(n))); }
 function updateStats(period) {
   const d = DATA[period];
   rollKpi(document.getElementById('stat-purchase'), d.purchase);
@@ -1905,24 +1912,32 @@ function pcts(vals) {
 // SNAPSHOT CARDS (Total Due + Stocks Worth, not date-filtered; built once on load)
 // =========================================================
 function buildSnapshots() {
-  const statusCell = (pct, color) => `<div class="snap-status"><div class="snap-track"><div style="width:${pct}%; background:${color};"></div></div><span>${pct}%</span></div>`;
+  // Numbers render as data-roll cells and bars as data-w, then animateIn() counts/grows them (same 900ms ease as the KPIs)
+  const roll = (v, f) => `<span data-roll="${v}" data-fmt="${f}"></span>`;
+  const statusCell = (pct, color) => `<div class="snap-status"><div class="snap-track"><div data-w="${pct}" style="background:${color};"></div></div>${roll(pct, 'pct')}</div>`;
 
   const agingCents = AGING.map(r => Math.round(r.amount * 100));
   const dueC = agingCents.filter((_, i) => AGING[i].notDue).reduce((a, v) => a + v, 0);
   const totalC = agingCents.reduce((a, v) => a + v, 0);
   const agingPct = pcts(agingCents);
   rollKpi(document.getElementById('stat-due'), fmtKpi(totalC / 100));
-  document.getElementById('due-due').innerHTML = 'SR ' + fmtTbl(dueC / 100, 'due-cents');
-  document.getElementById('due-overdue').innerHTML = 'SR ' + fmtTbl((totalC - dueC) / 100, 'due-cents');
-  document.getElementById('seg-due').style.flex = `${dueC} 1 0`;
-  document.getElementById('seg-overdue').style.flex = `${totalC - dueC} 1 0`;
+  const dueFmt = n => 'SR ' + fmtTbl(n, 'due-cents');
+  rollFmt(document.getElementById('due-due'), dueC / 100, dueFmt);
+  rollFmt(document.getElementById('due-overdue'), (totalC - dueC) / 100, dueFmt);
   setSegTip('seg-due', 'Due', fmtSR(dueC / 100), '#0A84FF');
   setSegTip('seg-overdue', 'Overdue', fmtSR((totalC - dueC) / 100), '#E72D2D');
+  document.getElementById('seg-due').style.flex = `${dueC} 1 0`;
+  document.getElementById('seg-overdue').style.flex = `${totalC - dueC} 1 0`;
+  // Split bar reveals left to right: start fully clipped, reflow, then transition the clip away
+  const dueBar = document.querySelector('.due-bar');
+  dueBar.classList.remove('grown');
+  void dueBar.offsetWidth;
+  dueBar.classList.add('grown');
   document.getElementById('aging-rows').innerHTML = AGING.map((r, i) => `
     <div class="snap-row aging-grid">
       <span class="snap-label"><i class="snap-dot" style="background:${r.dot};"></i>${r.label}</span>
-      <span>${fmtTbl(r.amount)}</span>
-      <span>${r.invoices} invoices from ${r.vendors} vendors</span>
+      ${roll(r.amount, 'tbl')}
+      <span>${roll(r.invoices, 'int')} invoices from ${roll(r.vendors, 'int')} vendors</span>
       ${statusCell(agingPct[i], r.bar)}
       <span class="snap-chevron"><img src="assets/icon-chevron-right-24.svg" width="24" height="24" alt="" /></span>
     </div>`).join('');
@@ -1935,11 +1950,16 @@ function buildSnapshots() {
   document.getElementById('stock-rows').innerHTML = STOCKS.map((r, i) => `
     <div class="snap-row stock-grid">
       <span class="snap-label"><img src="assets/${r.dead ? 'icon-warehouse-red' : 'icon-warehouse'}.svg" width="20" height="20" alt="" />${r.name}</span>
-      <span>${fmtTbl(r.amount)}</span>
-      <span>${r.taxed}</span>
-      <span>${r.nonTaxed == null ? '-' : r.nonTaxed}</span>
+      ${roll(r.amount, 'tbl')}
+      ${roll(r.taxed, 'int')}
+      ${r.nonTaxed == null ? '<span>-</span>' : roll(r.nonTaxed, 'int')}
       ${statusCell(stockPct[i], r.bar)}
     </div>`).join('');
+
+  const FMT = { tbl: n => fmtTbl(n), int: n => String(Math.round(n)), pct: n => Math.round(n) + '%' };
+  document.querySelectorAll('.snapshot [data-roll]').forEach(el => rollFmt(el, +el.dataset.roll, FMT[el.dataset.fmt]));
+  const bars = document.querySelectorAll('.snapshot [data-w]');
+  requestAnimationFrame(() => requestAnimationFrame(() => bars.forEach(b => { b.style.width = b.dataset.w + '%'; })));
 }
 
 // "Just a moment..." loader over a card region while a tab/dropdown swaps its data (Figma 8152:206014)
@@ -2181,7 +2201,7 @@ function hideInfoTooltip() {
 }
 document.querySelectorAll('[data-info]').forEach(el => {
   el.addEventListener('mouseenter', () => showInfoTooltip(el));
-  el.addEventListener('focus', () => showInfoTooltip(el));
+  el.addEventListener('focus', () => { if (el.matches(':focus-visible')) showInfoTooltip(el); }); // keyboard focus only, not programmatic/mouse focus
   el.addEventListener('mouseleave', hideInfoTooltip);
   el.addEventListener('blur', hideInfoTooltip);
 });
@@ -2399,10 +2419,12 @@ document.getElementById('refresh-data').addEventListener('click', () => {
   }
 
   function showDashboard() {
+    hideInfoTooltip(); // toggle label changes below; drop any tooltip still showing the old one
     document.body.classList.remove('dash-hidden');
     syncHiddenUI();
     saveHidden(false);
     render(); // replays count-ups + chart builds
+    buildSnapshots(); // Total Due + Stocks Worth count up and their bars grow again
     window.dispatchEvent(new Event('resize')); // re-measure charts + tab indicators
   }
 
