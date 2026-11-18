@@ -148,9 +148,10 @@
 
     /* Payments method table (Figma 8117:22250) */
     .pay-bar { height: 32px; display: flex; gap: 4px; border-radius: 6px; overflow: hidden; }
-    .pay-row { display: grid; grid-template-columns: minmax(0, 1fr) 130px 130px; align-items: center; height: 40px; border-bottom: 1px solid #EDEDED; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; color: #262626; }
+    .pay-row { display: grid; grid-template-columns: minmax(0, 1fr) 150px 150px; align-items: center; height: 40px; border-bottom: 1px solid #EDEDED; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; color: #262626; }
     .pay-row > span + span { padding-left: 16px; }
-    .pay-row-head { height: 32px; border-top: 1px solid #EDEDED; font-size: 12px; font-weight: 500; line-height: 16px; letter-spacing: -0.24px; }
+    #pay-methods .pay-row { flex: 1; height: auto; min-height: 40px; } /* rows share the card's spare height */
+    .pay-row-head { height: 36px; border-top: 1px solid #EDEDED; font-size: 14px; font-weight: 500; line-height: 20px; letter-spacing: -0.28px; }
     .pay-row-head > span { display: flex; align-items: center; gap: 4px; }
 
     /* "Just a moment..." loader (Figma 8152:206014) */
@@ -624,11 +625,11 @@
     .user-card {
       background: white;
       border-radius: 8px;
-      padding: 10px 12px;
+      padding: 10px 8px 10px 12px;
       display: flex;
       align-items: center;
       gap: 8px;
-      border: 1px solid #F4F4F5;
+      box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
     }
 
     /* Cashflow legend box */
@@ -780,7 +781,18 @@
   <!-- Nav items + lower group -->
   <div id="nav-wrapper" class="nav-section" style="flex:1; display:flex; flex-direction:column; justify-content:space-between;">
     <div id="nav-indicator" class="nav-indicator"></div>
-    <!-- Top nav -->
+    <!-- Profile card + top nav (Figma side nav 8134:18089) -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+    <div class="user-card">
+      <div style="width:40px; height:40px; border-radius:100px; background:#FFEBF3; display:flex; align-items:center; justify-content:center; flex-shrink:0; padding:9px; box-sizing:border-box;">
+        <img src="assets/imgProfileBuilding.svg" style="width:22px; height:22px;" alt="" />
+      </div>
+      <div style="min-width:0; flex:1; display:flex; flex-direction:column; justify-content:center;">
+        <div style="font-size:14px; font-weight:500; color:#262626; letter-spacing:-0.28px; line-height:20px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Galaxy Electronics Pvt. Ltd.</div>
+        <div style="font-size:14px; font-weight:400; color:#8C8D8F; letter-spacing:-0.28px; line-height:20px;">Owner</div>
+      </div>
+      <img src="assets/icon-chevron-down-24.svg" width="24" height="24" style="margin:2px; flex-shrink:0;" alt="" />
+    </div>
     <nav id="top-nav" style="display:flex; flex-direction:column; gap:4px;">
       <div class="nav-item" data-nav="Dashboard">
         <div class="nav-item-content">
@@ -825,6 +837,7 @@
         </div>
       </div>
     </nav>
+    </div>
 
     <!-- Bottom nav -->
     <div id="bottom-nav" style="display:flex; flex-direction:column; gap:4px;">
@@ -842,7 +855,7 @@
       </div>
 
       <!-- Separator -->
-      <div style="margin-top:16px; margin-bottom:8px;">
+      <div style="margin-top:8px; margin-bottom:8px;">
         <div style="height:1px; background:#EDEDED;"></div>
         <div style="height:1px; background:white;"></div>
       </div>
@@ -851,18 +864,6 @@
         <div class="nav-item-content">
           <svg viewBox="0 0 13.25 13.25" fill="none" xmlns="http://www.w3.org/2000/svg" class="nav-icon"><path d="M10.7506 4.625C11.4086 5.1185 12.0029 5.691 12.5201 6.32929C12.59 6.41561 12.625 6.52031 12.625 6.625M10.7506 8.625C11.4086 8.1315 12.0029 7.559 12.5201 6.92071C12.59 6.83439 12.625 6.72969 12.625 6.625M12.625 6.625H3.95833M7.29167 1.64352C6.58399 1.01014 5.64947 0.625 4.625 0.625C2.41586 0.625 0.625 2.41586 0.625 4.625V8.625C0.625 10.8341 2.41586 12.625 4.625 12.625C5.64947 12.625 6.58399 12.2399 7.29167 11.6065" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span class="nav-label">Log Out</span>
-        </div>
-      </div>
-
-      <!-- User card -->
-      <div class="user-card" style="margin-top:8px;">
-        <!-- Building avatar -->
-        <div style="width:40px; height:40px; border-radius:100px; background:#FFEBF3; display:flex; align-items:center; justify-content:center; flex-shrink:0; padding:9px; box-sizing:border-box;">
-          <img src="assets/imgProfileBuilding.svg" style="width:22px; height:22px;" alt="" />
-        </div>
-        <div style="min-width:0; flex:1; display:flex; flex-direction:column; justify-content:center;">
-          <div style="font-size:14px; font-weight:500; color:#262626; letter-spacing:-0.28px; line-height:20px;">Hi, Rohan!</div>
-          <div style="font-size:14px; font-weight:400; color:#8C8D8F; letter-spacing:-0.28px; line-height:20px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Galaxy Electronics Pvt. Ltd.</div>
         </div>
       </div>
     </div>
@@ -1149,9 +1150,9 @@
               <div id="prog-collection" class="prog-segment" style="border-radius:6px 2px 2px 6px; background:#0E8F53;"></div>
               <div id="prog-cash" class="prog-segment" style="border-radius:2px 6px 6px 2px; background:#A0DDA3;"></div>
             </div>
-            <div>
+            <div style="flex:1; display:flex; flex-direction:column;">
               <div class="pay-row pay-row-head"><span></span><span><i class="legend-dot" style="background:#0E8F53;"></i>Collection (SR)</span><span><i class="legend-dot" style="background:#A0DDA3;"></i>Cash sales (SR)</span></div>
-              <div id="pay-methods"></div>
+              <div id="pay-methods" style="flex:1; display:flex; flex-direction:column;"></div>
             </div>
           </div>
         </div>
@@ -1410,16 +1411,16 @@ const DATA = {
 
 const ITEMS = {
   most: [
-    { img: 'assets/imgImage59.png', rank: '1st', rankColor: '#B88D00', name: 'Seybrew 50cl', profit: '25.12%' },
-    { img: 'assets/imgImage61.png', rank: '2nd', rankColor: '#98A2B3', name: 'PET Cocktail 90cl', profit: '12.89%' },
-    { img: 'assets/imgImage60.png', rank: '3rd', rankColor: '#DD6A4F', name: 'RedBull Energy Drink', profit: '10.58%' },
-    { img: 'assets/imgImage60.png', rank: '4th', rankColor: '#DD6A4F', name: 'RedBull Energy Drink', profit: '10.58%' },
+    { img: 'assets/imgImage59.png', rank: '1st', rankColor: '#B88D00', name: 'Seybrew 50cl', sales: 100000 },
+    { img: 'assets/imgImage61.png', rank: '2nd', rankColor: '#98A2B3', name: 'PET Cocktail 90cl', sales: 10000 },
+    { img: 'assets/imgImage60.png', rank: '3rd', rankColor: '#DD6A4F', name: 'RedBull Energy Drink', sales: 3000 },
+    { img: 'assets/imgImage60.png', rank: '4th', rankColor: '#DD6A4F', name: 'RedBull Energy Drink', sales: 2000 },
   ],
   least: [
-    { img: 'assets/imgImage61.png', rank: '1st', rankColor: '#B88D00', name: 'Sparkling Water 1.5L', profit: '3.24%' },
-    { img: 'assets/imgImage59.png', rank: '2nd', rankColor: '#98A2B3', name: 'Iced Tea Peach 330ml', profit: '2.88%' },
-    { img: 'assets/imgImage60.png', rank: '3rd', rankColor: '#DD6A4F', name: 'Energy Shot 60ml', profit: '1.95%' },
-    { img: 'assets/imgImage59.png', rank: '4th', rankColor: '#DD6A4F', name: 'Aloe Vera Drink', profit: '1.42%' },
+    { img: 'assets/imgImage61.png', rank: '1st', rankColor: '#B88D00', name: 'Sparkling Water 1.5L', sales: 450 },
+    { img: 'assets/imgImage59.png', rank: '2nd', rankColor: '#98A2B3', name: 'Iced Tea Peach 330ml', sales: 820 },
+    { img: 'assets/imgImage60.png', rank: '3rd', rankColor: '#DD6A4F', name: 'Energy Shot 60ml', sales: 1100 },
+    { img: 'assets/imgImage59.png', rank: '4th', rankColor: '#DD6A4F', name: 'Aloe Vera Drink', sales: 1600 },
   ]
 };
 
@@ -1764,12 +1765,11 @@ function buildItemsGrid(type) {
         </div>
         <div style="display:flex; flex-direction:column; align-items:center; width:100%;">
           <span style="font-size:18px; font-weight:500; color:#262626; letter-spacing:-0.36px; line-height:28px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; text-align:center;">${item.name}</span>
-          <span class="item-profit" style="font-size:16px; font-weight:500; color:#0E8F53; letter-spacing:-0.32px; line-height:24px; text-align:center;"></span>
+          <span class="item-sales" style="font-size:16px; font-weight:500; color:#8C8D8F; letter-spacing:-0.32px; line-height:24px; text-align:center;"></span>
         </div>
       `;
       row.appendChild(card);
-      const pctTarget = parseFloat(item.profit);
-      rollPct(card.querySelector('.item-profit'), pctTarget);
+      rollCount(card.querySelector('.item-sales'), item.sales, n => n >= 1000 ? `SR ${+(n / 1000).toFixed(1)}K` : `SR ${n}`);
     }
     grid.appendChild(row);
   }
@@ -1861,20 +1861,6 @@ function rollCount(el, target, fmt) {
   };
   el._raf = requestAnimationFrame(tick);
 }
-// Roll percentage (used in top 4 items profit)
-function rollPct(el, target) {
-  if (el._raf) cancelAnimationFrame(el._raf);
-  const duration = 900, start = performance.now();
-  const tick = (now) => {
-    const t = Math.min(1, (now - start) / duration);
-    const eased = 1 - Math.pow(1 - t, 4);
-    el.textContent = (target * eased).toFixed(2) + '% Profit';
-    if (t < 1) { el._raf = requestAnimationFrame(tick); }
-    else { el.textContent = target.toFixed(2) + '% Profit'; el._raf = null; }
-  };
-  el._raf = requestAnimationFrame(tick);
-}
-
 function updateStats(period) {
   const d = DATA[period];
   rollKpi(document.getElementById('stat-purchase'), d.purchase);
