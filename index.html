@@ -134,8 +134,8 @@
     #stock-rows .snap-row { height: 52px; }
     #aging-rows .snap-row + .snap-row, #stock-rows .snap-row + .snap-row { border-top: 1px solid #EDEDED; }
     .snap-row-head { height: 36px; background: #F4F4F5; font-size: 12px; font-weight: 500; line-height: 16px; letter-spacing: -0.24px; color: #8C8D8F; }
-    .aging-grid { grid-template-columns: minmax(0, 1fr) 140px 250px minmax(0, 1fr) 60px; }
-    .stock-grid { grid-template-columns: 220px 150px 140px 140px minmax(0, 1fr); }
+    .aging-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) 60px; } /* chevron column stays 60px */
+    .stock-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
     .snap-label { display: flex; align-items: center; gap: 8px; }
     .stock-grid .snap-label { gap: 6px; }
     .snap-status { display: flex; align-items: center; gap: 16px; }
