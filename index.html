@@ -129,15 +129,22 @@
     .due-cents { font-size: 16px; letter-spacing: -0.32px; }
     .snap-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
     .snap-table-wrap { padding: 16px; }
-    .snap-table { border: 1px solid #EDEDED; border-radius: 8px; overflow: hidden; }
+    .snap-table { outline: 1px solid #EDEDED; outline-offset: -1px; border-radius: 8px; overflow: hidden; } /* outline, not border: keeps content at 16px inset so column 1 can be 324 */
     .snap-row { display: grid; align-items: center; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; color: #262626; }
     .snap-row > * { padding: 0 16px; min-width: 0; white-space: nowrap; }
     #aging-rows .snap-row { height: 44px; }
     #stock-rows .snap-row { height: 52px; }
     #aging-rows .snap-row + .snap-row, #stock-rows .snap-row + .snap-row { border-top: 1px solid #EDEDED; }
     .snap-row-head { height: 36px; background: #F4F4F5; font-size: 12px; font-weight: 500; line-height: 16px; letter-spacing: -0.24px; color: #8C8D8F; }
-    .aging-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) 60px; } /* chevron column stays 60px */
-    .stock-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    /* 4-pt widths. Column 1 is 324px so column 2 text starts at 356px = 340 summary (divider included) + 16 padding,
+       i.e. under the Due/Overdue bar and the Total Taxed Items icon (table inset 16 + 324 + 16 cell padding).
+       Last flexible column absorbs whatever the viewport leaves over. */
+    .aging-grid { grid-template-columns: 324px 148px 220px minmax(0, 1fr) 60px; } /* Aging | Amount | Invoices | Share | chevron */
+    .stock-grid { grid-template-columns: 324px 156px 144px 144px minmax(0, 1fr); } /* Warehouse | Amount | Taxed | Non-Taxed | Share (~186 at 1440) */
+    @media (max-width: 1416px) {
+      .aging-grid { grid-template-columns: 324px 120px 220px minmax(0, 1fr) 60px; }
+      .stock-grid { grid-template-columns: 324px 136px 124px 124px minmax(0, 1fr); } /* Share ~168 at 1250 */
+    }
     .snap-label { display: flex; align-items: center; gap: 8px; }
     .stock-grid .snap-label { gap: 6px; }
     .snap-status { display: flex; align-items: center; gap: 16px; }
@@ -743,7 +750,7 @@
 
     /* Auto-hide scrollbar: thumb only visible while hovering/scrolling the area */
     .scroll-area { scrollbar-width: thin; scrollbar-color: transparent transparent; padding:48px 72px 16px; gap:40px; }
-    @media (max-width: 1300px) { .scroll-area { padding: 16px; gap: 24px; } }
+    @media (max-width: 1416px) { .scroll-area { padding: 16px; gap: 24px; } } /* was 1300; raised so the snapshot tables never get narrower than at 1250 */
     .scroll-area:hover { scrollbar-color: #D4D4D6 transparent; }
     .scroll-area::-webkit-scrollbar-thumb { background: transparent; transition: background 200ms ease; }
     .scroll-area:hover::-webkit-scrollbar-thumb { background: #D4D4D6; }
@@ -957,7 +964,7 @@
           </div>
           <div class="snap-table-wrap">
             <div class="snap-table" data-no-lisse>
-              <div class="snap-row snap-row-head aging-grid"><span>Aging</span><span>Amount (SR)</span><span>Invoices</span><span>Status</span><span></span></div>
+              <div class="snap-row snap-row-head aging-grid"><span>Aging</span><span>Amount (SR)</span><span>Invoices</span><span>Share</span><span></span></div>
               <div id="aging-rows"></div>
             </div>
           </div>
@@ -987,7 +994,7 @@
           </div>
           <div class="snap-table-wrap">
             <div class="snap-table" data-no-lisse>
-              <div class="snap-row snap-row-head stock-grid"><span>Warehouse</span><span>Amount (SR)</span><span>Taxed Items</span><span>Non-Taxed Items</span><span>Status</span></div>
+              <div class="snap-row snap-row-head stock-grid"><span>Warehouse</span><span>Amount (SR)</span><span>Taxed Items</span><span>Non-Taxed Items</span><span>Share</span></div>
               <div id="stock-rows"></div>
             </div>
           </div>
