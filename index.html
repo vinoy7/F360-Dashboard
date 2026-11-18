@@ -114,7 +114,7 @@
     }
 
     /* Snapshot cards: Total Due + Stocks Worth (Figma 8136:18332 / 8116:19055) */
-    .snap-card { flex: 1; background: #FFFFFF; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+    .snap-card { background: #FFFFFF; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
     .snap-head { display: flex; border-bottom: 1px solid #EDEDED; }
     .snap-summary { width: 340px; flex-shrink: 0; box-sizing: border-box; padding: 16px; display: flex; gap: 8px; align-items: flex-start; border-right: 1px solid #EDEDED; }
     .snap-summary > img { flex-shrink: 0; }
@@ -929,8 +929,9 @@
 
       <div style="display:flex; flex-direction:column; gap:24px;">
 
-      <!-- Total Due snapshot (Figma 8136:18332) -->
+      <!-- Snapshot box: Total Due + Stocks Worth cards in one grey container (Figma 8138:18627) -->
       <div class="stat-cards-wrapper snapshot">
+        <!-- Total Due (Figma 8136:18332) -->
         <div class="snap-card">
           <div class="snap-head">
             <div class="snap-summary">
@@ -961,10 +962,8 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Stocks Worth snapshot (Figma 8116:19055) -->
-      <div class="stat-cards-wrapper snapshot">
+        <!-- Stocks Worth (Figma 8116:19055) -->
         <div class="snap-card">
           <div class="snap-head">
             <div class="snap-summary">
