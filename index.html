@@ -122,7 +122,7 @@
     .snap-breakdown { flex: 1; min-width: 0; padding: 16px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
     .due-bar { display: flex; justify-content: space-between; height: 10px; } /* red anchored right so it grows from that end */
     .due-bar .prog-segment { flex: none; width: 0; }
-    .due-bar .prog-segment { transition: width 450ms cubic-bezier(0.25, 1, 0.5, 1), filter 0.15s ease-out; }
+    .due-bar .prog-segment { transition: filter 0.15s ease-out; } /* width is driven by Web Animations in buildSnapshots */
     .due-split { width: 180px; display: flex; flex-direction: column; gap: 2px; }
     .due-split-label { display: flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; color: #8C8D8F; }
     .due-split-value { font-size: 18px; font-weight: 500; line-height: 28px; letter-spacing: -0.36px; color: #262626; white-space: nowrap; }
@@ -1926,16 +1926,21 @@ function buildSnapshots() {
   rollFmt(document.getElementById('due-overdue'), (totalC - dueC) / 100, dueFmt);
   setSegTip('seg-due', 'Due', fmtSR(dueC / 100), '#0A84FF');
   setSegTip('seg-overdue', 'Overdue', fmtSR((totalC - dueC) / 100), '#E72D2D');
-  // Split bar: blue grows from the left and red from the right to meet at 50%, then both settle at the real split
+  // Split bar: blue grows from the left and red from the right to meet at 50%, then both glide to the real split.
+  // One continuous animation per segment: ease-out into 50% (arrives at zero speed), ease-in-out away from it
+  // (leaves from zero speed), so there is no jolt at the hand-off. 1.4s total, a bit longer than the count-ups.
   const segDue = document.getElementById('seg-due'), segOver = document.getElementById('seg-overdue');
   const duePct = dueC * 100 / totalC;
-  const setW = (d, o) => { segDue.style.width = `calc(${d}% - 2px)`; segOver.style.width = `calc(${o}% - 2px)`; };
-  clearTimeout(segDue._t);
-  [segDue, segOver].forEach(el => { el.style.transition = 'none'; el.style.width = '0px'; }); // jump to empty, no tween
-  void segDue.offsetWidth;
-  [segDue, segOver].forEach(el => { el.style.transition = ''; });
-  setW(50, 50);
-  segDue._t = setTimeout(() => setW(duePct, 100 - duePct), 450);
+  const w = pct => `calc(${pct}% - 2px)`;
+  [[segDue, duePct], [segOver, 100 - duePct]].forEach(([el, end]) => {
+    el.getAnimations().forEach(an => an.cancel());
+    el.style.width = w(end); // final state once the animation finishes
+    el.animate([
+      { width: '0px', easing: 'cubic-bezier(0.33, 1, 0.68, 1)' },          // easeOutCubic
+      { width: w(50), offset: 0.43, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' }, // easeInOutCubic
+      { width: w(end) },
+    ], { duration: 1400 });
+  });
   document.getElementById('aging-rows').innerHTML = AGING.map((r, i) => `
     <div class="snap-row aging-grid">
       <span class="snap-label"><i class="snap-dot" style="background:${r.dot};"></i>${r.label}</span>
