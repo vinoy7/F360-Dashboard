@@ -113,60 +113,52 @@
       gap: 8px;
     }
 
-    /* Warehouse carousel beside Stocks Worth */
-    .wh-carousel {
-      position: relative;
-      flex: 1;
-      min-width: 0;
-      background: white;
-      border-left: 1px solid #E3E3E5;
-      border-radius: 0 12px 12px 0;
-      overflow: hidden;
-    }
-    .wh-track {
-      position: absolute;
-      inset: 0 60px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 16px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scroll-padding: 0 16px;
-      scrollbar-width: none;
-    }
-    .wh-track::-webkit-scrollbar { display: none; }
-    .wh-item {
-      flex: 0 0 230px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      scroll-snap-align: start;
-      white-space: nowrap;
-    }
-    .wh-pad {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      display: flex;
-      align-items: center;
-      padding: 0 11px;
-      background: white;
-    }
-    .wh-pad-prev { left: 0; box-shadow: 4px 0 6px rgba(0,0,0,0.05); }
-    .wh-pad-next { right: 0; box-shadow: -4px 0 6px rgba(0,0,0,0.05); }
-    .wh-btn {
-      display: flex;
-      padding: 8px;
-      background: #FFFFFF;
-      border: 1px solid #EDEDED;
-      border-radius: 8px;
-      color: #939596;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-    .wh-btn:hover:not(:disabled) { background: #F3F0FF; color: #623CEA; }
-    .wh-btn:disabled { background: #FAFAFA; color: #D4D4D6; cursor: default; }
+    /* Snapshot cards: Total Due + Stocks Worth (Figma 8136:18332 / 8116:19055) */
+    .snap-card { flex: 1; background: #FFFFFF; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+    .snap-head { display: flex; border-bottom: 1px solid #EDEDED; }
+    .snap-summary { width: 340px; flex-shrink: 0; box-sizing: border-box; padding: 16px; display: flex; gap: 8px; align-items: flex-start; border-right: 1px solid #EDEDED; }
+    .snap-summary > img { flex-shrink: 0; }
+    .snap-metric { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+    .snap-breakdown { flex: 1; min-width: 0; padding: 16px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+    .due-bar { display: flex; gap: 4px; height: 10px; }
+    .due-split { width: 180px; display: flex; flex-direction: column; gap: 2px; }
+    .due-split-label { display: flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; color: #8C8D8F; }
+    .due-split-value { font-size: 18px; font-weight: 500; line-height: 28px; letter-spacing: -0.36px; color: #262626; white-space: nowrap; }
+    .due-cents { font-size: 16px; letter-spacing: -0.32px; }
+    .snap-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+    .snap-table-wrap { padding: 16px; }
+    .snap-table { border: 1px solid #EDEDED; border-radius: 8px; overflow: hidden; }
+    .snap-row { display: grid; align-items: center; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; color: #262626; }
+    .snap-row > * { padding: 0 16px; min-width: 0; white-space: nowrap; }
+    #aging-rows .snap-row { height: 44px; }
+    #stock-rows .snap-row { height: 52px; }
+    #aging-rows .snap-row + .snap-row, #stock-rows .snap-row + .snap-row { border-top: 1px solid #EDEDED; }
+    .snap-row-head { height: 36px; background: #F4F4F5; font-size: 12px; font-weight: 500; line-height: 16px; letter-spacing: -0.24px; color: #8C8D8F; }
+    .aging-grid { grid-template-columns: minmax(0, 1fr) 140px 250px minmax(0, 1fr) 60px; }
+    .stock-grid { grid-template-columns: 220px 150px 140px 140px minmax(0, 1fr); }
+    .snap-label { display: flex; align-items: center; gap: 8px; }
+    .stock-grid .snap-label { gap: 6px; }
+    .snap-status { display: flex; align-items: center; gap: 16px; }
+    .snap-track { flex: 1; height: 4px; border-radius: 8px; background: #EDEDED; overflow: hidden; }
+    .snap-track > div { height: 100%; border-radius: 8px; }
+    .snap-status > span { width: 36px; text-align: right; font-weight: 500; color: #8C8D8F; }
+    .snap-chevron { display: flex; justify-content: flex-end; }
+    .snap-chevron img { display: block; margin: 2px; }
+    .tbl-cents { font-size: 12px; letter-spacing: -0.24px; }
+
+    /* Payments method table (Figma 8117:22250) */
+    .pay-bar { height: 32px; display: flex; gap: 4px; border-radius: 6px; overflow: hidden; }
+    .pay-row { display: grid; grid-template-columns: minmax(0, 1fr) 130px 130px; align-items: center; height: 40px; border-bottom: 1px solid #EDEDED; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; color: #262626; }
+    .pay-row > span + span { padding-left: 16px; }
+    .pay-row-head { height: 32px; border-top: 1px solid #EDEDED; font-size: 12px; font-weight: 500; line-height: 16px; letter-spacing: -0.24px; }
+    .pay-row-head > span { display: flex; align-items: center; gap: 4px; }
+
+    /* "Just a moment..." loader (Figma 8152:206014) */
+    .loader-overlay { position: absolute; inset: 0; z-index: 2; background: #FFFFFF; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; font-size: 18px; font-weight: 500; line-height: 28px; letter-spacing: -0.36px; color: #8C8D8F; }
+    .loader-overlay.show { display: flex; }
+    .loader-overlay img { margin: 3px; animation: loader-pulse 0.6s ease-in-out infinite alternate; }
+    @keyframes loader-pulse { to { opacity: 0.35; } }
+    @media (prefers-reduced-motion: reduce) { .loader-overlay img { animation: none; } }
 
     .stat-card + .stat-card {
       border-left: 1px solid #E3E3E5;
@@ -288,9 +280,9 @@
     /* Hide / unhide dashboard */
     #dash-toggle {
       box-sizing: border-box;
-      width: 40px;
-      height: 40px;
-      padding: 8px;
+      width: 36px;
+      height: 36px;
+      padding: 7px; /* 8px minus 1px border (Figma 36px button, 20px icon) */
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
@@ -302,7 +294,7 @@
       transition: background 0.15s;
     }
     #dash-toggle:hover { background: #F3F0FF; }
-    #dash-toggle img { display: block; width: 24px; height: 24px; }
+    #dash-toggle img { display: block; width: 20px; height: 20px; }
     #dash-toggle .icon-hidden,
     .dash-hidden #dash-toggle .icon-visible,
     .dash-hidden .dash-meta,
@@ -551,35 +543,6 @@
       padding: 16px;
     }
 
-    /* Credit Intelligence — invoice link buttons */
-    .credit-link-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 4px 6px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #623CEA;
-      font-family: 'DM Sans', sans-serif;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-      cursor: pointer;
-      background: transparent;
-      border: none;
-      white-space: nowrap;
-    }
-    .credit-link-btn:hover {
-      background: #F3F0FF;
-    }
-    .credit-link-divider {
-      width: 1px;
-      height: 20px;
-      background: #D9D9D9;
-      border-radius: 1px;
-      flex-shrink: 0;
-    }
-
     /* Product item ring colors */
     .ring-gold { border-color: #B88D00 !important; }
     .ring-silver { border-color: #98A2B3 !important; }
@@ -606,7 +569,8 @@
 
     /* Payments progress bar segments */
     .prog-segment {
-      height: 40px;
+      height: 100%;
+      min-width: 0;
       transition: width 0.5s ease, filter 0.15s ease-out;
       cursor: pointer;
       position: relative;
@@ -726,21 +690,26 @@
       border-radius: 8px;
       z-index: 200;
       list-style: none;
-      padding: 4px 0;
+      padding: 8px;
       margin: 0;
       display: none;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .dropdown-menu.open { display: block; }
     .dropdown-menu li {
-      padding: 8px 12px;
+      padding: 10px 8px;
+      border-radius: 4px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 14px;
+      line-height: 20px;
       font-family: 'DM Sans', sans-serif;
       color: #262626;
-      letter-spacing: -0.32px;
+      letter-spacing: -0.28px;
     }
-    .dropdown-menu li:hover { background: #F5F5F5; }
+    .dropdown-menu li + li { margin-top: 4px; }
+    .dropdown-menu li:hover { background: #F3F0FF; }
+    .dropdown-menu li.selected { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .dropdown-menu li.selected::after { content: ''; width: 24px; height: 24px; flex-shrink: 0; background: url(assets/icon-tick-24.svg) no-repeat center; }
 
     /* Chart animation */
     .bar-fill {
@@ -932,35 +901,104 @@
       <!-- Divider -->
       <div style="height:1px; background:#E3E3E5; flex-shrink:0;"></div>
 
-      <!-- Overview section wrapper -->
-      <div style="display:flex; flex-direction:column; gap:12px;">
-
-      <!-- Overview heading, then time tabs + Last updated / refresh / hide toggle (Figma 7849:148786) -->
+      <!-- Overview section wrapper: heading + controls, snapshot cards, then the date-filtered area (Figma 8136:18604) -->
       <div style="display:flex; flex-direction:column; gap:16px;">
+
+      <!-- Overview heading + Last updated / refresh / hide toggle (Figma 8136:18584) -->
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
         <h3 style="font-size:20px; font-weight:400; color:#262626; letter-spacing:-0.40px; line-height:28px; margin:0;">Overview</h3>
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
-          <div class="tab-group" id="time-tabs" style="width:432px;">
-            <div class="tab-indicator" id="time-indicator"></div>
-            <button class="tab-btn active" data-period="overall">Overall</button>
-            <button class="tab-btn" data-period="today">Today</button>
-            <button class="tab-btn" data-period="week">This Week</button>
-            <button class="tab-btn" data-period="month">This Month</button>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span id="last-updated" class="dash-meta" style="font-size:18px; font-weight:500; color:#8C8D8F; letter-spacing:-0.36px; line-height:28px; white-space:nowrap;">Last Updated at 11:17 AM</span>
+          <button id="refresh-data" class="dash-meta" aria-label="Refresh Overview" data-info="Refresh Overview">
+            <svg width="20" height="20" viewBox="0 0 18.0013 21.0535" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11.501 6.19626C12.7228 6.04915 13.9218 5.75125 15.071 5.31126L15.252 5.24126C15.3522 5.20126 15.436 5.1287 15.4899 5.03527C15.5437 4.94184 15.5646 4.83298 15.549 4.72626C15.3621 3.44421 15.0098 2.19179 14.501 1.00026M15.071 5.31126C13.9179 3.96749 12.3515 3.04528 10.6173 2.68731C8.88311 2.32934 7.07917 2.55684 5.48817 3.33415C3.89717 4.11147 2.60902 5.39467 1.82559 6.98267C1.04216 8.57067 0.807728 10.3737 1.15903 12.1093M3.50103 20.0533C2.99148 18.8615 2.63854 17.6087 2.45103 16.3263C2.43547 16.2195 2.45632 16.1107 2.5102 16.0172C2.56408 15.9238 2.64786 15.8512 2.74803 15.8113L2.93003 15.7413C4.06204 17.06 5.5937 17.9742 7.29149 18.3456C8.98929 18.717 10.7619 18.5255 12.3411 17.7999C13.9204 17.0744 15.2204 15.8543 16.0445 14.3242C16.8687 12.794 17.1722 11.0372 16.909 9.31926M6.50103 14.8563C5.27927 15.0034 4.08026 15.3003 2.93103 15.7403" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="dash-meta" style="width:1px; height:24px; background:#E3E3E5; border-radius:1px;"></div>
+          <button id="dash-toggle" data-no-lisse aria-label="Hide Overview" data-info="Hide Overview">
+            <img class="icon-visible" src="assets/icon-eye-20.svg" width="20" height="20" alt="" />
+            <img class="icon-hidden" src="assets/icon-eye-off.svg" width="20" height="20" alt="" />
+          </button>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:24px;">
+
+      <!-- Total Due snapshot (Figma 8136:18332) -->
+      <div class="stat-cards-wrapper">
+        <div class="snap-card">
+          <div class="snap-head">
+            <div class="snap-summary">
+              <img src="assets/icon-dues-20.svg" width="20" height="21" alt="" />
+              <div class="snap-metric">
+                <div style="display:flex; align-items:center;">
+                  <span class="stat-card-label">Total Due</span>
+                  <img class="info-icon" src="assets/icon-info-16.svg" width="16" height="16" alt="Total Invoice amount from delivered Orders" tabindex="0" data-info="Total Invoice amount from delivered Orders" />
+                </div>
+                <span class="stat-card-value" id="stat-due">SR 0<span class="cents">.00</span></span>
+              </div>
+            </div>
+            <div class="snap-breakdown">
+              <div class="due-bar">
+                <div id="seg-due" class="prog-segment" style="background:#0A84FF; border-radius:50px 2px 2px 50px;"></div>
+                <div id="seg-overdue" class="prog-segment" style="background:#E72D2D; border-radius:2px 50px 50px 2px;"></div>
+              </div>
+              <div style="display:flex; gap:16px;">
+                <div class="due-split"><span class="due-split-label"><i class="snap-dot" style="background:#0A84FF;"></i>Due</span><span id="due-due" class="due-split-value"></span></div>
+                <div class="due-split"><span class="due-split-label"><i class="snap-dot" style="background:#CC2828;"></i>Overdue</span><span id="due-overdue" class="due-split-value"></span></div>
+              </div>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:12px;">
-            <span id="last-updated" class="dash-meta" style="font-size:18px; font-weight:500; color:#8C8D8F; letter-spacing:-0.36px; line-height:28px; white-space:nowrap;">Last Updated at 11:17 AM</span>
-            <button id="refresh-data" class="dash-meta" aria-label="Refresh Overview" data-info="Refresh Overview">
-              <svg width="20" height="20" viewBox="0 0 18.0013 21.0535" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11.501 6.19626C12.7228 6.04915 13.9218 5.75125 15.071 5.31126L15.252 5.24126C15.3522 5.20126 15.436 5.1287 15.4899 5.03527C15.5437 4.94184 15.5646 4.83298 15.549 4.72626C15.3621 3.44421 15.0098 2.19179 14.501 1.00026M15.071 5.31126C13.9179 3.96749 12.3515 3.04528 10.6173 2.68731C8.88311 2.32934 7.07917 2.55684 5.48817 3.33415C3.89717 4.11147 2.60902 5.39467 1.82559 6.98267C1.04216 8.57067 0.807728 10.3737 1.15903 12.1093M3.50103 20.0533C2.99148 18.8615 2.63854 17.6087 2.45103 16.3263C2.43547 16.2195 2.45632 16.1107 2.5102 16.0172C2.56408 15.9238 2.64786 15.8512 2.74803 15.8113L2.93003 15.7413C4.06204 17.06 5.5937 17.9742 7.29149 18.3456C8.98929 18.717 10.7619 18.5255 12.3411 17.7999C13.9204 17.0744 15.2204 15.8543 16.0445 14.3242C16.8687 12.794 17.1722 11.0372 16.909 9.31926M6.50103 14.8563C5.27927 15.0034 4.08026 15.3003 2.93103 15.7403" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div class="dash-meta" style="width:1px; height:24px; background:#E3E3E5; border-radius:1px;"></div>
-            <button id="dash-toggle" data-no-lisse aria-label="Hide Overview" data-info="Hide Overview">
-              <img class="icon-visible" src="assets/icon-eye.svg" width="24" height="24" alt="" />
-              <img class="icon-hidden" src="assets/icon-eye-off.svg" width="24" height="24" alt="" />
-            </button>
+          <div class="snap-table-wrap">
+            <div class="snap-table">
+              <div class="snap-row snap-row-head aging-grid"><span>Aging</span><span>Amount (SR)</span><span>Invoices</span><span>Status</span><span></span></div>
+              <div id="aging-rows"></div>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Stocks Worth snapshot (Figma 8116:19055) -->
+      <div class="stat-cards-wrapper">
+        <div class="snap-card">
+          <div class="snap-head">
+            <div class="snap-summary">
+              <img src="assets/icon-stocks-worth-20.svg" width="20" height="20" alt="" />
+              <div class="snap-metric">
+                <div style="display:flex; align-items:center;">
+                  <span class="stat-card-label">Stocks Worth</span>
+                  <img class="info-icon" src="assets/icon-info-16.svg" width="16" height="16" alt="Total stock value across all warehouses, including dead stock" tabindex="0" data-info="Total stock value across all warehouses, including dead stock" />
+                </div>
+                <span class="stat-card-value" id="stat-stocks">SR 0<span class="cents">.00</span></span>
+              </div>
+            </div>
+            <div class="snap-summary" style="flex:1; width:auto; border:none;">
+              <img src="assets/icon-orders-off-20.svg" width="20" height="20" alt="" />
+              <div class="snap-metric"><span class="stat-card-label">Total Taxed Items</span><span class="stat-card-value" id="stat-taxed">0</span></div>
+            </div>
+            <div class="snap-summary" style="flex:1; width:auto; border:none;">
+              <img src="assets/icon-orders-off-20.svg" width="20" height="20" alt="" />
+              <div class="snap-metric"><span class="stat-card-label">Total Non-Taxed Items</span><span class="stat-card-value" id="stat-nontaxed">0</span></div>
+            </div>
+          </div>
+          <div class="snap-table-wrap">
+            <div class="snap-table">
+              <div class="snap-row snap-row-head stock-grid"><span>Warehouse</span><span>Amount (SR)</span><span>Taxed Items</span><span>Non-Taxed Items</span><span>Status</span></div>
+              <div id="stock-rows"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Date-filtered area: time tabs, then KPI row + charts (hidden by the eye toggle) -->
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="tab-group" id="time-tabs" style="width:432px;">
+          <div class="tab-indicator" id="time-indicator"></div>
+          <button class="tab-btn active" data-period="overall">Overall</button>
+          <button class="tab-btn" data-period="today">Today</button>
+          <button class="tab-btn" data-period="week">This Week</button>
+          <button class="tab-btn" data-period="month">This Month</button>
+        </div>
 
       <!-- Hidden-dashboard state (Figma 7931:135365) -->
       <div class="stat-cards-wrapper" id="dash-hidden-card">
@@ -980,7 +1018,7 @@
 
       <!-- Stat Cards -->
       <div class="stat-cards-wrapper" id="stat-cards">
-        <!-- Row 1: 4 cards -->
+        <!-- KPI row: Purchase, Total Sales, Total Received -->
         <div class="stat-cards-row">
           <div class="stat-card" style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div style="display:flex; align-items:center; gap:8px; align-self:stretch;">
@@ -1000,36 +1038,11 @@
           </div>
           <div class="stat-card" style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div style="display:flex; align-items:center; gap:8px; align-self:stretch;">
-              <img src="assets/imgIconDue.svg" style="width:20px; height:21px; flex-shrink:0;" alt="" />
-              <span class="stat-card-label">Total Due</span>
-              <img class="info-icon" src="assets/icon-info-16.svg" width="16" height="16" alt="Total Invoice amount from delivered Orders" tabindex="0" data-info="Total Invoice amount from delivered Orders" />
-            </div>
-            <span class="stat-card-value" style="padding-left:26px;" id="stat-due">SR 245,698<span class="cents">.65</span></span>
-          </div>
-          <div class="stat-card" style="display:flex; justify-content:space-between; align-items:flex-start;">
-            <div style="display:flex; align-items:center; gap:8px; align-self:stretch;">
               <img src="assets/imgIconReceived.svg" style="width:20px; height:21px; flex-shrink:0;" alt="" />
               <span class="stat-card-label">Total Received</span>
               <img class="info-icon" src="assets/icon-info-16.svg" width="16" height="16" alt="Total payments recorded for Deliveries and Cash Sales" tabindex="0" data-info="Total payments recorded for Deliveries and Cash Sales" />
             </div>
             <span class="stat-card-value" style="padding-left:26px;" id="stat-received">SR 2,469<span class="cents">.49</span></span>
-          </div>
-        </div>
-        <!-- Row 2: Full-width stocks card -->
-        <div class="stat-cards-row">
-          <div class="stat-card" style="flex:0 0 calc((100% - 3px) / 4); min-width:max-content; display:flex; justify-content:space-between; align-items:flex-start;">
-            <div style="display:flex; align-items:center; gap:8px; align-self:stretch;">
-              <img src="assets/imgIconStocks.svg" style="width:20px; height:21px; flex-shrink:0;" alt="" />
-              <span class="stat-card-label">Stocks Worth</span>
-              <img class="info-icon" src="assets/icon-info-16.svg" width="16" height="16" alt="Total stock value across all warehouses, including dead stock" tabindex="0" data-info="Total stock value across all warehouses, including dead stock" />
-            </div>
-            <span class="stat-card-value" style="padding-left:26px;" id="stat-stocks">SR 1,254,236<span class="cents">.00</span></span>
-          </div>
-          <!-- Warehouse carousel (Figma 7870:19019, chevron states 7882:126240) -->
-          <div class="wh-carousel">
-            <div class="wh-track" id="wh-track"></div>
-            <div class="wh-pad wh-pad-prev"><button class="wh-btn" id="wh-prev" data-no-lisse aria-label="Previous warehouse"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15.0004C10.6827 13.6862 9.05299 12.148 7.65236 10.4255C7.44921 10.1757 7.44921 9.82513 7.65236 9.5753C9.05299 7.85285 10.6827 6.31458 12.5 5.00041" stroke="currentColor" stroke-width="1.45833" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
-            <div class="wh-pad wh-pad-next"><button class="wh-btn" id="wh-next" data-no-lisse aria-label="Next warehouse"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.5 15C9.31733 13.6858 10.947 12.1476 12.3476 10.4251C12.5508 10.1753 12.5508 9.82473 12.3476 9.5749C10.947 7.85245 9.31733 6.31417 7.5 5" stroke="currentColor" stroke-width="1.45833" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
           </div>
         </div>
 
@@ -1079,7 +1092,7 @@
               <button class="tab-btn" style="flex:1;" data-items="least">Least Ordered Items</button>
             </div>
             <!-- 2x2 Grid -->
-            <div id="items-grid" style="display:flex; flex-direction:column; gap:8px;"></div>
+            <div id="items-grid" style="position:relative; display:flex; flex-direction:column; gap:8px;"></div>
           </div>
         </div>
 
@@ -1089,15 +1102,15 @@
             <span class="card-title">Sales by Category</span>
           </div>
           <div class="card-divider"></div>
-          <div class="card-body" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; padding-bottom:24px;">
-            <!-- Dropdown -->
-            <div class="custom-dropdown" id="category-dropdown-wrapper">
+          <div class="card-body" id="donut-region" style="position:relative; flex:1; display:flex; flex-direction:column; justify-content:space-between; padding-bottom:24px;">
+            <!-- Dropdown (z-index keeps it above the loader overlay) -->
+            <div class="custom-dropdown" id="category-dropdown-wrapper" style="z-index:3;">
               <div class="dropdown-trigger" id="category-dropdown-trigger">
                 <span class="dropdown-selected">Delivery Sales vs Cash Sales</span>
                 <img src="assets/imgVector1.svg" style="width:12px; height:7px; flex-shrink:0;" alt="" />
               </div>
               <ul class="dropdown-menu" id="category-dropdown-menu">
-                <li data-value="delivery_cash">Delivery Sales vs Cash Sales</li>
+                <li data-value="delivery_cash" class="selected">Delivery Sales vs Cash Sales</li>
                 <li data-value="retail_wholesale">Retailer vs Wholesaler</li>
                 <li data-value="product_categories">Product Category</li>
                 <li data-value="sales_points">Sales Point</li>
@@ -1117,68 +1130,28 @@
         <div style="display:flex; gap:6px; align-items:stretch;">
 
         <!-- Payments -->
-        <div class="card" style="flex:1; min-width:0;">
+        <div class="card" style="flex:1; min-width:0; display:flex; flex-direction:column;">
           <div class="card-header">
             <span class="card-title">Payments</span>
           </div>
           <div class="card-divider"></div>
-          <div class="card-body" style="display:flex; flex-direction:column; gap:24px;">
-            <!-- Total Payments Received -->
-            <div style="display:flex; flex-direction:column; gap:20px;">
-              <div style="display:flex; gap:8px; align-items:center;">
-                <img src="assets/imgFrame.svg" style="width:40px; height:40px; flex-shrink:0;" alt="" />
-                <div style="flex:1; display:flex; flex-direction:column; gap:4px;">
-                  <span style="font-size:14px; font-weight:500; color:#8C8D8F; letter-spacing:-0.28px;">Total Payments Received</span>
-                  <span id="pay-transactions" style="font-size:14px; font-weight:500; color:#262626; letter-spacing:-0.28px;">14 Transactions</span>
-                </div>
-                <span style="font-size:18px; font-weight:500; color:#262626; letter-spacing:-0.36px; white-space:nowrap;" id="pay-received-total">SR 2,469<span style="font-size:14px;">.49</span></span>
-              </div>
-              <!-- Progress bar 1 -->
-              <div style="display:flex; flex-direction:column; gap:12px;">
-                <div style="display:flex; gap:4px;">
-                  <div id="prog-collection" class="prog-segment" data-tip="Payment from Collection" style="border-radius:8px 2px 2px 8px; background:#0E8F53; width:62%;"></div>
-                  <div id="prog-cash" class="prog-segment" data-tip="Payment from Cash Sales" style="border-radius:2px 8px 8px 2px; background:#A0DDA3; flex:1;"></div>
-                </div>
-                <div style="display:flex; gap:19px; align-items:center;">
-                  <div style="display:flex; gap:4px; align-items:center;">
-                    <div class="legend-dot" style="background:#0E8F53;"></div>
-                    <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Payment from Collection</span>
-                  </div>
-                  <div style="display:flex; gap:4px; align-items:center;">
-                    <div class="legend-dot" style="background:#A0DDA3;"></div>
-                    <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Payment from Cash Sales</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="card-divider"></div>
-
-            <!-- Total Due to Receive -->
+          <div class="card-body" style="flex:1; display:flex; flex-direction:column; gap:20px;">
+            <!-- Total Payments Received (Figma 8116:19386) -->
             <div style="display:flex; gap:8px; align-items:center;">
-              <img src="assets/imgFrame1.svg" style="width:40px; height:40px; flex-shrink:0;" alt="" />
+              <img src="assets/icon-payments-received-40.svg" width="40" height="40" style="flex-shrink:0;" alt="" />
               <div style="flex:1; display:flex; flex-direction:column; gap:4px;">
-                <span style="font-size:14px; font-weight:500; color:#8C8D8F; letter-spacing:-0.28px;">Total Due to Receive</span>
-                <span id="pay-invoices" style="font-size:14px; font-weight:500; color:#262626; letter-spacing:-0.28px;">5 Invoices</span>
+                <span style="font-size:14px; font-weight:500; line-height:20px; color:#8C8D8F; letter-spacing:-0.28px;">Total Payments Received</span>
+                <span id="pay-transactions" style="font-size:14px; font-weight:500; line-height:20px; color:#262626; letter-spacing:-0.28px;">14 Transactions</span>
               </div>
-              <span style="font-size:18px; font-weight:500; color:#262626; letter-spacing:-0.36px; white-space:nowrap;" id="pay-due-total">SR 22,000<span style="font-size:14px;">.42</span></span>
+              <span style="font-size:18px; font-weight:500; line-height:28px; color:#262626; letter-spacing:-0.36px; white-space:nowrap;" id="pay-received-total"></span>
             </div>
-            <!-- Progress bar 2 -->
-            <div style="display:flex; flex-direction:column; gap:12px;">
-              <div style="display:flex; gap:4px;">
-                <div id="prog-due" class="prog-segment" data-tip="Due" style="border-radius:8px 2px 2px 8px; background:#D4D4D6; width:62%;"></div>
-                <div id="prog-overdue" class="prog-segment" data-tip="Overdue" style="border-radius:2px 8px 8px 2px; background:#F59D9D; flex:1;"></div>
-              </div>
-              <div style="display:flex; gap:19px; align-items:center;">
-                <div style="display:flex; gap:4px; align-items:center;">
-                  <div class="legend-dot" style="background:#D4D4D6;"></div>
-                  <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Due</span>
-                </div>
-                <div style="display:flex; gap:4px; align-items:center;">
-                  <div class="legend-dot" style="background:#F59D9D;"></div>
-                  <span style="font-size:14px; color:#262626; letter-spacing:-0.28px;">Overdue</span>
-                </div>
-              </div>
+            <div class="pay-bar">
+              <div id="prog-collection" class="prog-segment" style="border-radius:6px 2px 2px 6px; background:#0E8F53;"></div>
+              <div id="prog-cash" class="prog-segment" style="border-radius:2px 6px 6px 2px; background:#A0DDA3;"></div>
+            </div>
+            <div>
+              <div class="pay-row pay-row-head"><span></span><span><i class="legend-dot" style="background:#0E8F53;"></i>Collection (SR)</span><span><i class="legend-dot" style="background:#A0DDA3;"></i>Cash sales (SR)</span></div>
+              <div id="pay-methods"></div>
             </div>
           </div>
         </div>
@@ -1191,25 +1164,25 @@
           <div class="card-divider"></div>
           <!-- Vendors controls -->
           <div style="padding:16px; display:flex; align-items:center; justify-content:space-between;">
-            <div class="tab-group" id="vendor-tabs" style="width:160px;">
+            <div class="tab-group" id="vendor-tabs" style="width:216px;">
               <div class="tab-indicator" id="vendor-indicator"></div>
               <button class="tab-btn active" data-vendor="top">Top</button>
               <button class="tab-btn" data-vendor="least">Least</button>
             </div>
-            <div class="custom-dropdown" id="vendor-sort-wrapper" style="width:210px;">
+            <div class="custom-dropdown" id="vendor-sort-wrapper" style="width:180px;">
               <div class="dropdown-trigger" id="vendor-sort-trigger">
-                <span class="dropdown-selected">By Amount Pending</span>
+                <span class="dropdown-selected">By Sales Amount</span>
                 <img src="assets/imgVector1.svg" style="width:12px; height:7px; flex-shrink:0;" alt="" />
               </div>
               <ul class="dropdown-menu" id="vendor-sort-menu">
-                <li data-value="amount_pending">By Amount Pending</li>
-                <li data-value="amount_paid">By Sales Amount</li>
+                <li data-value="amount" class="selected">By Sales Amount</li>
+                <li data-value="volume">By Sales Volume</li>
               </ul>
             </div>
           </div>
           <div class="card-divider"></div>
           <!-- Vendor list -->
-          <div id="vendor-list" style="flex:1; padding:12px 16px; display:flex; flex-direction:column; justify-content:space-between; gap:0;"></div>
+          <div id="vendor-list" style="position:relative; flex:1; padding:12px 16px; display:flex; flex-direction:column; justify-content:space-between; gap:0;"></div>
         </div>
         </div><!-- end Payments + Vendors row -->
 
@@ -1221,65 +1194,6 @@
           <div class="card-divider"></div>
           <!-- Tabs + cards in one container (no divider between) -->
           <div style="padding:16px; display:flex; flex-direction:column; gap:12px;">
-            <!-- Vendors / Invoices tab switcher -->
-            <div>
-              <div class="tab-group" id="credit-tabs" style="width:220px;">
-                <div class="tab-indicator" id="credit-indicator"></div>
-                <button class="tab-btn active" data-credit="vendors">Vendors</button>
-                <button class="tab-btn" data-credit="invoices">Invoices</button>
-              </div>
-            </div>
-            <!-- Invoices panel -->
-            <div id="credit-invoices-panel" style="display:none; gap:16px; align-items:stretch;">
-              <!-- Card 1: Overdue 30+ days (red) -->
-              <div data-no-lisse style="position:relative; flex:1; min-width:0; height:260px; border-radius:10px; border:2px solid #FFDBDB; overflow:hidden; background:white; display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; padding:20px 12px; box-sizing:border-box;">
-                <div style="position:relative; display:flex; flex-direction:column; gap:16px; align-items:center; width:220px;">
-                  <img src="assets/credit-invoice-red.svg" style="width:50px; height:50px; display:block;" alt="" />
-                  <div style="display:flex; flex-direction:column; align-items:center; color:#262626;">
-                    <span style="font-size:18px; font-weight:600; line-height:28px; letter-spacing:-0.36px; white-space:nowrap;">24 Invoices Overdue</span>
-                    <span style="font-size:16px; font-weight:400; line-height:24px; letter-spacing:-0.32px; text-align:center; white-space:nowrap;">for more than 30 days</span>
-                  </div>
-                </div>
-                <div style="position:relative; display:flex; gap:8px; align-items:center; justify-content:center;">
-                  <button class="credit-link-btn">Send Reminder</button>
-                  <div class="credit-link-divider"></div>
-                  <button class="credit-link-btn">View Details</button>
-                </div>
-                <div data-no-lisse style="position:absolute; inset:0; pointer-events:none; box-shadow:inset 0px 0px 20px 2px rgba(245,157,157,0.5);"></div>
-              </div>
-              <!-- Card 2: Overdue <30 days (orange) -->
-              <div data-no-lisse style="position:relative; flex:1; min-width:0; height:260px; border-radius:10px; border:2px solid #FFE8CA; overflow:hidden; background:white; display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; padding:20px 12px; box-sizing:border-box;">
-                <div style="position:relative; display:flex; flex-direction:column; gap:16px; align-items:center; width:220px;">
-                  <img src="assets/credit-invoice-orange.svg" style="width:50px; height:50px; display:block;" alt="" />
-                  <div style="display:flex; flex-direction:column; align-items:center; color:#262626;">
-                    <span style="font-size:18px; font-weight:600; line-height:28px; letter-spacing:-0.36px; white-space:nowrap;">12 Invoices Overdue</span>
-                    <span style="font-size:16px; font-weight:400; line-height:24px; letter-spacing:-0.32px; text-align:center; white-space:nowrap;">for less than 30 days</span>
-                  </div>
-                </div>
-                <div style="position:relative; display:flex; gap:8px; align-items:center; justify-content:center;">
-                  <button class="credit-link-btn">Send Reminder</button>
-                  <div class="credit-link-divider"></div>
-                  <button class="credit-link-btn">View Details</button>
-                </div>
-                <div data-no-lisse style="position:absolute; inset:0; pointer-events:none; box-shadow:inset 0px 0px 20px 2px rgba(224,117,9,0.25);"></div>
-              </div>
-              <!-- Card 3: Due soon (grey) -->
-              <div data-no-lisse style="position:relative; flex:1; min-width:0; height:260px; border-radius:10px; border:2px solid #F2F2F2; overflow:hidden; background:white; display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; padding:20px 12px; box-sizing:border-box;">
-                <div style="position:relative; display:flex; flex-direction:column; gap:16px; align-items:center; width:220px;">
-                  <img src="assets/credit-invoice-grey.svg" style="width:50px; height:50px; display:block;" alt="" />
-                  <div style="display:flex; flex-direction:column; align-items:center; color:#262626;">
-                    <span style="font-size:18px; font-weight:600; line-height:28px; letter-spacing:-0.36px; white-space:nowrap;">8 Invoices Due</span>
-                    <span style="font-size:16px; font-weight:400; line-height:24px; letter-spacing:-0.32px; text-align:center; white-space:nowrap;">for in 2 days or less</span>
-                  </div>
-                </div>
-                <div style="position:relative; display:flex; gap:8px; align-items:center; justify-content:center;">
-                  <button class="credit-link-btn">Send Reminder</button>
-                  <div class="credit-link-divider"></div>
-                  <button class="credit-link-btn">View Details</button>
-                </div>
-                <div data-no-lisse style="position:absolute; inset:0; pointer-events:none; box-shadow:inset 0px 0px 20px 2px rgba(227,227,229,0.6);"></div>
-              </div>
-            </div>
             <!-- Vendors panel -->
             <div id="credit-vendors-panel" style="display:block;">
               <div data-no-lisse style="border:1px solid #EDEDED; border-radius:8px; overflow:hidden; display:flex; align-items:flex-start; justify-content:space-between;">
@@ -1336,6 +1250,8 @@
         </div>
 
       </div><!-- end stat-cards-wrapper -->
+      </div><!-- end date-filtered area -->
+      </div><!-- end snapshots + date-filtered column -->
       </div><!-- end overview section wrapper -->
 
     </div><!-- end scrollable content -->
@@ -1376,15 +1292,45 @@ try { if (localStorage.getItem(DASH_HIDDEN_KEY) === '1') document.body.classList
 // =========================================================
 // DATA MODEL
 // =========================================================
-const WAREHOUSE_NAMES = ['Primary Warehouse', 'WH Mahé', 'WH Praslin', 'WH La Digue', 'WH Providence', 'WH Anse Royale', 'Dead Stock'];
+// Snapshot cards (not date-filtered). Totals are summed from rows so they always reconcile.
+// Total Due = SR 245,698.65 (Due 65,298.50 + Overdue 180,400.15)
+const AGING = [
+  { label: '90+ days overdue',   amount: 81902.39, invoices: 24, vendors: 10, dot: '#D92D20', bar: '#E72D2D' },
+  { label: '61–90 days overdue', amount: 44575.89, invoices: 15, vendors: 7,  dot: '#EC4A0A', bar: '#E85D5D' },
+  { label: '31–60 days overdue', amount: 30850.11, invoices: 12, vendors: 6,  dot: '#E07509', bar: '#FF7373' },
+  { label: '1–30 days overdue',  amount: 23071.76, invoices: 9,  vendors: 5,  dot: '#FF9F0A', bar: '#FF8C8C' },
+  { label: 'Not due yet',        amount: 65298.50, invoices: 31, vendors: 14, dot: '#0A84FF', bar: '#0A84FF', notDue: true },
+];
+// Stocks Worth = SR 1,254,236.00; taxed 510, non-taxed 240 (dead stock non-taxed shown as "-")
+const STOCKS = [
+  { name: 'Primary Warehouse', amount: 465606.24, taxed: 180, nonTaxed: 100, bar: '#623CEA' },
+  { name: 'WH Mahé',           amount: 253409.18, taxed: 90,  nonTaxed: 50,  bar: '#7A5AEF' },
+  { name: 'WH Praslin',        amount: 175379.56, taxed: 70,  nonTaxed: 30,  bar: '#8F76F5' },
+  { name: 'WH La Digue',       amount: 131160.51, taxed: 60,  nonTaxed: 25,  bar: '#AB94FF' },
+  { name: 'WH Providence',     amount: 101363.67, taxed: 50,  nonTaxed: 20,  bar: '#C1B2FF' },
+  { name: 'WH Anse Royale',    amount: 71158.65,  taxed: 40,  nonTaxed: 15,  bar: '#D7CCFF' },
+  { name: 'Dead Stock',        amount: 56158.19,  taxed: 20,  nonTaxed: null, bar: '#F59D9D', dead: true },
+];
+
+// Vendors Performance pool: [sales amount, invoice count] per period. Top/Least = 5 highest/lowest by the chosen metric.
+const VENDORS = [
+  { name: 'Atlas Digital Systems',         loc: 'Mahé',        icon: 'yellow', overall: [253500, 240], month: [84200, 82], week: [21400, 19], today: [3250, 3] },
+  { name: 'Emmanuel Transports Pvt. Ltd.', loc: 'Grand Anse',  icon: 'pink',   overall: [233500, 180], month: [91750, 64], week: [18950, 15], today: [2700, 2] },
+  { name: 'Mitsuishi Engineering',         loc: 'Grand Anse',  icon: 'blue',   overall: [220500, 125], month: [70300, 41], week: [22800, 11], today: [4100, 2] },
+  { name: 'Redox Steel Pvt Ltd',           loc: 'Mahé',        icon: 'brown',  overall: [180500, 98],  month: [52900, 30], week: [12600, 8],  today: [1800, 1] },
+  { name: 'Whimsi Works',                  loc: 'Mahé',        icon: 'teal',   overall: [160500, 132], month: [49800, 47], week: [10900, 12], today: [1450, 2] },
+  { name: 'Verdant Supplies Co.',          loc: 'Praslin',     icon: 'blue',   overall: [96400, 64],   month: [31200, 22], week: [7350, 6],   today: [960, 1] },
+  { name: 'Crestline Foods',               loc: 'Victoria',    icon: 'yellow', overall: [54250, 71],   month: [16400, 25], week: [4200, 7],   today: [540, 1] },
+  { name: 'Nordic Tool Works',             loc: 'La Digue',    icon: 'brown',  overall: [21300, 18],   month: [7300, 6],   week: [1850, 2],   today: [220, 1] },
+  { name: 'Bluepeak Traders',              loc: 'Beau Vallon', icon: 'pink',   overall: [8640, 9],     month: [2950, 3],   week: [640, 1],    today: [0, 0] },
+  { name: 'Horizon Systems Group',         loc: 'Victoria',    icon: 'orange', overall: [3500, 4],     month: [1300, 2],   week: [310, 1],    today: [0, 0] },
+];
 
 const DATA = {
   today: {
     purchase: 'SR 0<span class="cents">.00</span>',
     sales: 'SR 23,586<span class="cents">.49</span>',
-    due: 'SR 245,698<span class="cents">.65</span>',
     received: 'SR 2,469<span class="cents">.49</span>',
-    warehouses: [194194.25, 52875.50, 405120.75, 311640.00, 171980.25, 87214.50, 4215.75], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
     cashflow: {
       purchase: { value: 2550000.65, label: 'SR 2,550,000.65' },
       sales:    { value: 1750000.23, label: 'SR 1,750,000.23' },
@@ -1397,55 +1343,13 @@ const DATA = {
       sales_points:  { data: [38, 27, 21, 14], labels: ['Mahe', 'Grand Anse', 'Anse Royale', 'Mont Fleuri'], values: ['SR 112,349.77', 'SR 79,827.47', 'SR 62,088.03', 'SR 41,392.01'], colors: ['#D7CCFF', '#C1B2FF', '#8F76F5', '#623CEA'] },
       retail_wholesale: { data: [27, 73], labels: ['Retailer', 'Wholesaler'], values: ['SR 88,954.32', 'SR 242,124.68'], colors: ['#623CEA', '#D7CCFF'] },
     },
-    payments: {
-      transactions: '14 Transactions',
-      receivedTotal: 'SR 2,469<span style="font-size:14px;">.49</span>',
-      collectionPct: 62,
-      invoices: '5 Invoices',
-      dueTotal: 'SR 22,000<span style="font-size:14px;">.42</span>',
-      duePct: 62,
-    },
-    vendors: {
-      top: {
-        amount_pending: [
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 2,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 0.00',      color: '#262626', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '− SR 1,500.00', color: '#262626', bg: '#EAEFFF', icon: 'blue' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 3,500.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 3,500.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-        ],
-        amount_paid: [
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 48,000.00',  color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 32,500.00',  color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 18,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 12,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 5,500.00',   color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-        ]
-      },
-      least: {
-        amount_pending: [
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 3,500.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 3,500.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '− SR 1,500.00', color: '#262626', bg: '#EAEFFF', icon: 'blue' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 0.00',      color: '#262626', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 2,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-        ],
-        amount_paid: [
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 5,500.00',   color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 12,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 18,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 32,500.00',  color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 48,000.00',  color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
-        ]
-      }
-    }
+    // [collection, cash sales] per method (Cash, Cheque, Bank transfer, Credit Adjustment); sums to `received`
+    payments: { transactions: 14, methods: [[612.45, 516.13], [428.70, 187.68], [336.83, 234.60], [153.10, null]] },
   },
   overall: {
     purchase: 'SR 145,200<span class="cents">.00</span>',
     sales: 'SR 312,840<span class="cents">.75</span>',
-    due: 'SR 892,450<span class="cents">.30</span>',
     received: 'SR 287,654<span class="cents">.90</span>',
-    warehouses: [3655430.00, 1466290.25, 2085447.80, 1298962.45, 1194576.90, 623121.17, 47385.60], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
     cashflow: {
       purchase: { value: 8200000.00, label: 'SR 8,200,000.00' },
       sales:    { value: 6540000.75, label: 'SR 6,540,000.75' },
@@ -1459,55 +1363,13 @@ const DATA = {
       retail_wholesale: { data: [27, 73], labels: ['Retailer', 'Wholesaler'], values: ['SR 295,680.46', 'SR 799,160.28'], colors: ['#623CEA', '#D7CCFF'] },
       by_region:     { data: [65, 35], labels: ['Victoria', 'Other Islands'], values: ['SR 203,346.49', 'SR 109,494.26'], colors: ['#623CEA', '#D7CCFF'] },
     },
-    payments: {
-      transactions: '184 Transactions',
-      receivedTotal: 'SR 287,654<span style="font-size:14px;">.90</span>',
-      collectionPct: 70,
-      invoices: '47 Invoices',
-      dueTotal: 'SR 892,450<span style="font-size:14px;">.30</span>',
-      duePct: 55,
-    },
-    vendors: {
-      top: {
-        amount_pending: [
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 45,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '+ SR 28,500.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: '+ SR 12,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 8,400.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 14,200.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-        ],
-        amount_paid: [
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 285,000.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 198,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 112,500.00', color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 76,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 42,500.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-        ]
-      },
-      least: {
-        amount_pending: [
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 14,200.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 8,400.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: '+ SR 12,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 45,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '+ SR 28,500.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
-        ],
-        amount_paid: [
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 42,500.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 76,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 112,500.00', color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 198,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 285,000.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
-        ]
-      }
-    }
+    // [collection, cash sales] per method (Cash, Cheque, Bank transfer, Credit Adjustment); sums to `received`
+    payments: { transactions: 184, methods: [[80543.38, 47463.07], [56380.36, 17259.29], [44298.85, 21574.11], [20135.84, null]] },
   },
   week: {
     purchase: 'SR 18,400<span class="cents">.00</span>',
     sales: 'SR 84,215<span class="cents">.60</span>',
-    due: 'SR 412,350<span class="cents">.80</span>',
     received: 'SR 31,640<span class="cents">.15</span>',
-    warehouses: [196790.25, 53420.00, 408765.50, 315230.75, 174105.00, 88310.50, 4260.00], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
     cashflow: {
       purchase: { value: 4100000.00, label: 'SR 4,100,000.00' },
       sales:    { value: 2850000.60, label: 'SR 2,850,000.60' },
@@ -1521,55 +1383,13 @@ const DATA = {
       retail_wholesale: { data: [27, 73], labels: ['Retailer', 'Wholesaler'], values: ['SR 72,557.72', 'SR 196,057.88'], colors: ['#623CEA', '#D7CCFF'] },
       by_region:     { data: [62, 38], labels: ['Victoria', 'Other Islands'], values: ['SR 52,213.67', 'SR 32,001.93'], colors: ['#623CEA', '#D7CCFF'] },
     },
-    payments: {
-      transactions: '56 Transactions',
-      receivedTotal: 'SR 31,640<span style="font-size:14px;">.15</span>',
-      collectionPct: 65,
-      invoices: '18 Invoices',
-      dueTotal: 'SR 412,350<span style="font-size:14px;">.80</span>',
-      duePct: 58,
-    },
-    vendors: {
-      top: {
-        amount_pending: [
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '+ SR 12,000.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 8,500.00',  color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: '+ SR 4,200.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 2,800.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 5,100.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-        ],
-        amount_paid: [
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 65,000.00',  color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 48,000.00',  color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 28,500.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 19,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 12,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-        ]
-      },
-      least: {
-        amount_pending: [
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 5,100.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 2,800.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: '+ SR 4,200.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 8,500.00',  color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '+ SR 12,000.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
-        ],
-        amount_paid: [
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 12,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 19,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 28,500.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 48,000.00',  color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 65,000.00',  color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
-        ]
-      }
-    }
+    // [collection, cash sales] per method (Cash, Cheque, Bank transfer, Credit Adjustment); sums to `received`
+    payments: { transactions: 56, methods: [[8226.46, 6090.74], [5758.50, 2214.81], [4524.53, 2768.51], [2056.60, null]] },
   },
   month: {
     purchase: 'SR 58,200<span class="cents">.50</span>',
     sales: 'SR 198,650<span class="cents">.25</span>',
-    due: 'SR 645,200<span class="cents">.90</span>',
     received: 'SR 142,380<span class="cents">.75</span>',
-    warehouses: [201569.75, 55210.75, 418300.25, 322615.50, 179440.00, 90125.25, 4310.25], // Stocks Worth = sum, same order as WAREHOUSE_NAMES
     cashflow: {
       purchase: { value: 6800000.50, label: 'SR 6,800,000.50' },
       sales:    { value: 4950000.25, label: 'SR 4,950,000.25' },
@@ -1583,48 +1403,8 @@ const DATA = {
       retail_wholesale: { data: [27, 73], labels: ['Retailer', 'Wholesaler'], values: ['SR 185,040.07', 'SR 500,108.28'], colors: ['#623CEA', '#D7CCFF'] },
       by_region:     { data: [63, 37], labels: ['Victoria', 'Other Islands'], values: ['SR 125,149.66', 'SR 73,500.59'], colors: ['#623CEA', '#D7CCFF'] },
     },
-    payments: {
-      transactions: '128 Transactions',
-      receivedTotal: 'SR 142,380<span style="font-size:14px;">.75</span>',
-      collectionPct: 68,
-      invoices: '34 Invoices',
-      dueTotal: 'SR 645,200<span style="font-size:14px;">.90</span>',
-      duePct: 60,
-    },
-    vendors: {
-      top: {
-        amount_pending: [
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 28,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '+ SR 18,500.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: '+ SR 9,400.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 6,200.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 10,800.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-        ],
-        amount_paid: [
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 165,000.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 125,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 72,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 45,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 28,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-        ]
-      },
-      least: {
-        amount_pending: [
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: '− SR 10,800.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: '− SR 6,200.00', color: '#262626', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: '+ SR 9,400.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: '+ SR 28,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: '+ SR 18,500.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
-        ],
-        amount_paid: [
-          { name: 'Whimsi Works',               type: 'Retailer',   amount: 'SR 28,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Emmanuel Transports Pvt. Ltd.', type: 'Retailer', amount: 'SR 45,000.00', color: '#0E8F53', bg: '#FFEBF3', icon: 'pink' },
-          { name: 'Redox Steel Pvt Ltd',        type: 'Retailer',   amount: 'SR 72,000.00',  color: '#0E8F53', bg: '#F1E4DD', icon: 'brown' },
-          { name: 'Atlas Digital Systems',      type: 'Retailer',   amount: 'SR 125,000.00', color: '#0E8F53', bg: '#FCF4CA', icon: 'yellow' },
-          { name: 'Mitsuishi Engineering',      type: 'Wholesaler', amount: 'SR 165,000.00', color: '#0E8F53', bg: '#EAEFFF', icon: 'blue' },
-        ]
-      }
-    }
+    // [collection, cash sales] per method (Cash, Cheque, Bank transfer, Credit Adjustment); sums to `received`
+    payments: { transactions: 128, methods: [[38727.57, 25059.02], [27109.29, 9112.36], [21300.16, 11390.46], [9681.89, null]] },
   }
 };
 
@@ -1662,14 +1442,6 @@ const BUILDING_ICONS = {
   teal:    'assets/imgBuildingTeal.svg',
 };
 
-// Extra businesses shown in the Least-performers list (amount magnitude drives sort)
-const EXTRA_LEAST = [
-  { name: 'Verdant Supplies Co.', type: 'Wholesaler', amount: 'SR 6,200.00',  icon: 'blue'   },
-  { name: 'Crestline Foods',      type: 'Retailer',   amount: 'SR 9,800.00',  icon: 'yellow' },
-  { name: 'Nordic Tool Works',    type: 'Wholesaler', amount: 'SR 21,400.00', icon: 'brown'  },
-  { name: 'Bluepeak Traders',     type: 'Retailer',   amount: 'SR 33,900.00', icon: 'pink'   },
-];
-
 // Vendor area shown under name in Vendors Performance + Credit Intelligence (replaces Retailer/Wholesaler)
 const VENDOR_AREA = {
   'Atlas Digital Systems':         'Mahe',
@@ -1695,7 +1467,7 @@ let currentPeriod = 'overall';
 let currentItems = 'most';
 let currentCategory = 'delivery_cash';
 let currentVendorSide = 'top';
-let currentVendorSort = 'amount_pending';
+let currentVendorSort = 'amount';
 
 // =========================================================
 // CHART INSTANCES
@@ -2007,14 +1779,9 @@ function buildItemsGrid(type) {
 // VENDOR LIST
 // =========================================================
 function buildVendorList() {
-  let vendors = DATA[currentPeriod].vendors[currentVendorSide][currentVendorSort];
-  // Least performers: force all amounts negative, sort ascending (most negative on top)
-  if (currentVendorSide === 'least') {
-    vendors = vendors.concat(EXTRA_LEAST).map(v => {
-      const mag = parseFloat(v.amount.replace(/[^0-9.]/g, '')) || 0;
-      return { ...v, _mag: mag, amount: 'SR ' + mag.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), color: '#262626' };
-    }).sort((a, b) => a._mag - b._mag).slice(0, 5);
-  }
+  const m = currentVendorSort === 'volume' ? 1 : 0; // index into [amount, invoices]
+  const dir = currentVendorSide === 'top' ? -1 : 1;
+  const vendors = [...VENDORS].sort((a, b) => dir * (a[currentPeriod][m] - b[currentPeriod][m])).slice(0, 5);
   const list = document.getElementById('vendor-list');
   list.innerHTML = '';
   vendors.forEach(v => {
@@ -2029,14 +1796,16 @@ function buildVendorList() {
         </div>
         <div style="flex:1; min-width:0;">
           <div style="font-size:14px; color:#262626; letter-spacing:-0.28px; line-height:20px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${v.name}</div>
-          <div style="font-size:14px; color:#8C8D8F; letter-spacing:-0.28px; line-height:20px;">${VENDOR_AREA[v.name] || 'Mahe'}</div>
+          <div style="font-size:14px; color:#8C8D8F; letter-spacing:-0.28px; line-height:20px;">${v.loc}</div>
         </div>
       </div>
-      <span class="vendor-amt" style="font-size:18px; font-weight:500; color:#262626; letter-spacing:-0.36px; white-space:nowrap; flex-shrink:0; margin-left:12px;"></span>
+      <span class="vendor-amt" style="font-size:18px; font-weight:500; color:#262626; letter-spacing:-0.36px; line-height:28px; white-space:nowrap; flex-shrink:0; margin-left:12px;"></span>
     `;
     list.appendChild(row);
-    const amtTarget = parseFloat(v.amount.replace(/[^0-9.]/g, '')) || 0;
-    rollSR(row.querySelector('.vendor-amt'), amtTarget, true);
+    const [amount, invoices] = v[currentPeriod];
+    const el = row.querySelector('.vendor-amt');
+    if (m) rollCount(el, invoices, n => `${n} Invoice${n === 1 ? '' : 's'}`);
+    else rollSR(el, amount, true);
   });
 }
 
@@ -2081,6 +1850,17 @@ function rollSR(el, target, centsSmall) {
   };
   el._raf = requestAnimationFrame(tick);
 }
+// Roll an integer through a formatter (invoice counts, table counts)
+function rollCount(el, target, fmt) {
+  if (el._raf) cancelAnimationFrame(el._raf);
+  const duration = 900, start = performance.now();
+  const tick = (now) => {
+    const t = Math.min(1, (now - start) / duration);
+    el.textContent = fmt(Math.round(target * (1 - Math.pow(1 - t, 4))));
+    el._raf = t < 1 ? requestAnimationFrame(tick) : null;
+  };
+  el._raf = requestAnimationFrame(tick);
+}
 // Roll percentage (used in top 4 items profit)
 function rollPct(el, target) {
   if (el._raf) cancelAnimationFrame(el._raf);
@@ -2099,54 +1879,95 @@ function updateStats(period) {
   const d = DATA[period];
   rollKpi(document.getElementById('stat-purchase'), d.purchase);
   rollKpi(document.getElementById('stat-sales'), d.sales);
-  rollKpi(document.getElementById('stat-due'), d.due);
   rollKpi(document.getElementById('stat-received'), d.received);
-  // Stocks Worth is the sum of the warehouse split (summed in cents to avoid float drift)
-  const stockCents = d.warehouses.reduce((a, v) => a + Math.round(v * 100), 0);
-  rollKpi(document.getElementById('stat-stocks'), fmtKpi(stockCents / 100));
-  const track = document.getElementById('wh-track');
-  if (!track.children.length) {
-    track.innerHTML = WAREHOUSE_NAMES.map(n => `
-      <div class="wh-item">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <img src="assets/icon-warehouse.svg" width="20" height="20" style="flex-shrink:0;" alt="" />
-          <span class="stat-card-label">${n}</span>
-        </div>
-        <span class="stat-card-value" style="padding-left:28px;"></span>
-      </div>`).join('');
-  }
-  [...track.children].forEach((item, i) => rollKpi(item.lastElementChild, fmtKpi(d.warehouses[i])));
-  track.dispatchEvent(new Event('scroll')); // refresh chevron disabled states
 
-  // Payments
+  // Payments: totals come from the method rows (cents, no float drift) and must equal Total Received
   const p = d.payments;
-  document.getElementById('pay-transactions').textContent = p.transactions;
-  rollKpi(document.getElementById('pay-received-total'), p.receivedTotal);
-  document.getElementById('pay-invoices').textContent = p.invoices;
-  rollKpi(document.getElementById('pay-due-total'), p.dueTotal);
+  const cents = (n) => Math.round((n || 0) * 100);
+  const col = p.methods.reduce((a, r) => a + cents(r[0]), 0);
+  const cash = p.methods.reduce((a, r) => a + cents(r[1]), 0);
+  console.assert(col + cash === cents(parseFloat(d.received.replace(/<[^>]*>/g, '').replace(/[^0-9.]/g, ''))), `payments != received (${period})`);
+  document.getElementById('pay-transactions').textContent = `${p.transactions} Transactions`;
+  rollSR(document.getElementById('pay-received-total'), (col + cash) / 100, true);
+  document.getElementById('prog-collection').style.flex = `${col} 1 0`;
+  document.getElementById('prog-cash').style.flex = `${cash} 1 0`;
+  setSegTip('prog-collection', 'Collection', fmtSR(col / 100), '#0E8F53');
+  setSegTip('prog-cash', 'Cash sales', fmtSR(cash / 100), '#A0DDA3');
+  document.getElementById('pay-methods').innerHTML = ['Cash', 'Cheque', 'Bank transfer', 'Credit Adjustment'].map((name, i) => `
+    <div class="pay-row"><span>${name}</span><span>${fmtTbl(p.methods[i][0])}</span><span>${p.methods[i][1] == null ? '-' : fmtTbl(p.methods[i][1])}</span></div>`).join('');
+}
 
-  document.getElementById('prog-collection').style.width = p.collectionPct + '%';
-  document.getElementById('prog-cash').style.flex = '1';
-  document.getElementById('prog-due').style.width = p.duePct + '%';
-  document.getElementById('prog-overdue').style.flex = '1';
+// Shared formatters + bar tooltip data
+function fmtSR(n) { return 'SR ' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+function fmtTbl(n, cls = 'tbl-cents') { const [w, c] = n.toFixed(2).split('.'); return `${Number(w).toLocaleString('en-US')}<span class="${cls}">.${c}</span>`; }
+function setSegTip(id, label, amount, color) {
+  const el = document.getElementById(id);
+  el.dataset.label = label;
+  el.dataset.amount = amount;
+  el.dataset.color = color;
+}
+// Largest-remainder rounding so row percentages always add up to 100
+function pcts(vals) {
+  const total = vals.reduce((a, v) => a + v, 0);
+  const raw = vals.map(v => v * 100 / total);
+  const out = raw.map(Math.floor);
+  raw.map((r, i) => [r - out[i], i]).sort((a, b) => b[0] - a[0]).slice(0, 100 - out.reduce((a, v) => a + v, 0)).forEach(([, i]) => out[i]++);
+  return out;
+}
 
-  // Tooltip splits: label + computed amount + swatch color (mirrors the donut hover)
-  const parseAmt = (html) => parseFloat(html.replace(/<[^>]*>/g, '').replace(/[^0-9.]/g, ''));
-  const fmtAmt = (n) => 'SR ' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const recv = parseAmt(p.receivedTotal);
-  const col = recv * p.collectionPct / 100;
-  const dueT = parseAmt(p.dueTotal);
-  const dueAmt = dueT * p.duePct / 100;
-  const setTip = (id, label, amount, color) => {
-    const el = document.getElementById(id);
-    el.dataset.label = label;
-    el.dataset.amount = amount;
-    el.dataset.color = color;
-  };
-  setTip('prog-collection', 'Payment from Collection', fmtAmt(col), '#0E8F53');
-  setTip('prog-cash', 'Payment from Cash Sales', fmtAmt(recv - col), '#A0DDA3');
-  setTip('prog-due', 'Due', fmtAmt(dueAmt), '#D4D4D6');
-  setTip('prog-overdue', 'Overdue', fmtAmt(dueT - dueAmt), '#F59D9D');
+// =========================================================
+// SNAPSHOT CARDS (Total Due + Stocks Worth, not date-filtered; built once on load)
+// =========================================================
+function buildSnapshots() {
+  const statusCell = (pct, color) => `<div class="snap-status"><div class="snap-track"><div style="width:${pct}%; background:${color};"></div></div><span>${pct}%</span></div>`;
+
+  const agingCents = AGING.map(r => Math.round(r.amount * 100));
+  const dueC = agingCents.filter((_, i) => AGING[i].notDue).reduce((a, v) => a + v, 0);
+  const totalC = agingCents.reduce((a, v) => a + v, 0);
+  const agingPct = pcts(agingCents);
+  rollKpi(document.getElementById('stat-due'), fmtKpi(totalC / 100));
+  document.getElementById('due-due').innerHTML = 'SR ' + fmtTbl(dueC / 100, 'due-cents');
+  document.getElementById('due-overdue').innerHTML = 'SR ' + fmtTbl((totalC - dueC) / 100, 'due-cents');
+  document.getElementById('seg-due').style.flex = `${dueC} 1 0`;
+  document.getElementById('seg-overdue').style.flex = `${totalC - dueC} 1 0`;
+  setSegTip('seg-due', 'Due', fmtSR(dueC / 100), '#0A84FF');
+  setSegTip('seg-overdue', 'Overdue', fmtSR((totalC - dueC) / 100), '#E72D2D');
+  document.getElementById('aging-rows').innerHTML = AGING.map((r, i) => `
+    <div class="snap-row aging-grid">
+      <span class="snap-label"><i class="snap-dot" style="background:${r.dot};"></i>${r.label}</span>
+      <span>${fmtTbl(r.amount)}</span>
+      <span>${r.invoices} invoices from ${r.vendors} vendors</span>
+      ${statusCell(agingPct[i], r.bar)}
+      <span class="snap-chevron"><img src="assets/icon-chevron-right-24.svg" width="24" height="24" alt="" /></span>
+    </div>`).join('');
+
+  const stockCents = STOCKS.map(r => Math.round(r.amount * 100));
+  const stockPct = pcts(stockCents);
+  rollKpi(document.getElementById('stat-stocks'), fmtKpi(stockCents.reduce((a, v) => a + v, 0) / 100));
+  rollCount(document.getElementById('stat-taxed'), STOCKS.reduce((a, r) => a + r.taxed, 0), String);
+  rollCount(document.getElementById('stat-nontaxed'), STOCKS.reduce((a, r) => a + (r.nonTaxed || 0), 0), String);
+  document.getElementById('stock-rows').innerHTML = STOCKS.map((r, i) => `
+    <div class="snap-row stock-grid">
+      <span class="snap-label"><img src="assets/${r.dead ? 'icon-warehouse-red' : 'icon-warehouse'}.svg" width="20" height="20" alt="" />${r.name}</span>
+      <span>${fmtTbl(r.amount)}</span>
+      <span>${r.taxed}</span>
+      <span>${r.nonTaxed == null ? '-' : r.nonTaxed}</span>
+      ${statusCell(stockPct[i], r.bar)}
+    </div>`).join('');
+}
+
+// "Just a moment..." loader over a card region while a tab/dropdown swaps its data (Figma 8152:206014)
+function withLoader(region, build) {
+  let ov = region.querySelector(':scope > .loader-overlay');
+  if (!ov) {
+    ov = document.createElement('div');
+    ov.className = 'loader-overlay';
+    ov.innerHTML = '<img src="assets/icon-loader-dots.svg" width="22" height="22" alt="" /><span>Just a moment...</span>';
+    region.appendChild(ov);
+  }
+  ov.classList.add('show');
+  clearTimeout(region._loaderT);
+  region._loaderT = setTimeout(() => { ov.classList.remove('show'); build(); }, 500);
 }
 
 // =========================================================
@@ -2231,7 +2052,7 @@ document.getElementById('items-tabs').addEventListener('click', (e) => {
   document.querySelectorAll('#items-tabs .tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   moveIndicator('items-indicator', btn);
-  buildItemsGrid(currentItems);
+  withLoader(document.getElementById('items-grid'), () => buildItemsGrid(currentItems));
 });
 
 // Custom dropdowns
@@ -2248,6 +2069,7 @@ document.getElementById('items-tabs').addEventListener('click', (e) => {
       li.addEventListener('click', (e) => {
         e.stopPropagation();
         trigger.querySelector('.dropdown-selected').textContent = li.textContent;
+        menu.querySelectorAll('li').forEach(x => x.classList.toggle('selected', x === li));
         menu.classList.remove('open');
         onSelect(li.dataset.value);
       });
@@ -2256,12 +2078,12 @@ document.getElementById('items-tabs').addEventListener('click', (e) => {
 
   initDropdown('category-dropdown-trigger', 'category-dropdown-menu', (val) => {
     currentCategory = val;
-    buildDonutChart(currentPeriod, currentCategory);
+    withLoader(document.getElementById('donut-region'), () => buildDonutChart(currentPeriod, currentCategory));
   });
 
   initDropdown('vendor-sort-trigger', 'vendor-sort-menu', (val) => {
     currentVendorSort = val;
-    buildVendorList();
+    withLoader(document.getElementById('vendor-list'), buildVendorList);
   });
 
   document.addEventListener('click', () => {
@@ -2277,19 +2099,8 @@ document.getElementById('vendor-tabs').addEventListener('click', (e) => {
   document.querySelectorAll('#vendor-tabs .tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   moveIndicator('vendor-indicator', btn);
-  buildVendorList();
+  withLoader(document.getElementById('vendor-list'), buildVendorList);
 });
-
-// Credit Intelligence tabs
-initIndicator('credit-tabs', 'credit-indicator');
-document.querySelectorAll('#credit-tabs .tab-btn').forEach(b => b.addEventListener('click', () => {
-  document.querySelectorAll('#credit-tabs .tab-btn').forEach(x => x.classList.remove('active'));
-  b.classList.add('active');
-  moveIndicator('credit-indicator', b);
-  const tab = b.dataset.credit;
-  document.getElementById('credit-invoices-panel').style.display = tab === 'invoices' ? 'flex' : 'none';
-  document.getElementById('credit-vendors-panel').style.display = tab === 'vendors' ? 'block' : 'none';
-}));
 
 // Credit Intelligence — vendor table
 const CI_VENDORS = [
@@ -2516,6 +2327,7 @@ document.querySelectorAll('.nav-item').forEach(item => {
 // =========================================================
 // Initialize after DOM + layout is settled. Don't wait on fonts.ready
 // so headless screenshots don't time out on Google Fonts loading.
+buildSnapshots(); // not date-filtered, so built once even while the Overview is hidden
 function initWhenReady() {
   // Hidden on load: first render happens on unhide instead
   if (document.body.classList.contains('dash-hidden')) return;
@@ -2554,7 +2366,7 @@ window.addEventListener('resize', checkNarrowScreen);
 // Resize guard + re-position tab indicators
 window.addEventListener('resize', () => {
   if (cashflowChart) { cashflowChart.resize(); }
-  [['time-tabs','time-indicator'],['items-tabs','items-indicator'],['vendor-tabs','vendor-indicator'],['credit-tabs','credit-indicator']].forEach(([groupId, indId]) => {
+  [['time-tabs','time-indicator'],['items-tabs','items-indicator'],['vendor-tabs','vendor-indicator']].forEach(([groupId, indId]) => {
     const btn = document.querySelector(`#${groupId} .tab-btn.active`);
     if (btn) moveIndicator(indId, btn);
   });
@@ -2573,23 +2385,6 @@ document.getElementById('refresh-data').addEventListener('click', () => {
     render(); // replay count-ups + chart builds so refresh reads as fresh data
   }, 400);
 });
-
-// Warehouse carousel: one item per chevron click
-(function() {
-  const track = document.getElementById('wh-track');
-  const prev = document.getElementById('wh-prev');
-  const next = document.getElementById('wh-next');
-  const step = () => (track.firstElementChild ? track.firstElementChild.offsetWidth + 8 : 0);
-  const smooth = () => (matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth');
-  function syncChevrons() {
-    prev.disabled = track.scrollLeft <= 1;
-    next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
-  }
-  prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: smooth() }));
-  next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: smooth() }));
-  track.addEventListener('scroll', syncChevrons, { passive: true });
-  new ResizeObserver(syncChevrons).observe(track);
-})();
 
 // Hide / unhide dashboard (unhide requires PIN; prototype accepts any 4 digits)
 (function() {
