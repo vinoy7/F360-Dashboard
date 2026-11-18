@@ -157,9 +157,10 @@
 
     /* Payments method table (Figma 8117:22250) */
     .pay-bar { height: 32px; display: flex; gap: 4px; border-radius: 6px; overflow: hidden; }
-    .pay-row { display: grid; grid-template-columns: minmax(0, 1fr) 150px 150px; align-items: center; height: 40px; border-bottom: 1px solid #EDEDED; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; color: #262626; }
+    .pay-row { display: grid; grid-template-columns: minmax(0, 1fr) 160px 160px; align-items: center; height: 40px; border-bottom: 1px solid #EDEDED; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; color: #262626; }
     .pay-row > span + span { padding-left: 16px; }
     #pay-methods .pay-row { flex: 1; height: auto; min-height: 40px; } /* rows share the card's spare height */
+    @media (max-width: 1416px) { .pay-row { grid-template-columns: minmax(0, 1fr) 148px 148px; } } /* 160 wraps "Credit Adjustment" at 1250 */
     .pay-row-head { height: 36px; border-top: 1px solid #EDEDED; font-size: 14px; font-weight: 500; line-height: 20px; letter-spacing: -0.28px; }
     .pay-row-head > span { display: flex; align-items: center; gap: 4px; }
 
