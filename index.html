@@ -116,7 +116,7 @@
     /* Snapshot cards: Total Due + Stocks Worth (Figma 8136:18332 / 8116:19055) */
     .snap-card { background: #FFFFFF; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
     .snap-head { display: flex; border-bottom: 1px solid #EDEDED; }
-    .snap-summary { width: 340px; flex-shrink: 0; box-sizing: border-box; padding: 16px; display: flex; gap: 8px; align-items: flex-start; border-right: 1px solid #EDEDED; }
+    .snap-summary { width: 340px; flex-shrink: 0; box-sizing: border-box; min-height: 104px; /* both header rows 104px, content centred */ padding: 16px; display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap; align-content: center; /* content centred vertically when the row is taller; icon stays top-aligned with the label */ border-right: 1px solid #EDEDED; }
     .snap-summary > img { flex-shrink: 0; }
     .snap-metric { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
     .snap-breakdown { flex: 1; min-width: 0; padding: 16px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
@@ -125,8 +125,8 @@
     .due-bar .prog-segment { transition: filter 0.15s ease-out; } /* width is driven by Web Animations in buildSnapshots */
     .due-split { width: 180px; display: flex; flex-direction: column; gap: 2px; }
     .due-split-label { display: flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; color: #8C8D8F; }
-    .due-split-value { font-size: 18px; font-weight: 500; line-height: 28px; letter-spacing: -0.36px; color: #262626; white-space: nowrap; }
-    .due-cents { font-size: 16px; letter-spacing: -0.32px; }
+    .due-split-value { padding-left: 16px; /* 8px dot + 8px gap: amount starts under "Due"/"Overdue", not the dot */ font-size: 18px; font-weight: 500; line-height: 28px; letter-spacing: -0.36px; color: #262626; white-space: nowrap; }
+    .due-cents { font-size: 16px; letter-spacing: -0.32px; line-height: 0; } /* no extra line-box height from the smaller cents (was making the row 104.5px) */
     .snap-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
     .snap-table-wrap { padding: 16px; }
     .snap-table { outline: 1px solid #EDEDED; outline-offset: -1px; border-radius: 8px; overflow: hidden; } /* outline, not border: keeps content at 16px inset so column 1 can be 324 */
