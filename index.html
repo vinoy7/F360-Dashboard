@@ -756,7 +756,7 @@
     ::-webkit-scrollbar-thumb { background: #D4D4D6; border-radius: 3px; }
 
     /* Auto-hide scrollbar: thumb only visible while hovering/scrolling the area */
-    .scroll-area { scrollbar-width: thin; scrollbar-color: transparent transparent; padding:48px 72px 16px; gap:40px; }
+    .scroll-area { scrollbar-width: thin; scrollbar-color: transparent transparent; padding:48px 72px; gap:40px; } /* bottom matches top (48) */
     @media (max-width: 1416px) { .scroll-area { padding: 16px; gap: 24px; } } /* was 1300; raised so the snapshot tables never get narrower than at 1250 */
     .scroll-area:hover { scrollbar-color: #D4D4D6 transparent; }
     .scroll-area::-webkit-scrollbar-thumb { background: transparent; transition: background 200ms ease; }
