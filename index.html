@@ -2525,7 +2525,7 @@ document.getElementById('refresh-data').addEventListener('click', () => {
 </script>
 
 <script type="module">
-import { generateClipPath } from './node_modules/@lisse/core/dist/path.js';
+import { generateClipPath } from 'https://cdn.jsdelivr.net/npm/@lisse/core@0.4.0/dist/path.js'; // CDN so staging/Pages get it (node_modules is gitignored)
 
 const lisseMap = new WeakMap();
 
