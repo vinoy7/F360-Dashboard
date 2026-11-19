@@ -120,6 +120,8 @@
     .snap-summary > img { flex-shrink: 0; }
     /* Stocks Worth header: three equal blocks, no dividers */
     .snap-head-thirds .snap-summary { flex: 1 1 0; width: auto; min-width: 0; border-right: none; }
+    /* Stocks Worth info icon lines up with Total Due's: metric capped at Total Due's width (340 - 1 border - 32 padding - 20 icon - 8 gap) */
+    .snap-head-thirds .snap-summary:first-child .snap-metric { max-width: 279px; }
     .snap-metric { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
     .snap-breakdown { flex: 1; min-width: 0; padding: 16px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
     .due-bar { display: flex; justify-content: space-between; height: 10px; } /* red anchored right so it grows from that end */
