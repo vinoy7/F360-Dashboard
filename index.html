@@ -118,6 +118,8 @@
     .snap-head { display: flex; border-bottom: 1px solid #EDEDED; }
     .snap-summary { width: 340px; flex-shrink: 0; box-sizing: border-box; min-height: 104px; /* both header rows 104px, content centred */ padding: 16px; display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap; align-content: center; /* content centred vertically when the row is taller; icon stays top-aligned with the label */ border-right: 1px solid #EDEDED; }
     .snap-summary > img { flex-shrink: 0; }
+    /* Stocks Worth header: three equal blocks, no dividers */
+    .snap-head-thirds .snap-summary { flex: 1 1 0; width: auto; min-width: 0; border-right: none; }
     .snap-metric { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
     .snap-breakdown { flex: 1; min-width: 0; padding: 16px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
     .due-bar { display: flex; justify-content: space-between; height: 10px; } /* red anchored right so it grows from that end */
@@ -973,7 +975,7 @@
 
         <!-- Stocks Worth (Figma 8116:19055) -->
         <div class="snap-card">
-          <div class="snap-head">
+          <div class="snap-head snap-head-thirds">
             <div class="snap-summary">
               <img src="assets/icon-stocks-worth-20.svg" width="20" height="20" alt="" />
               <div class="snap-metric">
@@ -984,13 +986,13 @@
                 <span class="stat-card-value" id="stat-stocks">SR 0<span class="cents">.00</span></span>
               </div>
             </div>
-            <div class="snap-summary" style="flex:1; width:auto; border:none;">
+            <div class="snap-summary">
               <img src="assets/icon-orders-off-20.svg" width="20" height="20" alt="" />
-              <div class="snap-metric"><span class="stat-card-label">Total Taxed Items</span><span class="stat-card-value" id="stat-taxed">0</span></div>
+              <div class="snap-metric"><span class="stat-card-label">Taxed Items Worth</span><span class="stat-card-value" id="stat-taxed">SR 0<span class="cents">.00</span></span></div>
             </div>
-            <div class="snap-summary" style="flex:1; width:auto; border:none;">
+            <div class="snap-summary">
               <img src="assets/icon-orders-off-20.svg" width="20" height="20" alt="" />
-              <div class="snap-metric"><span class="stat-card-label">Total Non-Taxed Items</span><span class="stat-card-value" id="stat-nontaxed">0</span></div>
+              <div class="snap-metric"><span class="stat-card-label">Non-Taxed Items Worth</span><span class="stat-card-value" id="stat-nontaxed">SR 0<span class="cents">.00</span></span></div>
             </div>
           </div>
           <div class="snap-table-wrap">
@@ -1961,8 +1963,12 @@ function buildSnapshots() {
   const stockCents = STOCKS.map(r => Math.round(r.amount * 100));
   const stockPct = pcts(stockCents);
   rollKpi(document.getElementById('stat-stocks'), fmtKpi(stockCents.reduce((a, v) => a + v, 0) / 100));
-  rollCount(document.getElementById('stat-taxed'), STOCKS.reduce((a, r) => a + r.taxed, 0), String);
-  rollCount(document.getElementById('stat-nontaxed'), STOCKS.reduce((a, r) => a + (r.nonTaxed || 0), 0), String);
+  // ponytail: no per-item prices in mock data, so each warehouse's value is split by its taxed/non-taxed item counts.
+  // Taxed + Non-Taxed worth always equal Stocks Worth (non-taxed = remainder, in cents).
+  const taxedCents = STOCKS.reduce((a, r, i) => a + Math.round(stockCents[i] * r.taxed / (r.taxed + (r.nonTaxed || 0))), 0);
+  const totalStockCents = stockCents.reduce((a, v) => a + v, 0);
+  rollKpi(document.getElementById('stat-taxed'), fmtKpi(taxedCents / 100));
+  rollKpi(document.getElementById('stat-nontaxed'), fmtKpi((totalStockCents - taxedCents) / 100));
   document.getElementById('stock-rows').innerHTML = STOCKS.map((r, i) => `
     <div class="snap-row stock-grid">
       <span class="snap-label"><img src="assets/${r.dead ? 'icon-warehouse-red' : 'icon-warehouse'}.svg" width="20" height="20" alt="" />${r.name}</span>
