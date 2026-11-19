@@ -151,6 +151,7 @@
     }
     .snap-label { display: flex; align-items: center; gap: 8px; }
     .stock-grid .snap-label { gap: 6px; }
+    .stock-grid .snap-label > img { transform: translateY(-0.5px); } /* icon ink centred on the name's cap height (was 0.5px low) */
     .snap-status { display: flex; align-items: center; gap: 16px; }
     .snap-track { flex: 1; height: 4px; border-radius: 8px; background: #EDEDED; overflow: hidden; }
     .snap-track > div { width: 0; height: 100%; border-radius: 8px; transition: width 900ms cubic-bezier(0.25, 1, 0.5, 1); }
@@ -1973,7 +1974,7 @@ function buildSnapshots() {
   rollKpi(document.getElementById('stat-nontaxed'), fmtKpi((totalStockCents - taxedCents) / 100));
   document.getElementById('stock-rows').innerHTML = STOCKS.map((r, i) => `
     <div class="snap-row stock-grid">
-      <span class="snap-label"><img src="assets/${r.dead ? 'icon-warehouse-red' : 'icon-warehouse'}.svg" width="20" height="20" alt="" />${r.name}</span>
+      <span class="snap-label"><img src="assets/${r.dead ? 'icon-warehouse-gray' : 'icon-warehouse'}.svg" width="20" height="20" alt="" />${r.name}</span>
       ${roll(r.amount, 'tbl')}
       ${roll(r.taxed, 'int')}
       ${r.nonTaxed == null ? '<span>-</span>' : roll(r.nonTaxed, 'int')}
