@@ -126,7 +126,8 @@
     .snap-breakdown { flex: 1; min-width: 0; padding: 16px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
     .due-bar { display: flex; justify-content: space-between; height: 10px; } /* red anchored right so it grows from that end */
     .due-bar .prog-segment { flex: none; width: 0; }
-    .due-bar .prog-segment { transition: filter 0.15s ease-out; } /* width is driven by Web Animations in buildSnapshots */
+    .due-bar .prog-segment { cursor: default; } /* no hover state; width is driven by Web Animations in buildSnapshots */
+    .due-bar .prog-segment:hover { filter: none; }
     .due-split { width: 180px; display: flex; flex-direction: column; gap: 2px; }
     .due-split-label { display: flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; color: #8C8D8F; }
     .due-split-value { padding-left: 16px; /* 8px dot + 8px gap: amount starts under "Due"/"Overdue", not the dot */ font-size: 18px; font-weight: 500; line-height: 28px; letter-spacing: -0.36px; color: #262626; white-space: nowrap; }
@@ -1937,8 +1938,6 @@ function buildSnapshots() {
   const dueFmt = n => 'SR ' + fmtTbl(n, 'due-cents');
   rollFmt(document.getElementById('due-due'), dueC / 100, dueFmt);
   rollFmt(document.getElementById('due-overdue'), (totalC - dueC) / 100, dueFmt);
-  setSegTip('seg-due', 'Due', fmtSR(dueC / 100), '#0A84FF');
-  setSegTip('seg-overdue', 'Overdue', fmtSR((totalC - dueC) / 100), '#E72D2D');
   // Split bar: blue grows from the left and red from the right to meet at 50%, then both glide to the real split.
   // One continuous animation per segment: ease-out into 50% (arrives at zero speed), ease-in-out away from it
   // (leaves from zero speed), so there is no jolt at the hand-off. 1.4s total, a bit longer than the count-ups.
@@ -2023,7 +2022,7 @@ function render() {
   tip.dataset.noLisse = '';
   tip.innerHTML = '<div class="pt-title"></div><div class="pt-row"><span class="pt-swatch" data-no-lisse></span><span class="pt-amount"></span></div>';
   document.body.appendChild(tip);
-  document.querySelectorAll('.prog-segment').forEach(seg => {
+  document.querySelectorAll('.prog-segment:not(.due-bar .prog-segment)').forEach(seg => { // Total Due bar has no tooltip
     seg.addEventListener('mouseenter', (e) => {
       tip.querySelector('.pt-title').textContent = seg.dataset.label || '';
       tip.querySelector('.pt-amount').textContent = seg.dataset.amount || '';
