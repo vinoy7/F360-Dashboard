@@ -7,22 +7,24 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet" />
   <style>
     * { box-sizing: border-box; margin: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: #F9FAFB; color: #262626; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; min-height: 100vh; display: flex; flex-direction: column; }
+    body { font-family: 'DM Sans', sans-serif; background: #F9FAFB; color: #262626; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; height: 100vh; overflow: hidden; display: flex; flex-direction: column; } /* only the table scrolls */
     header { height: 64px; background: #fff; border-bottom: 1px solid #EDEDED; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
     .logo { font-size: 32px; line-height: 40px; letter-spacing: -1.28px; font-weight: 500; }
     .logo span { color: #623CEA; }
     .help { display: flex; align-items: center; gap: 8px; color: #623CEA; font-size: 16px; line-height: 24px; text-decoration: none; }
     .title { height: 60px; display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid #EDEDED; font-size: 20px; line-height: 28px; letter-spacing: -0.4px; }
-    main { flex: 1; padding: 20px; display: flex; }
-    .card { flex: 1; background: #fff; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    main { flex: 1; min-height: 0; padding: 20px; display: flex; }
+    .card { flex: 1; min-height: 0; background: #fff; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
     .card h2 { font-size: 20px; font-weight: 400; line-height: 28px; letter-spacing: -0.4px; }
-    .table { flex: 1; outline: 1px solid #EDEDED; outline-offset: -1px; border-radius: 8px; overflow: auto; }
+    .table { flex: 1; min-height: 0; display: flex; flex-direction: column; outline: 1px solid #EDEDED; outline-offset: -1px; border-radius: 8px; overflow-x: auto; overflow-y: hidden; }
+    .table, #rows { scrollbar-width: thin; scrollbar-color: #E3E3E5 transparent; } /* lighter than dashboard's #D4D4D6 */
+    #rows { flex: 1; min-height: 0; min-width: 1200px; overflow-y: auto; } /* vertical scroll on rows only, so the scrollbar starts under the header */
     .row { display: grid; grid-template-columns: minmax(160px, 1fr) minmax(160px, 1fr) minmax(240px, 1.5fr) minmax(200px, 1fr) minmax(220px, 1.2fr) minmax(172px, 1fr) 48px; align-items: center; min-width: 1200px; }
     .row > * { padding: 0 16px; min-width: 0; white-space: nowrap; }
     .row.head button { all: unset; cursor: pointer; padding: 0 16px; display: flex; align-items: center; gap: 4px; height: 100%; }
     .row.head button:hover, .row.head button[aria-sort] { color: #262626; }
     .row.head button:focus-visible { outline: 2px solid #623CEA; outline-offset: -2px; }
-    .row.head { height: 40px; background: #F4F4F5; color: #8C8D8F; font-size: 12px; line-height: 16px; letter-spacing: -0.24px; }
+    .row.head { flex-shrink: 0; height: 40px; background: #F4F4F5; color: #8C8D8F; font-size: 12px; line-height: 16px; letter-spacing: -0.24px; }
     .row:not(.head) { height: 68px; border-bottom: 1px solid #EDEDED; }
     #rows .row:hover { background: #F9FAFB; } /* same as dashboard aging rows */
     .sub { color: #8C8D8F; }
