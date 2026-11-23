@@ -136,7 +136,8 @@
     .snap-table { outline: 1px solid #EDEDED; outline-offset: -1px; border-radius: 8px; overflow: hidden; } /* outline, not border: keeps content at 16px inset so column 1 can be 324 */
     .snap-row { display: grid; align-items: center; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; color: #262626; }
     .snap-row > * { padding: 0 16px; min-width: 0; white-space: nowrap; }
-    #aging-rows .snap-row { height: 44px; }
+    #aging-rows .snap-row { height: 44px; text-decoration: none; cursor: pointer; }
+    #aging-rows .snap-row:hover { background: #F9FAFB; }
     #stock-rows .snap-row { height: 52px; }
     #aging-rows .snap-row + .snap-row, #stock-rows .snap-row + .snap-row { border-top: 1px solid #EDEDED; }
     .snap-row-head { height: 36px; background: #F4F4F5; font-size: 12px; font-weight: 500; line-height: 16px; letter-spacing: -0.24px; color: #8C8D8F; }
@@ -1953,14 +1954,16 @@ function buildSnapshots() {
       { width: w(end) },
     ], { duration: 1400 });
   });
+  // Row opens aging.html in a new tab; it builds its own mock invoices from these numbers
+  const agingHref = r => 'aging.html?' + new URLSearchParams({ label: r.label, amount: r.amount, invoices: r.invoices, vendors: r.vendors, ...(r.notDue && { due: 1 }) });
   document.getElementById('aging-rows').innerHTML = AGING.map((r, i) => `
-    <div class="snap-row aging-grid">
+    <a class="snap-row aging-grid" href="${agingHref(r)}" target="_blank" rel="noopener">
       <span class="snap-label"><i class="snap-dot" style="background:${r.dot};"></i>${r.label}</span>
       ${roll(r.amount, 'tbl')}
       <span>${roll(r.invoices, 'int')} invoices from ${roll(r.vendors, 'int')} vendors</span>
       ${statusCell(agingPct[i], r.bar)}
       <span class="snap-chevron"><img src="assets/icon-chevron-right-24.svg" width="24" height="24" alt="" /></span>
-    </div>`).join('');
+    </a>`).join('');
 
   const stockCents = STOCKS.map(r => Math.round(r.amount * 100));
   const stockPct = pcts(stockCents);

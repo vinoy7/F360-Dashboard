@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aging details</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: #F9FAFB; color: #262626; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; min-height: 100vh; display: flex; flex-direction: column; }
+    header { height: 64px; background: #fff; border-bottom: 1px solid #EDEDED; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
+    .logo { font-size: 32px; line-height: 40px; letter-spacing: -1.28px; font-weight: 500; }
+    .logo span { color: #623CEA; }
+    .help { display: flex; align-items: center; gap: 8px; color: #623CEA; font-size: 16px; line-height: 24px; text-decoration: none; }
+    .title { height: 60px; display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid #EDEDED; font-size: 20px; line-height: 28px; letter-spacing: -0.4px; }
+    main { flex: 1; padding: 20px; display: flex; }
+    .card { flex: 1; background: #fff; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .card h2 { font-size: 20px; font-weight: 400; line-height: 28px; letter-spacing: -0.4px; }
+    .table { flex: 1; outline: 1px solid #EDEDED; outline-offset: -1px; border-radius: 8px; overflow: auto; }
+    .row { display: grid; grid-template-columns: minmax(160px, 1fr) minmax(160px, 1fr) minmax(240px, 1.5fr) minmax(200px, 1fr) minmax(220px, 1.2fr) minmax(172px, 1fr) 48px; align-items: center; min-width: 1200px; }
+    .row > * { padding: 0 16px; min-width: 0; white-space: nowrap; }
+    .row.head button { all: unset; cursor: pointer; padding: 0 16px; display: flex; align-items: center; gap: 4px; height: 100%; }
+    .row.head button:hover, .row.head button[aria-sort] { color: #262626; }
+    .row.head button:focus-visible { outline: 2px solid #623CEA; outline-offset: -2px; }
+    .row.head { height: 40px; background: #F4F4F5; color: #8C8D8F; font-size: 12px; line-height: 16px; letter-spacing: -0.24px; }
+    .row:not(.head) { height: 68px; border-bottom: 1px solid #EDEDED; }
+    #rows .row:hover { background: #F9FAFB; } /* same as dashboard aging rows */
+    .sub { color: #8C8D8F; }
+    .overdue { color: #E72D2D; font-size: 12px; line-height: 16px; letter-spacing: -0.24px; }
+    .due { color: #0A84FF; font-size: 12px; line-height: 16px; letter-spacing: -0.24px; }
+    .cents { font-size: 12px; }
+    .card h2 .cents { font-size: 16px; font-weight: 500; } /* 4px under the 20px total */
+    .who { display: flex; align-items: center; gap: 12px; }
+    .who > div:last-child { overflow: hidden; text-overflow: ellipsis; }
+    .avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px 0 8px; border-radius: 999px; border: 1px solid #D4D4D6; color: #8C8D8F; }
+    .pill.partial { border-color: #E07509; color: #E07509; }
+    .chev { display: flex; justify-content: flex-end; }
+    .view-btn { all: unset; width: 28px; height: 28px; padding: 2px; box-sizing: border-box; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; } /* Figma 8152:22410 */
+    .view-btn:hover { background: #F3F0FF; }
+    .view-btn:focus-visible { outline: 2px solid #623CEA; outline-offset: -2px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">fuse<span>360</span></div>
+    <a class="help" href="#"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#623CEA" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="7.5"/><path d="M7.9 7.9a2.1 2.1 0 1 1 2.9 1.9c-.5.2-.8.7-.8 1.2v.5"/><circle cx="10" cy="13.6" r=".4" fill="#623CEA"/></svg>Help</a>
+  </header>
+  <div class="title" id="title"></div>
+  <main>
+    <div class="card">
+      <h2 id="total"></h2>
+      <div class="table">
+        <div class="row head" id="head"><button data-k="date">Invoice date</button><button data-k="number">Invoice number</button><button data-k="vendor">Vendor</button><button data-k="amount">Amount (SR) incl. VAT</button><button data-k="user">Created by</button><button data-k="status">Payment status</button><span></span></div>
+        <div id="rows"></div>
+      </div>
+    </div>
+  </main>
+<script>
+// Mock invoices generated from the aging row the user clicked (label, amount, invoices, vendors in the query string).
+// Pending amounts always sum to the row's amount. Seeded by label so a reload shows the same invoices.
+const q = new URLSearchParams(location.search);
+const label = q.get('label') || '90+ days overdue';
+const amountC = Math.round(+(q.get('amount') || 81902.39) * 100);
+const nInv = +q.get('invoices') || 24;
+const nVen = Math.min(+q.get('vendors') || 10, nInv);
+const notDue = q.has('due');
+
+let seed = [...label].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 16777619), 2166136261);
+const rnd = () => { seed = Math.imul(seed ^ (seed >>> 15), 1 | seed) + 0x6D2B79F5 | 0; return ((seed ^ (seed >>> 14)) >>> 0) / 4294967296; };
+const pick = a => a[Math.floor(rnd() * a.length)];
+
+const VENDORS = [
+  ['Meridian Dynamics Solutions', 'Grand Anse'], ['Atlas Digital Solutions', 'Mahé'], ['Mitsuishi Engineering', 'Grand Anse'],
+  ['Emmanuel Transports Pvt. Ltd.', 'Anse Royale'], ['Redox Steel Pvt Ltd', 'Grand Anse'], ['Whimsi Works', 'Mahé'],
+  ['Island Fresh Traders', 'Praslin'], ['Coral Bay Supplies', 'La Digue'], ['Takamaka Beverages', 'Victoria'],
+  ['Seabreeze Distributors', 'Beau Vallon'], ['Granite Isle Hardware', 'Providence'], ['Palm Grove Foods', 'Anse Boileau'],
+  ['Blue Lagoon Imports', 'Victoria'], ['Victoria Wholesale Co.', 'Victoria'], ['Sunset Packaging', 'Cascade'],
+];
+const COLORS = [['#EAEFFF', '#ABB5D6'], ['#FFECD6', '#E1BB8F'], ['#FCF4CA', '#D6C66B'], ['#FFEBF3', '#E5B8CB'], ['#E1F0F5', '#ABCCD6'], ['#F1E4DD', '#D6BEAB']];
+const USERS = [['Eric Peter', 'Admin'], ['Michelle Mathews', 'Admin'], ['Daniel Hoareau', 'Accountant'], ['Priya Nair', 'Manager']];
+
+// Overdue range from the label ("61–90 days overdue" → 61..90, "90+" → 91..150); due rows fall due in 1..30 days
+const nums = (label.match(/\d+/g) || ['90']).map(Number);
+const [lo, hi] = notDue ? [1, 30] : nums.length > 1 ? nums : [nums[0] + 1, nums[0] + 60];
+
+// Split the amount into nInv pending parts (weights 0.3..1.3, remainder to the last so the total is exact)
+const w = Array.from({ length: nInv }, () => 0.3 + rnd());
+const wSum = w.reduce((a, v) => a + v, 0);
+let left = amountC;
+const today = new Date(); today.setHours(0, 0, 0, 0);
+const invoices = w.map((wt, i) => {
+  const pending = i === nInv - 1 ? left : Math.round(amountC * wt / wSum);
+  left -= pending;
+  const partial = rnd() < 0.35;
+  const days = lo + Math.floor(rnd() * (hi - lo + 1));
+  const dueDate = new Date(today); dueDate.setDate(dueDate.getDate() + (notDue ? days : -days));
+  const date = new Date(dueDate); date.setDate(date.getDate() - 30); // 30-day terms
+  return {
+    date, days, partial, pending,
+    total: partial ? pending + Math.round(pending * (0.4 + rnd())) : pending,
+    number: 'INV-MF-26-' + (900000 + Math.floor(rnd() * 99999)),
+    vendor: i % nVen, // every vendor in the row gets at least one invoice
+    user: pick(USERS),
+  };
+}).sort((a, b) => a.date - b.date);
+
+const money = c => { const [whole, cents] = (c / 100).toFixed(2).split('.'); return `${Number(whole).toLocaleString('en-US')}<span class="cents">.${cents}</span>`; };
+const vendorIdx = [...VENDORS.keys()].sort(() => rnd() - 0.5).slice(0, nVen);
+const building = c => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 6h3M7 10h3M7 14h3M7 18h3M17 14h1M17 18h1M14 22V4.6c0-.56 0-.84-.11-1.05a1 1 0 0 0-.44-.44C13.24 3 12.96 3 12.4 3H4.6c-.56 0-.84 0-1.05.11a1 1 0 0 0-.44.44C3 3.76 3 4.04 3 4.6v15.8c0 .56 0 .84.11 1.05a1 1 0 0 0 .44.44c.21.11.49.11 1.05.11H14Zm0 0h5.4c.56 0 .84 0 1.05-.11a1 1 0 0 0 .44-.44c.11-.21.11-.49.11-1.05v-7.2c0-1.12 0-1.68-.22-2.11a2 2 0 0 0-.87-.87C19.48 10 18.92 10 17.8 10H14"/></svg>`;
+const person = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D6C66B" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-3.3 3.6-6 8-6s8 2.7 8 6"/></svg>`;
+const statusIcon = p => p
+  ? `<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="#E07509" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 0 0 13Z" fill="#E07509"/></svg>`
+  : `<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="#8C8D8F" stroke-width="1.5" stroke-dasharray="2 2"/></svg>`;
+const fmtDate = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+const title = label.replace('overdue', 'Overdue'); // display only; dashboard label unchanged
+document.title = title;
+document.getElementById('title').textContent = title;
+document.getElementById('total').innerHTML = `Total Amount - SR ${money(amountC)}`;
+// Click a header to sort by it; click again to flip direction
+const SORT_BY = { date: i => i.date, number: i => i.number, vendor: i => VENDORS[vendorIdx[i.vendor]][0], amount: i => i.total, user: i => i.user[0], status: i => i.partial };
+let sortKey = 'date', sortDir = 1;
+document.getElementById('head').addEventListener('click', e => {
+  const k = e.target.closest('button')?.dataset.k;
+  if (!k) return;
+  sortDir = k === sortKey ? -sortDir : 1;
+  sortKey = k;
+  render();
+});
+function render() {
+document.querySelectorAll('#head button').forEach(b => {
+  const on = b.dataset.k === sortKey;
+  b.toggleAttribute('aria-sort', on);
+  if (on) b.setAttribute('aria-sort', sortDir > 0 ? 'ascending' : 'descending');
+  b.textContent = b.textContent.replace(/ [↑↓]$/, '') + (on ? (sortDir > 0 ? ' ↑' : ' ↓') : '');
+});
+const by = SORT_BY[sortKey];
+document.getElementById('rows').innerHTML = [...invoices].sort((a, b) => ((by(a) > by(b)) - (by(a) < by(b))) * sortDir).map(inv => {
+  const [name, area] = VENDORS[vendorIdx[inv.vendor]];
+  const [bg, fg] = COLORS[vendorIdx[inv.vendor] % COLORS.length];
+  return `<div class="row">
+    <div>${fmtDate(inv.date)}<div class="${notDue ? 'due' : 'overdue'}">${notDue ? 'Due in' : 'Overdue since'} ${inv.days} day${inv.days === 1 ? '' : 's'}</div></div>
+    <span>${inv.number}</span>
+    <div class="who"><span class="avatar" style="background:${bg};">${building(fg)}</span><div>${name}<div class="sub">${area}</div></div></div>
+    <div>${money(inv.total)}${inv.partial ? `<div class="sub">Pending ${money(inv.pending)}</div>` : ''}</div>
+    <div class="who"><span class="avatar" style="background:#FCF4CA;">${person}</span><div>${inv.user[0]}<div class="sub">${inv.user[1]}</div></div></div>
+    <div><span class="pill ${inv.partial ? 'partial' : ''}">${statusIcon(inv.partial)}${inv.partial ? 'Partially paid' : 'Unpaid'}</span></div>
+    <span class="chev"><button class="view-btn" aria-label="View invoice ${inv.number}"><img src="assets/icon-chevron-right-24.svg" width="24" height="24" alt="" /></button></span>
+  </div>`;
+}).join('');
+}
+render();
+console.assert(invoices.reduce((a, i) => a + i.pending, 0) === amountC, 'pending must sum to row amount');
+console.assert(new Set(invoices.map(i => i.vendor)).size === nVen, 'vendor count must match row');
+</script>
+</body>
+</html>
