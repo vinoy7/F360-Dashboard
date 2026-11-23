@@ -21,7 +21,10 @@
     #rows { flex: 1; min-height: 0; min-width: 1200px; overflow-y: auto; } /* vertical scroll on rows only, so the scrollbar starts under the header */
     .row { display: grid; grid-template-columns: minmax(160px, 1fr) minmax(160px, 1fr) minmax(240px, 1.5fr) minmax(200px, 1fr) minmax(220px, 1.2fr) minmax(172px, 1fr) 48px; align-items: center; min-width: 1200px; }
     .row > * { padding: 0 16px; min-width: 0; white-space: nowrap; }
-    .row.head button { all: unset; cursor: pointer; padding: 0 16px; display: flex; align-items: center; gap: 4px; height: 100%; }
+    .row.head button { all: unset; cursor: pointer; padding: 0 16px; display: flex; align-items: center; gap: 2px; height: 100%; }
+    .row.head button img { display: none; } /* Figma 16px/Sorting icon, only on the active column */
+    .row.head button[aria-sort] img { display: block; }
+    .row.head button[aria-sort=descending] img { transform: rotate(180deg); }
     .row.head button:hover, .row.head button[aria-sort] { color: #262626; }
     .row.head button:focus-visible { outline: 2px solid #623CEA; outline-offset: -2px; }
     .row.head { flex-shrink: 0; height: 40px; background: #F4F4F5; color: #8C8D8F; font-size: 12px; line-height: 16px; letter-spacing: -0.24px; }
@@ -53,7 +56,7 @@
     <div class="card">
       <h2 id="total"></h2>
       <div class="table">
-        <div class="row head" id="head"><button data-k="date">Invoice date</button><button data-k="number">Invoice number</button><button data-k="vendor">Vendor</button><button data-k="amount">Amount (SR) incl. VAT</button><button data-k="user">Created by</button><button data-k="status">Payment status</button><span></span></div>
+        <div class="row head" id="head"><button data-k="date">Invoice date<img src="assets/credit-sorting.svg" width="10" height="16" alt="" /></button><button data-k="number">Invoice number<img src="assets/credit-sorting.svg" width="10" height="16" alt="" /></button><button data-k="vendor">Vendor<img src="assets/credit-sorting.svg" width="10" height="16" alt="" /></button><button data-k="amount">Amount (SR) incl. VAT<img src="assets/credit-sorting.svg" width="10" height="16" alt="" /></button><button data-k="user">Created by<img src="assets/credit-sorting.svg" width="10" height="16" alt="" /></button><button data-k="status">Payment status<img src="assets/credit-sorting.svg" width="10" height="16" alt="" /></button><span></span></div>
         <div id="rows"></div>
       </div>
     </div>
@@ -135,7 +138,6 @@ document.querySelectorAll('#head button').forEach(b => {
   const on = b.dataset.k === sortKey;
   b.toggleAttribute('aria-sort', on);
   if (on) b.setAttribute('aria-sort', sortDir > 0 ? 'ascending' : 'descending');
-  b.textContent = b.textContent.replace(/ [↑↓]$/, '') + (on ? (sortDir > 0 ? ' ↑' : ' ↓') : '');
 });
 const by = SORT_BY[sortKey];
 document.getElementById('rows').innerHTML = [...invoices].sort((a, b) => ((by(a) > by(b)) - (by(a) < by(b))) * sortDir).map(inv => {
